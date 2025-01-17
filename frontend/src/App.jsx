@@ -5,6 +5,7 @@ import Navbar from "./components/Navbar.jsx";
 import Cards from "./components/Cards.jsx";
 import Footer from "./components/Footer.jsx";
 
+
 function App() {
   return (
     <Layout>
