@@ -8,6 +8,8 @@ var app = require('../app');
 var debug = require('debug')('mainserver:server');
 var http = require('http');
 
+app.use(cors());
+
 /**
  * Get port from environment and store in Express.
  */
