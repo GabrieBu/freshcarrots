@@ -1,7 +1,7 @@
-import Card from "./Card.jsx";
+//import Card from "./Card.jsx";
 
 function Cards() {
-    const cardsTitle = [
+    /*const cardsTitle = [
         "The Godfather",
         "The Dark Knight",
         "Inception",
@@ -18,14 +18,13 @@ function Cards() {
         "Jurassic Park",
         "The Lion King",
         "Star Wars: Episode V - The Empire Strikes Back"
-    ];
+    ];*/
 
     return(
-    <div className="container d-flex flex-wrap gap-4 justify-content-center">
-        {cardsTitle.map((title, index) => <Card key={index} title={title} />)}
-        <div className="">
+    <div className="container-fluid d-flex flex-wrap gap-4 justify-content-center">
+        {/*cardsTitle.map((title, index) => <Card key={index} title={title} />)) <div className="">
             <a href="" className="text-primary">Load more...</a>
-        </div>
+        </div>*/ }
     </div>);
 }
 

@@ -1,6 +1,6 @@
 function Footer() {
     return (
-        <div className="container">
+        <div className="">
             <p>This is a footer!</p>
         </div>);
 }

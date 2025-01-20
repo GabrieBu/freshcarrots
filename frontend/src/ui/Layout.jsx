@@ -1,7 +1,7 @@
 // eslint-disable-next-line react/prop-types
 function Layout({children}) {
     return (
-        <div className="container-fluid">
+        <div className="">
             {children}
         </div>
     )

@@ -1,21 +1,19 @@
-import Layout from "./ui/Layout.jsx";
-import LayoutNavbar from "./ui/LayoutNavbar.jsx";
-import LayoutContent from "./ui/LayoutContent.jsx";
-import Navbar from "./components/Navbar.jsx";
-import Cards from "./components/Cards.jsx";
-import Footer from "./components/Footer.jsx";
+import {BrowserRouter, Routes, Route} from "react-router-dom";
+import Homepage from "./pages/Homepage";
+import Community from "./pages/Community";
+import Reviews from "./pages/Reviews";
 
 function App() {
   return (
-    <Layout>
-        <LayoutNavbar>
-            <Navbar />
-        </LayoutNavbar>
-        <LayoutContent>
-            <Cards />
-        </LayoutContent>
-        <Footer />
-    </Layout>
+      <BrowserRouter>
+          <Routes>
+              <Route path="/" element={<Homepage />}/>
+              <Route path="home" element={<Homepage />}/>
+              <Route path="community" element={<Community />}/>
+              <Route path="reviews" element={<Reviews />}/>
+              <Route path="*" element={<p>Page not Found! Error 404</p>} />
+          </Routes>
+      </BrowserRouter>
   )
 }
 
