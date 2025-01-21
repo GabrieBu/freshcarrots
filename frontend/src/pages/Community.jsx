@@ -13,7 +13,7 @@ function Community() {
   useEffect(() => {
     function sendAxiosQuery(url) {
       axios
-        .get(url, { withCredentials: true })
+        .get(url)
         .then(function (dataR) {
           console.log("Received first data: " + dataR.data);
         })
