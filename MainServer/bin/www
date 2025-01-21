@@ -9,7 +9,11 @@ var debug = require('debug')('mainserver:server');
 var http = require('http');
 const cors = require('cors');
 
-app.use(cors());
+app.use(cors({
+  origin: "http://localhost:5173",
+  methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+  credentials: true, //cookies!?
+}));
 
 /**
  * Get port from environment and store in Express.
