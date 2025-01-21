@@ -1,6 +1,6 @@
-import {Schema} from "mongoose";
+import mongoose, {Schema} from "mongoose";
 
-var Movie = new Schema(
+var MovieSchema = new Schema(
     {
         id: {type: Number},
         name: {type: String},
