@@ -1,7 +1,22 @@
 var createError = require('http-errors');
 var express = require('express');
 const mongoose = require('mongoose');
+const mongoDB = "mongodb://localhost:27017/movies";
 const cors = require("cors");
+
+mongoose.Promise = global.Promise;
+
+/*
+* @TODO better to use await
+*/
+connection = mongoose.connect(mongoDB)
+    .then(() => {
+        console.log('connection to mongodb worked!');
+    })
+    .catch((error) => {
+        console.log('connection to mongodb did not work! '+ JSON.stringify(error));
+    });
+
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
