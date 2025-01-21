@@ -1,4 +1,4 @@
-import {lazy} from "react";
+import {lazy,useEffect} from "react";
 
 const Layout = lazy(() => import("../ui/Layout"));
 const LayoutNavbar = lazy(() => import("../ui/LayoutNavbar"));
