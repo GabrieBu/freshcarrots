@@ -1,5 +1,4 @@
-import {lazy, useEffect, useState} from "react";
-import axios from "axios";
+import {lazy} from "react";
 
 const Layout = lazy(() => import("../ui/Layout"));
 const LayoutNavbar = lazy(() => import("../ui/LayoutNavbar"));
@@ -10,25 +9,7 @@ const Navbar = lazy(() => import("../components/Navbar"));
 const HeroSection = lazy(() => import("../components/HeroSection"));
 
 
-function Reviews() {
-    const [reviews, setReviews] = useState([]);
-    const first_url = "http://localhost:3000/getReviews";
-
-    useEffect(() => {
-        function sendAxiosQuery(url) {
-          axios
-            .get(url)
-            .then(function (dataR) {
-              setReviews(dataR.data);
-              reviews?.map((review, index) => {console.log(index + ": " + review)})
-            })
-            .catch(function (error) {
-              console.error("Error:", error.message);
-            });
-        }
-        console.log(`Query sent to ${first_url} waiting`);
-        sendAxiosQuery(first_url);
-      }, []);
+function Homepage() {
 
     return (
         <Layout>
@@ -44,4 +25,4 @@ function Reviews() {
     );
 }
 
-export default Reviews;
+export default Homepage;
