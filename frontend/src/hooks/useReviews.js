@@ -16,7 +16,6 @@ export default function useReviews(pageNumber){
             url: `http://localhost:3000/getReviews?page=${pageNumber}`,
             params: {page:pageNumber}}
         ).then(res=>{
-            console.log("returned new: " + JSON.stringify(res.data));
             setReviews(prevReviews => [...prevReviews, ...res.data]);
             setLoading(false);
         }).catch(err=>{

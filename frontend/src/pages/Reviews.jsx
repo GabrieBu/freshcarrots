@@ -10,15 +10,14 @@ const Navbar = lazy(() => import("../components/Navbar"));
 const Review = lazy(() => import("../components/Review"));
 
 function Reviews() {
-    //const [reviews, setReviews] = useState([]);
-    const [pageNumber, setPageNumber] = useState(0); //on first render page = 0, time to time increase it by one
+    const [pageNumber, setPageNumber] = useState(1); //on first render page = 0, time to time increase it by one
     const { ref, inView } = useInView({});
 
     const {loading, error, reviews} = useReviews(pageNumber);
 
     useEffect(() => {
         if (inView) {
-            console.log("In view")
+            console.log("In view!")
             setPageNumber(pageNumber => pageNumber + 1); //increase page
         }
     }, [inView]);
@@ -36,8 +35,9 @@ function Reviews() {
             </LayoutContent>
             {
                 loading &&
-                <div className="spinner-border" role="status">
-                 <span className="sr-only">Loading...</span>
+                <div className="d-flex justify-content-center">
+                    <div className="spinner-border" role="status">
+                    </div>
                 </div>
             }
             <div ref={ref}></div>
