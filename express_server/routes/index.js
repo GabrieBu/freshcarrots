@@ -1,6 +1,6 @@
 import express from 'express';
 var router = express.Router();
-import {getFirstMovies} from "../controllers/movieController.js";
+import {getLatestMovies} from "../controllers/movieController.js";
 
 /* GET home page. UNUSED SO FAR */
 router.get('/', function(req, res, next) {
@@ -8,7 +8,7 @@ router.get('/', function(req, res, next) {
 });
 
 //will match requests to /movies
-router.get('/get_all_movies', getFirstMovies)
+router.get('/getLatestMovies', getLatestMovies)
 
 
 export default router;
