@@ -15,7 +15,7 @@ public class ActorsService {
 
 
     public List<Actors> findActorsByName(String name) {
-        return actorsRepository.findCharacterByNameCustomQuery(name);
+        return actorsRepository.findActorsByNameCustomQuery(name);
     }
 
     public Optional<Actors> findActorsByMovie(String name) {

@@ -12,6 +12,6 @@ public interface ActorsRepository extends JpaRepository<Actors, Long> {
     Optional<Actors> findByMovie(String name);
 
     @Query(value = "SELECT * FROM actors WHERE name = :name", nativeQuery = true)
-     List<Actors> findCharacterByNameCustomQuery(String name);
+     List<Actors> findActorsByNameCustomQuery(String name);
 
 }
