@@ -8,7 +8,7 @@ const Footer = lazy(() => import("../components/Footer"));
 const Navbar = lazy(() => import("../components/Navbar"));
 
 function Community() {
-  const first_url = "http://localhost:3000/";
+  const first_url = "http://localhost:3000/getReviews";
 
   useEffect(() => {
     function sendAxiosQuery(url) {
