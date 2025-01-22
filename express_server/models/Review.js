@@ -1,15 +1,15 @@
 import mongoose, {Schema} from "mongoose";
 
-var MovieSchema = new Schema(
+var ReviewSchema = new Schema(
     {
-        id: {type: Number},
+        /*id: {type: Number},
         name: {type: String},
         date: {type: Number},
         tagline: {type: String},
         description: {type: String},
-        minute: {type: Number},
+        minute: {type: Number},*/
     }
 );
 
-const Movie = mongoose.model("Movie", MovieSchema);
-export default Movie;
+const Review = mongoose.model("Review", ReviewSchema);
+export default Review;
