@@ -11,8 +11,8 @@ const Review = lazy(() => import("../components/Review"));
 
 function Reviews() {
     //const [reviews, setReviews] = useState([]);
-    const [pageNumber, setPageNumber] = useState(1); //on first render page = 1, time to time increase it by one
-    const { ref: refLastReview, inView } = useInView({});
+    const [pageNumber, setPageNumber] = useState(0); //on first render page = 0, time to time increase it by one
+    const { ref, inView } = useInView({});
 
     const {loading, error, reviews} = useReviews(pageNumber);
 
@@ -28,18 +28,19 @@ function Reviews() {
             <LayoutNavbar>
                 <Navbar/>
             </LayoutNavbar>
-            <p>{loading && "Loading..." /*@TODO change to a real Spiner or something*/}</p>
+
             <p>{error && "Error..." /*@TODO change to a real message error*/}</p>
             <LayoutContent>
                 <h1>Reviews: </h1>
-                {reviews?.map((review, index) => {
-                    if(reviews.length === index + 1)
-                        return <Review ref={refLastReview} review={review} key={index}/>; //it is the last one
-                    else{
-                        return <Review review={review} key={index}/>; // it is not the last one
-                    }
-                })}
+                {reviews?.map((review, index) => <Review review={review} key={index}/>)}
             </LayoutContent>
+            {
+                loading &&
+                <div className="spinner-border" role="status">
+                 <span className="sr-only">Loading...</span>
+                </div>
+            }
+            <div ref={ref}></div>
             <Footer/>
         </Layout>
     )
