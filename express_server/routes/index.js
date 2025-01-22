@@ -1,7 +1,6 @@
-var express = require('express');
+import express from 'express';
 var router = express.Router();
-const axios = require('axios')
-import {getFirst100Movies, getFirstMovies} from "../controllers/movieController.js";
+import {getFirstMovies} from "../controllers/movieController.js";
 
 /* GET home page. UNUSED SO FAR */
 router.get('/', function(req, res, next) {
@@ -12,5 +11,4 @@ router.get('/', function(req, res, next) {
 router.get('/get_all_movies', getFirstMovies)
 
 
-
-module.exports = router;
+export default router;
