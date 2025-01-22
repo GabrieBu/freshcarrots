@@ -13,16 +13,16 @@ export default function useReviews(pageNumber){
         setError(false);
         axios({
             method: "GET",
-            url: "http://localhost:3000/getReviews",
+            url: `http://localhost:3000/getReviews?page=${pageNumber}`,
             params: {page:pageNumber}}
         ).then(res=>{
             console.log("returned new: " + JSON.stringify(res.data));
-            setReviews(prevReviews => {
-                return [...new Set([...prevReviews, ...res.data])]
-            });
+            setReviews(prevReviews => [...prevReviews, ...res.data]);
+            setLoading(false);
         }).catch(err=>{
             console.log(err)
-            setError(true); //it willk be returned so then we will take actions in the page
+            setError(true); //it will be returned so then we will take actions in the page
+            setLoading(false);
         })
     }, [pageNumber])
 

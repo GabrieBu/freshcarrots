@@ -14,13 +14,14 @@ function Reviews() {
     const [pageNumber, setPageNumber] = useState(1); //on first render page = 1, time to time increase it by one
     const { ref: refLastReview, inView } = useInView({});
 
-    const {loading, error, reviews, hasMore} = useReviews(pageNumber);
+    const {loading, error, reviews} = useReviews(pageNumber);
 
     useEffect(() => {
-        if (inView && hasMore) {
+        if (inView) {
             console.log("In view")
+            setPageNumber(pageNumber => pageNumber + 1); //increase page
         }
-    }, [inView, hasMore]);
+    }, [inView]);
 
     return (
         <Layout>
