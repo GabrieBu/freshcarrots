@@ -11,6 +11,7 @@ const formatDate = (dateString) => {
 function Review({ review}) {
     // eslint-disable-next-line react/prop-types
     const {movie_title, review_content, review_date, link, critic_name, publisher_name} = review;
+
     return (
         <div className="p-5 mb-4 bg-body-tertiary rounded-3">
             <div className="container-fluid py-5">
