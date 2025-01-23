@@ -7,5 +7,5 @@ import java.util.List;
 public interface CountriesRepository {
 
     @Query(value = "SELECT * FROM country WHERE id_film = :movieId", nativeQuery = true)
-    List<Countries> findByMovie(Integer movieId);
+    List<Country> findByMovie(Integer movieId);
 }

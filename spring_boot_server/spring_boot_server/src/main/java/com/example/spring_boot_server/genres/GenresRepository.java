@@ -7,5 +7,5 @@ import java.util.List;
 public interface GenresRepository {
 
     @Query(value = "SELECT * FROM genres WHERE id_film = :movieId", nativeQuery = true)
-    List<Genres> findByMovie(Integer movieId);
+    List<Genre> findByMovie(Integer movieId);
 }

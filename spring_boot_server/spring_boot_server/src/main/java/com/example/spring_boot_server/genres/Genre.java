@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 
 @Entity
 @Table
-public class Genres {
+public class Genre {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -13,9 +13,9 @@ public class Genres {
     @Column(name = "Genre", nullable = false, columnDefinition = "TEXT")
     private String Genre;
 
-    public Genres() {}
+    public Genre() {}
 
-    public Genres(Long id_film, String genre) {
+    public Genre(Long id_film, String genre) {
         this.id_film = id_film;
         Genre = genre;
     }

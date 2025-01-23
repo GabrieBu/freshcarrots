@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 
 @Entity
 @Table
-public class Actors {
+public class Actor {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -21,11 +21,11 @@ public class Actors {
     // Constructors, getters, setters, other methods...*/
 
     // Default constructor
-    public Actors() {
+    public Actor() {
     }
 
     // Constructor with all fields
-    public Actors( Long id_film, String name, String role) {
+    public Actor(Long id_film, String name, String role) {
         this.id_film = id_film;
         this.name = name;
         this.role = role;

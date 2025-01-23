@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 
 @Entity
 @Table
-public class Countries {
+public class Country {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -15,7 +15,7 @@ public class Countries {
     private String country;
 
     // Default constructor
-    public Countries() {
+    public Country() {
     }
 
     public Long getId() {
@@ -42,7 +42,7 @@ public class Countries {
         this.country = country;
     }
 
-    public Countries(Long id_film, String country) {
+    public Country(Long id_film, String country) {
         this.id_film = id_film;
         this.country = country;
     }

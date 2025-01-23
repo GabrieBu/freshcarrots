@@ -1,6 +1,4 @@
 package com.example.spring_boot_server.genres;
-import com.example.spring_boot_server.countries.Countries;
-import com.example.spring_boot_server.countries.CountriesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,8 +16,8 @@ public class GenresController {
     }
 
     @GetMapping("/findByMovie")
-    public ResponseEntity<List<Genres>>findCountryByMovie(@RequestParam Integer id) {
-        List<Genres> genres = genresService.findGenresOfMovie(id);
+    public ResponseEntity<List<Genre>>findCountryByMovie(@RequestParam Integer id) {
+        List<Genre> genres = genresService.findGenresOfMovie(id);
         if (genres.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }

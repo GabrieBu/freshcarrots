@@ -13,7 +13,7 @@ public class LanguagesService {
         this.languagesRepository = languagesRepository;
     }
 
-    public List<Languages> findLanguageByMovie(Integer movieId) {
+    public List<Language> findLanguageOfMovie(Integer movieId) {
         return languagesRepository.findByMovie(movieId);
     }
 }

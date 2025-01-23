@@ -16,8 +16,8 @@ public class LanguagesController {
     }
 
     @GetMapping("/findByMovie")
-    public ResponseEntity<List<Languages>>findCrewByMovie(@RequestParam Integer id) {
-        List<Languages> languages = languagesService.findLanguageByMovie(id);
+    public ResponseEntity<List<Language>>findLanguageOfMovie(@RequestParam Integer id) {
+        List<Language> languages = languagesService.findLanguageOfMovie(id);
         if (languages.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }

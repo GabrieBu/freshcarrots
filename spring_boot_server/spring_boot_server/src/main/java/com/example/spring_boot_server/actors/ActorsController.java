@@ -23,15 +23,15 @@ public class ActorsController {
     }
 
     @GetMapping("/findByMovie")
-    public ResponseEntity<Actors> findActorsByMovie(@RequestParam String name) {
-        Optional<Actors> actors = actorsService.findActorsByMovie(name);
+    public ResponseEntity<Actor> findActorsByMovie(@RequestParam String name) {
+        Optional<Actor> actors = actorsService.findActorsByMovie(name);
         return actors.map(value -> new ResponseEntity<>(value, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     @GetMapping("/findByName")
-    public ResponseEntity<List<Actors>> findActorsByName(@RequestParam String name) {
-        List<Actors> actors = actorsService.findActorsByName(name);
+    public ResponseEntity<List<Actor>> findActorsByName(@RequestParam String name) {
+        List<Actor> actors = actorsService.findActorsByName(name);
         if (actors.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }

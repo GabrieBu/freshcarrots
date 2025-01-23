@@ -17,8 +17,8 @@ public class CountriesController {
     }
 
     @GetMapping("/findByMovie")
-    public ResponseEntity<List<Countries>>findCountryByMovie(@RequestParam Integer id) {
-        List<Countries> countries = countriesService.findCountryByMovie(id);
+    public ResponseEntity<List<Country>>findCountryByMovie(@RequestParam Integer id) {
+        List<Country> countries = countriesService.findCountryByMovie(id);
         if (countries.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }

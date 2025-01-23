@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 
 @Entity
 @Table
-public class Languages {
+public class Language {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -15,9 +15,9 @@ public class Languages {
     @Column(name = "language", columnDefinition = "TEXT")
     private String language;
 
-    public Languages() {}
+    public Language() {}
 
-    public Languages(Long id_film, String type, String language) {
+    public Language(Long id_film, String type, String language) {
         this.id_film = id_film;
         this.type = type;
         this.language = language;

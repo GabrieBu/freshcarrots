@@ -7,5 +7,5 @@ import java.util.List;
 public interface LanguagesRepository {
 
     @Query(value = "SELECT * FROM languages WHERE id_film = :movieId", nativeQuery = true)
-    List<Languages> findByMovie(Integer movieId);
+    List<Language> findByMovie(Integer movieId);
 }
