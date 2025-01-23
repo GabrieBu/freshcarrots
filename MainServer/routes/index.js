@@ -26,10 +26,9 @@ router.get('/getActors', async function(req, res, next) {
 
 /* GET reviews. */
 router.get('/getReviews', async function(req, res, next) {
-  const { page} = req.query;
   try {
     const response = await axios.get(
-        'http://localhost:3001/getReviews', {params: {page}});
+        'http://localhost:3001/getReviews', {params: req.query});
     res.json(response.data);
   } catch (error) {
     res.status(500).send('Error occured: getReviews ' + error.message);
