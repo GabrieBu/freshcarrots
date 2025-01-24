@@ -1,4 +1,6 @@
 import {useState} from "react";
+import useHeroSection from "../hooks/useHeroSection.js";
+
 
 function HeroSection() {
     /* @TODO
@@ -30,7 +32,10 @@ function HeroSection() {
             description: "An emotional story of love, loss, and the pursuit of dreams."
         }
     ];
-
+    //QUERY TOP 5 MOVIES
+    //const { topFilms, loading, error } = useHeroSection();
+    
+    
     const [currentIndex, setCurrentIndex] = useState(0);
 
     return (
