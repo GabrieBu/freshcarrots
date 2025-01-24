@@ -12,8 +12,8 @@ const Review = lazy(() => import("../components/Review"));
 function Reviews() {
     const [pageNumber, setPageNumber] = useState(1); //on first render page = 0, time to time increase it by one
     const { ref, inView } = useInView({});
-    const [criticFilter, setCriticFilter] = useState("All");
-    const [typeFilter, setTypeFilter] = useState("All");
+    const [criticFilter, setCriticFilter] = useState("all_critics");
+    const [typeFilter, setTypeFilter] = useState("all_types");
 
     const {loading, error, reviews, hasMore} = useReviews(pageNumber,criticFilter,typeFilter);
 
@@ -36,8 +36,8 @@ function Reviews() {
     };
 
     const handleResetFilters = () => {
-        setCriticFilter("All");
-        setTypeFilter("All");
+        setCriticFilter("all_critics");
+        setTypeFilter("all_types");
     };
 
     return (
@@ -52,22 +52,24 @@ function Reviews() {
                 <div className="bg-light p-3 mb-4 shadow-sm rounded" style={{ border: "1px solid #ccc" }}>
                     <div className="row gy-2">
                         <div className="col-md-3">
-                            <select className="form-select" value={criticFilter}
+                            <label htmlFor="criticFilter" className="form-label">Critic:</label>
+                            <select id="criticFilter" className="form-select" value={criticFilter}
                                     onChange={handleCriticFilterChange}>
-                                <option value="all_critics">All critics</option>
-                                <option value="True">Top Ones</option>
-                                <option value="False">Normal critics</option>
+                                <option value="all_critics">All</option>
+                                <option value="True">Top</option>
+                                <option value="False">Normal</option>
                             </select>
                         </div>
                         <div className="col-md-3">
-                            <select className="form-select" value={typeFilter} onChange={handleRottenChange}>
-                                <option value="all_types">All Types</option>
+                            <label htmlFor="typeFilter" className="form-label">Type:</label>
+                            <select id="typeFilter" className="form-select" value={typeFilter} onChange={handleRottenChange}>
+                                <option value="all_types">All</option>
                                 <option value="Rotten">Rotten</option>
                                 <option value="Fresh">Fresh</option>
                             </select>
                         </div>
                         <div className="col-md-2 text-end">
-                            <button className="btn btn-outline-secondary" onClick={handleResetFilters}>
+                        <button className="btn btn-outline-secondary" onClick={handleResetFilters}>
                                 Reset Filters
                             </button>
                         </div>
