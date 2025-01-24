@@ -16,7 +16,7 @@ function Review({ review}) {
         <div className="p-5 mb-4 bg-body-tertiary rounded-3">
             <div className="container-fluid py-5">
                 <h1 className="display-5 fw-bold">{movie_title}</h1>
-                <h4 className="display-5">Critic name: {critic_name}. Published by: {publisher_name}</h4>
+                <h4 className="display-5">Critic name: {critic_name} <span className="badge badge-pill badge-info">{publisher_name}</span></h4>
                 <p className="col-md-12 fs-4">{review_content}</p>
                 <p className="col-md-8">Rating: {rating}/5</p>
                 <div className="my-4">
