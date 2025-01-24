@@ -1,3 +1,5 @@
+import CommentSection from "./CommentSection.jsx";
+
 const formatDate = (dateString) => {
     const date = new Date(dateString);
     return date.toLocaleDateString("en-US", {
@@ -8,9 +10,9 @@ const formatDate = (dateString) => {
 };
 
 // eslint-disable-next-line react/prop-types
-function Review({ review}) {
+function Review({review}) {
     // eslint-disable-next-line react/prop-types
-    const {movie_title, review_content, review_date, link, critic_name, publisher_name, rating} = review;
+    const {movie_title, review_content, review_date, link, critic_name, publisher_name, rating, review_type} = review;
 
     return (
         <div className="p-5 mb-4 bg-body-tertiary rounded-3">
@@ -32,7 +34,8 @@ function Review({ review}) {
                 <div className="my-4">
                     <p>{formatDate(review_date)}</p>
                 </div>
-                <a href={link} className="btn btn-primary btn-lg" type="button">Read more</a>
+                <a href={link} className="btn btn-primary btn-md" type="button">Read more on RottenTomatoes</a>
+                <CommentSection />
             </div>
         </div>
     )
