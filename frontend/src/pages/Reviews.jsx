@@ -46,7 +46,7 @@ function Reviews() {
                 <Navbar/>
             </LayoutNavbar>
 
-            <p>{error && "Error..." /*@TODO change to a real message error*/}</p>
+            {error && <h2 className="text-danger">Server is not responding 404. Try again later...</h2>}
             <LayoutContent>
                 <h1>Reviews: </h1>
                 <div className="bg-light p-3 mb-4 shadow-sm rounded" style={{ border: "1px solid #ccc" }}>
@@ -55,16 +55,15 @@ function Reviews() {
                             <select className="form-select" value={criticFilter}
                                     onChange={handleCriticFilterChange}>
                                 <option value="all_critics">All critics</option>
-                                <option value="top">Top Ones</option>
-                                <option value="normal">Normal critics</option>
-                                <option value="user">User</option>
+                                <option value="True">Top Ones</option>
+                                <option value="False">Normal critics</option>
                             </select>
                         </div>
                         <div className="col-md-3">
                             <select className="form-select" value={typeFilter} onChange={handleRottenChange}>
                                 <option value="all_types">All Types</option>
-                                <option value="rotten">Rotten</option>
-                                <option value="fresh">Fresh</option>
+                                <option value="Rotten">Rotten</option>
+                                <option value="Fresh">Fresh</option>
                             </select>
                         </div>
                         <div className="col-md-2 text-end">

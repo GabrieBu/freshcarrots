@@ -1,7 +1,7 @@
 import {useEffect, useState} from 'react'
 import axios from 'axios'
 
-export default function useReviews(pageNumber, criticFilter, rottenFilter){
+export default function useReviews(pageNumber, criticFilter, typeFilter){
     const [hasMore, setHasMore] = useState(false);
     const [loading, setLoading] = useState(true); //first thing we do is loading
     const [error, setError] = useState(false);
@@ -16,7 +16,7 @@ export default function useReviews(pageNumber, criticFilter, rottenFilter){
             params: {
                 page: pageNumber,
                 criticFilter: criticFilter,
-                rottenFilter: rottenFilter
+                typeFilter: typeFilter,
         }}
         ).then(res=>{
             setReviews(prevReviews => [...prevReviews, ...res.data]);
@@ -27,7 +27,7 @@ export default function useReviews(pageNumber, criticFilter, rottenFilter){
             setError(true); //it will be returned so then we will take actions in the page
             setLoading(false);
         })
-    }, [pageNumber])
+    }, [pageNumber, criticFilter, typeFilter]);
 
     return {loading, error, reviews, hasMore}
 }

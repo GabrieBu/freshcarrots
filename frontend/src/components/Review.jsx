@@ -10,14 +10,15 @@ const formatDate = (dateString) => {
 // eslint-disable-next-line react/prop-types
 function Review({ review}) {
     // eslint-disable-next-line react/prop-types
-    const {movie_title, review_content, review_date, link, critic_name, publisher_name} = review;
+    const {movie_title, review_content, review_date, link, critic_name, publisher_name, rating} = review;
 
     return (
         <div className="p-5 mb-4 bg-body-tertiary rounded-3">
             <div className="container-fluid py-5">
                 <h1 className="display-5 fw-bold">{movie_title}</h1>
-                <h3 className="display-5 fw-bold">{critic_name}. Published by: {publisher_name}</h3>
-                <p className="col-md-8 fs-4">{review_content}</p>
+                <h4 className="display-5">Critic name: {critic_name}. Published by: {publisher_name}</h4>
+                <p className="col-md-12 fs-4">{review_content}</p>
+                <p className="col-md-8">Rating: {rating}/5</p>
                 <div className="my-4">
                     <p>{formatDate(review_date)}</p>
                 </div>
