@@ -20,6 +20,7 @@ public class Release {
     @Column(name = "age_min", columnDefinition = "INTEGER")
     private Integer age_min;
 
+
     public Release() {}
 
     public Release(Long id_film, String country, LocalDateTime date, String type, Integer age_min) {

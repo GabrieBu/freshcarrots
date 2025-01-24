@@ -14,11 +14,6 @@ public class Actor {
     private String name;
     @Column(name = "role", nullable = false, columnDefinition = "TEXT")
     private String role;
-    /*@Column(name = "date_of_birth", nullable = false)
-    private LocalDate dob; // Maps to a DATE type in the database
-    @Column(unique = true, nullable = false) // Define email as unique and non-null
-    private String email;
-    // Constructors, getters, setters, other methods...*/
 
     // Default constructor
     public Actor() {

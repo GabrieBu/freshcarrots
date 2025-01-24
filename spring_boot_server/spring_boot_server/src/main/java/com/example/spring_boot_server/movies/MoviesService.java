@@ -3,6 +3,7 @@ package com.example.spring_boot_server.movies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class MoviesService {
@@ -15,6 +16,10 @@ public class MoviesService {
 
     public List<Movie> findMovie(String title) {
         return moviesRepository.findMovie(title);
+    }
+
+    public List<Map<String, Object>> getTop5MoviesWithPosters() {
+        return MoviesRepository.findTop5MoviesWithPosters();
     }
 
 }

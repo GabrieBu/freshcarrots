@@ -9,14 +9,14 @@ public class Theme {
     private Long id;
     @Column(name = "id_film", nullable = false, columnDefinition = "BIGINT")
     private Long id_film;
-    @Column(name = "themes", columnDefinition = "TEXT")
-    private String themes;
+    @Column(name = "theme", columnDefinition = "TEXT")
+    private String theme;
 
     public Theme() {}
 
     public Theme(Long id_film, String themes) {
         this.id_film = id_film;
-        this.themes = themes;
+        this.theme = themes;
     }
 
     public Long getId() {
@@ -36,10 +36,10 @@ public class Theme {
     }
 
     public String getThemes() {
-        return themes;
+        return theme;
     }
 
     public void setThemes(String themes) {
-        this.themes = themes;
+        this.theme = themes;
     }
 }
