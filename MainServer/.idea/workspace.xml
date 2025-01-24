@@ -4,7 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="09f61af7-d139-41f0-9180-01e3b14267b7" name="Changes" comment="setup" />
+    <list default="true" id="09f61af7-d139-41f0-9180-01e3b14267b7" name="Changes" comment="setup">
+      <change beforePath="$PROJECT_DIR$/../.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/routes/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/index.js" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -30,10 +34,13 @@
   "keyToString": {
     "Node.js.bin/www.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
     "dart.analysis.tool.window.visible": "false",
-    "git-widget-placeholder": "development",
-    "javascript.nodejs.core.library.configured.version": "22.9.0",
-    "javascript.nodejs.core.library.typings.version": "22.9.4",
+    "git-widget-placeholder": "main__server",
+    "javascript.nodejs.core.library.configured.version": "22.12.0",
+    "javascript.nodejs.core.library.typings.version": "22.10.10",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Users/andre/Desktop/ProgettoTweb/TWEB_2425/MainServer",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -46,7 +53,8 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-js-predefined-d6986cc7102b-5c90d61e3bab-JavaScript-WS-242.23726.96" />
+        <option value="bundled-jdk-9823dce3aa75-125ca727e0f0-intellij.indexing.shared.core-IU-243.23654.117" />
+        <option value="bundled-js-predefined-d6986cc7102b-822845ee3bb5-JavaScript-IU-243.23654.117" />
       </set>
     </attachedChunks>
   </component>
@@ -61,6 +69,7 @@
       <workItem from="1733942124327" duration="160000" />
       <workItem from="1733942287144" duration="486000" />
       <workItem from="1737133851542" duration="35000" />
+      <workItem from="1737711413224" duration="1883000" />
     </task>
     <task id="LOCAL-00001" summary="setup">
       <option name="closed" value="true" />
