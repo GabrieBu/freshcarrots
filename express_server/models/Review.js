@@ -11,6 +11,7 @@ var ReviewSchema = new Schema(
         review_date: {type: Date},
         review_content: {type: String},
         link: {type: String},
+        rating: {type: Number},
     }
 );
 
