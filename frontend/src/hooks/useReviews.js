@@ -1,26 +1,26 @@
 import {useEffect, useState} from 'react'
 import axios from 'axios'
-import { set } from 'mongoose';
 
-export default function useReviews(pageNumber,top_critic_filter,rottenFilter){
+export default function useReviews(pageNumber, criticFilter, rottenFilter){
     const [hasMore, setHasMore] = useState(false);
     const [loading, setLoading] = useState(true); //first thing we do is loading
     const [error, setError] = useState(false);
     const [reviews, setReviews] = useState([]);
+
     useEffect(()=>{
         setLoading(true);
         setError(false);
-        const params = {
-            page: pageNumber,
-            top_critic: top_critic_filter !== "All" ? top_critic_filter : null,
-            review_type: rottenFilter !== "All" ? rottenFilter : null,
-        };
         axios({
             method: "GET",
             url: `http://localhost:3000/getReviews`,
-            params: params}
+            params: {
+                page: pageNumber,
+                criticFilter: criticFilter,
+                rottenFilter: rottenFilter
+        }}
         ).then(res=>{
             setReviews(prevReviews => [...prevReviews, ...res.data]);
+            setHasMore(res.data.length > 0); // if data is returned, there are more pages
             setLoading(false);
         }).catch(err=>{
             console.log(err)

@@ -12,35 +12,32 @@ const Review = lazy(() => import("../components/Review"));
 function Reviews() {
     const [pageNumber, setPageNumber] = useState(1); //on first render page = 0, time to time increase it by one
     const { ref, inView } = useInView({});
-    const [criticFilter, setTop_critic_Filter] = useState('All'); // For Top critic filter
-    const [rottenFilter, setRottenFilter] = useState('All'); // For Freshness filter
+    const [criticFilter, setCriticFilter] = useState("All");
+    const [typeFilter, setTypeFilter] = useState("All");
 
-    const {loading, error, reviews} = useReviews(pageNumber,criticFilter,rottenFilter);
+    const {loading, error, reviews, hasMore} = useReviews(pageNumber,criticFilter,typeFilter);
 
     useEffect(() => {
-        if (inView) {
-            console.log("In view!")
+        if (inView && hasMore) {
             setPageNumber(pageNumber => pageNumber + 1); //increase page
         }
-    }, [inView]);
+    }, [inView, hasMore]);
 
     useEffect(() => {
-        const filters = {
-            top_critic: criticFilter !== 'All' ? criticFilter : null,
-            review_type: rottenFilter !== 'All' ? rottenFilter : null,
-        };
+        setPageNumber(1); //restore to first page
+    }, [criticFilter, typeFilter]);
 
-        console.log("Filters changed:", filters);
-        setPageNumber(1); 
-    }, [criticFilter, rottenFilter]);
+    const handleCriticFilterChange = (event) => {
+        setCriticFilter(event.target.value);
+    };
 
-    const handleTop_critic_FilterChange = (e) => setTop_critic_Filter(e.target.value);
-
-    const handleRottenChange = (e) => setRottenFilter(e.target.value);
+    const handleRottenChange = (event) => {
+        setTypeFilter(event.target.value);
+    };
 
     const handleResetFilters = () => {
-        setTop_critic_Filter('All');
-        setRottenFilter('All');
+        setCriticFilter("All");
+        setTypeFilter("All");
     };
 
     return (
@@ -55,17 +52,19 @@ function Reviews() {
                 <div className="bg-light p-3 mb-4 shadow-sm rounded" style={{ border: "1px solid #ccc" }}>
                     <div className="row gy-2">
                         <div className="col-md-3">
-                            <select className="form-select" value={criticFilter} onChange={handleTop_critic_FilterChange}>
-                                <option value="All">All critics</option>
-                                <option value="True">Top Ones</option>
-                                <option value="False">Normal critics</option>
+                            <select className="form-select" value={criticFilter}
+                                    onChange={handleCriticFilterChange}>
+                                <option value="all_critics">All critics</option>
+                                <option value="top">Top Ones</option>
+                                <option value="normal">Normal critics</option>
+                                <option value="user">User</option>
                             </select>
                         </div>
                         <div className="col-md-3">
-                            <select className="form-select"  value={rottenFilter} onChange={handleRottenChange}>
-                                <option value="All">All Types</option>
-                                <option value="Rotten">Rotten</option>
-                                <option value="Rotten">Fresh</option>
+                            <select className="form-select" value={typeFilter} onChange={handleRottenChange}>
+                                <option value="all_types">All Types</option>
+                                <option value="rotten">Rotten</option>
+                                <option value="fresh">Fresh</option>
                             </select>
                         </div>
                         <div className="col-md-2 text-end">
