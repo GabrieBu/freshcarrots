@@ -10,6 +10,11 @@ export default function useReviews(pageNumber, criticFilter, typeFilter){
     useEffect(()=>{
         setLoading(true);
         setError(false);
+
+        if(pageNumber === 1){
+            setReviews([]);
+        }
+
         axios({
             method: "GET",
             url: `http://localhost:3000/getReviews`,
