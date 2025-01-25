@@ -1,16 +1,28 @@
-import { useState } from "react";
+import {useEffect, useState} from "react";
 import { useParams } from "react-router-dom";
+import io from "socket.io-client";
+
+const socket = io("http://localhost:3000"); //main server address
 
 function DiscussionRoom() {
-    const { id } = useParams();
-    const [messages, setMessages] = useState([
-        { sender: "Alice", text: "Hello, welcome to the discussion!" },
-        { sender: "Bob", text: "Thanks! Excited to talk about this topic." },
-    ]);
-    const [newMessage, setNewMessage] = useState("");
+    const { id:id_room } = useParams(); //retrieving id room from url
+    const [messages, setMessages] = useState([]);
+    const [newMessage, setNewMessage] = useState(""); //state to track the message typed (the next one to be sent)
+
+    useEffect(() => {
+        console.log("id_room: " + id_room)
+        socket.emit('joinRoom', id_room);
+        socket.on('message', (message) => { //new message arrived, update state -> re-render
+            setMessages((prevMessages) => [...prevMessages, message]);
+        });
+        // clean up socket listeners when the component unmounts
+        return () => { //it's kinda callback to run when component unmounted
+            socket.off('message');
+        };
+    }, [id_room]);
 
     const handleSend = () => {
-        if (newMessage.trim() !== "") {
+        if (newMessage.trim() !== "") { //if message isn't empty
             setMessages([...messages, { sender: "You", text: newMessage }]);
             setNewMessage("");
         }
@@ -18,7 +30,7 @@ function DiscussionRoom() {
 
     return (
         <div className="container mt-4">
-            <h2>Chat Room {id}</h2>
+            <h2>Chat Room {id_room}</h2>
             <div className="border p-3 mb-3" style={{ height: "300px", overflowY: "auto" }}>
                 {messages.map((msg, index) => (
                     <div
