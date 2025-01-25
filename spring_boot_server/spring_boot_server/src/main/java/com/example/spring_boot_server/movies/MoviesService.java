@@ -13,9 +13,9 @@ public class MoviesService {
         this.moviesRepository = moviesRepository;
     }
 
-    public List<Movie> findMovie(String title) {
-        return moviesRepository.findMovie(title);
+    public List<Movie> findTopFiveMovies() {
+        List<Movie> movies = moviesRepository.findTopFiveMovies();
+        System.out.println("Repository query executed. Movies retrieved: " + movies.size());
+        return movies;
     }
-
-    public List<Movie> findTopFiveMovies() { return moviesRepository.findTopFiveMovies(); }
 }

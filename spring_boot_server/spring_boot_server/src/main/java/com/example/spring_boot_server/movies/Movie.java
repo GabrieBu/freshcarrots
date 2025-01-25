@@ -1,29 +1,34 @@
 package com.example.spring_boot_server.movies;
+import com.example.spring_boot_server.posters.Poster;
 import jakarta.persistence.*;
 import java.time.LocalDate;
 
 @Entity
-@Table
+@Table(name="movies")
 public class Movie {
     @Id
-    @Column(name = "id", nullable = false, columnDefinition = "BIGINT")
+    @Column(name = "id", nullable = false)
     private Long id;
-    @Column(name = "name", columnDefinition = "TEXT")
+    @Column(name = "name", nullable = true)
     private String name;
-    @Column(name = "date", columnDefinition = "DATE")
+    @Column(name = "date", nullable = true)
     private LocalDate date;
-    @Column(name = "tagline", columnDefinition = "TEXT")
+    @Column(name = "tagline", nullable = true)
     private String tagline;
-    @Column(name = "description", columnDefinition = "TEXT")
+    @Column(name = "description",nullable = true)
     private String description;
-    @Column(name = "minute", columnDefinition = "REAL") //change in DOUBLE PRECISION
+    @Column(name = "minute", nullable = true)
     private Float minute;
-    @Column(name = "rating", columnDefinition = "REAL")
+    @Column(name = "rating", nullable = true)
     private Float rating;
+    @JoinColumn
+    @OneToOne(mappedBy = "movie", cascade = CascadeType.ALL)
+    private Poster poster;
+
 
     public Movie() {}
 
-    public Movie(Long id, String name, LocalDate date, String tagline, String description, Float minute, Float rating) {
+    public Movie(Long id, String name, LocalDate date, String tagline, String description, Float minute, Float rating, Poster poster) {
         this.id = id;
         this.name = name;
         this.date = date;
@@ -31,6 +36,7 @@ public class Movie {
         this.description = description;
         this.minute = minute;
         this.rating = rating;
+        this.poster = poster;
     }
 
     public Long getId() {

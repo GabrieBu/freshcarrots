@@ -2,7 +2,7 @@ package com.example.spring_boot_server.themes;
 import jakarta.persistence.*;
 
 @Entity
-@Table
+@Table(name="themes")
 public class Theme {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

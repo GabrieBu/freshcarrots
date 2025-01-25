@@ -16,19 +16,10 @@ public class MoviesController {
         this.moviesService = moviesService;
     }
 
-    @GetMapping("/findMovie")
-    public ResponseEntity<List<Movie>>findMovie(@RequestParam String title) {
-        List<Movie> languages = moviesService.findMovie(title);
-        if (languages.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-        }
-        return ResponseEntity.ok(languages);
-    }
-
     @GetMapping("/findTopFiveMovies")
     public ResponseEntity<List<Movie>> findTopFiveMovies() {
         List<Movie> movies = moviesService.findTopFiveMovies();
-        if (movies.isEmpty()) {
+        if (movies.isEmpty() || movies.size() < 5) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         return new ResponseEntity<>(movies, HttpStatus.OK);
