@@ -12,9 +12,11 @@ public interface MoviesRepository extends JpaRepository<Movie, Long> {
     List<Movie> findMovie(String title);
 
 
-    @Query(value = "SELECT m.*, p.* FROM movies m " +
-            "JOIN posters p ON p.id_film = m.id_film " +
-            "ORDER BY m.rating DESC, m.date DESC " +
-            "LIMIT 5", nativeQuery = true)
+    @Query(value = "SELECT *\n" +
+            "            FROM movies\n" +
+            "            WHERE movies.rating IS NOT NULL\n" +
+            "            AND movies.date IS NOT NULL\n" +
+            "            ORDER BY movies.rating DESC, movies.date DESC\n" +
+            "            LIMIT 5;", nativeQuery = true)
     List<Movie> findTopFiveMovies();
 }

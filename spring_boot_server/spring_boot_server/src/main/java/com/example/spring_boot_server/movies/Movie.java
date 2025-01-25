@@ -1,9 +1,10 @@
 package com.example.spring_boot_server.movies;
+import com.example.spring_boot_server.posters.Poster;
 import jakarta.persistence.*;
 import java.time.LocalDate;
 
 @Entity
-@Table
+@Table(name="movies")
 public class Movie {
     @Id
     @Column(name = "id", nullable = false, columnDefinition = "BIGINT")
@@ -20,6 +21,9 @@ public class Movie {
     private Float minute;
     @Column(name = "rating", columnDefinition = "REAL")
     private Float rating;
+    @OneToOne
+    @JoinColumn(referencedColumnName = "id_film")
+    private Poster poster;
 
     public Movie() {}
 
