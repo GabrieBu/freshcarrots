@@ -15,20 +15,14 @@ router.get('/getReviews', async function(req, res, next) {
   }
 });
 
-/* @TODO impelement it frontend side */
-/* GET reviews by movie. */
-router.get('/getReviewsByMovie', async function(req, res, next) {
-  const { movie_title } = req.query;
+/* GET top 5. */
+router.get('/getTopFiveMovies', async function(req, res, next) {
   try {
-    const response = await axios.get(
-        'http://localhost:3001/getReviewsByMovie', { params: { movie_title } }
-    );
+    const response = await axios.get('http://localhost:3002/findTopFiveMovies');
     res.json(response.data);
   } catch (error) {
-    res.status(500).send('Error occurred: getReviewsByMovie ' + error.message);
+    res.status(500).send('Error occured: getTopFiveMovies ' + error.message);
   }
 });
-
-
 
 module.exports = router;
