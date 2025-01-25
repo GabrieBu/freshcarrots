@@ -24,4 +24,13 @@ public class MoviesController {
         }
         return ResponseEntity.ok(languages);
     }
+
+    @GetMapping("/findTopFiveMovies")
+    public ResponseEntity<List<Movie>> findTopFiveMovies() {
+        List<Movie> movies = moviesService.findTopFiveMovies();
+        if (movies.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(movies, HttpStatus.OK);
+    }
 }

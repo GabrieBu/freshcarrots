@@ -14,11 +14,11 @@ public class ActorsService {
     }
 
 
-    public List<Actor> findActorsByName(String name) {
+    /*public List<Actor> findActorsByName(String name) {
         return actorsRepository.findActorsByNameCustomQuery(name);
     }
 
-    public Optional<Actor> findActorsByMovie(String name) {
+    /*public Optional<Actor> findActorsByMovie(String name) {
         return actorsRepository.findByMovie(name);
-    }
+    }*/
 }

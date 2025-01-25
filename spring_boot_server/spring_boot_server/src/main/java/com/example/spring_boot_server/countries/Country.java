@@ -18,6 +18,11 @@ public class Country {
     public Country() {
     }
 
+    public Country(Long id_film, String country) {
+        this.id_film = id_film;
+        this.country = country;
+    }
+
     public Long getId() {
         return id;
     }
@@ -39,11 +44,6 @@ public class Country {
     }
 
     public void setCountry(String country) {
-        this.country = country;
-    }
-
-    public Country(Long id_film, String country) {
-        this.id_film = id_film;
         this.country = country;
     }
 }

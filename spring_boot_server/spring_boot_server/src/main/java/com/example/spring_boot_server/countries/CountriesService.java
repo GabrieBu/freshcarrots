@@ -11,8 +11,7 @@ public class CountriesService {
         this.countriesRepository = countriesRepository;
     }
 
-    public List<Country> findCountryByMovie(Integer movieId) {
+    /*public List<Country> findCountryByMovie(Integer movieId) {
         return countriesRepository.findByMovie(movieId);
-    }
-
+    }*/
 }

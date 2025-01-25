@@ -17,4 +17,5 @@ public class MoviesService {
         return moviesRepository.findMovie(title);
     }
 
+    public List<Movie> findTopFiveMovies() { return moviesRepository.findTopFiveMovies(); }
 }
