@@ -13,6 +13,7 @@ public class Poster {
     @Column(name = "link", columnDefinition = "TEXT")
     private String link;
 
+
     public Poster(){
 
     }

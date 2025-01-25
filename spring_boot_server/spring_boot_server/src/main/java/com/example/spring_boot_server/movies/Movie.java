@@ -10,7 +10,7 @@ public class Movie {
     private Long id;
     @Column(name = "name", columnDefinition = "TEXT")
     private String name;
-    @Column(name = "date", columnDefinition = "TIMESTAMP")
+    @Column(name = "date", columnDefinition = "DATE")
     private LocalDate date;
     @Column(name = "tagline", columnDefinition = "TEXT")
     private String tagline;

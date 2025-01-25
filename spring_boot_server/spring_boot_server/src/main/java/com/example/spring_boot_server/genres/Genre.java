@@ -13,6 +13,7 @@ public class Genre {
     @Column(name = "Genre", nullable = false, columnDefinition = "TEXT")
     private String Genre;
 
+
     public Genre() {}
 
     public Genre(Long id_film, String genre) {
