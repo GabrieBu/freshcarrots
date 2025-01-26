@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
+import axios from "axios";
 
 /* @TODO EDIT with query to mongodb */
 const discussionsInit = [
@@ -7,7 +8,6 @@ const discussionsInit = [
     { id: 2, title: "State Management Strategies" },
     { id: 3, title: "Upcoming React Features" },
 ];
-
 
 function DiscussionList() {
     const [joinedDiscussions, setJoinedDiscussions] = useState([]);
@@ -32,8 +32,7 @@ function DiscussionList() {
     }, []);
 
     function handleCloseModal() {
-        //close modal
-        /* @TODO not interesting now*/
+        /* @TODO close modal not interesting now*/
     }
 
     function handleSubmitModal() {
@@ -60,14 +59,24 @@ function DiscussionList() {
         if (newTitle.trim() === "") return; // Prevent empty discussions
 
         const newDiscussion = {
-            id: Math.random().toString(36).substr(2, 9), // Generate random ID
+            id: Math.random().toString(36).substr(2, 16), // generate random ID of 16 chars
             title: newTitle,
         };
 
         const updatedDiscussions = [...discussions, newDiscussion];
         setDiscussions(updatedDiscussions);
-        setNewTitle(""); // Reset input field
-        /* @TODO query mongodb to add a new discussion */
+        setNewTitle(""); // reset input field
+
+        // query to mongo
+        axios({
+            method: "POST",
+            url: `http://localhost:3000/newDiscussion`,
+            data: newDiscussion}
+        ).then(res=>{
+            console.log(res) //to handle better
+        }).catch(err=>{
+            console.log(err) //to handle better
+        })
     }
 
     return (<>
