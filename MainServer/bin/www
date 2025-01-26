@@ -7,7 +7,7 @@
 var app = require('../app');
 var debug = require('debug')('mainserver:server');
 var http = require('http');
-
+const socketIO = require('socket.io');
 /**
  * Get port from environment and store in Express.
  */
@@ -20,6 +20,15 @@ app.set('port', port);
  */
 
 var server = http.createServer(app);
+const io = socketIO(server, {
+  cors: {
+    origin: "http://localhost:5173", // allow frontend to connect
+    methods: ["GET", "POST"]
+  }
+});
+
+const my_socket = require("../socket.io/socket.io"); // Import socket.io.js
+my_socket.init(io); // Correctly initialize socket.io.js
 
 /**
  * Listen on provided port, on all network interfaces.
@@ -28,12 +37,6 @@ var server = http.createServer(app);
 server.listen(port);
 server.on('error', onError);
 server.on('listening', onListening);
-
-
-const io = require('socket.io');
-var socket_module = require('../socket.io/socket.io');
-socket_module.init(io, app);
-
 
 /**
  * Normalize a port into a number, string, or false.
@@ -65,8 +68,8 @@ function onError(error) {
   }
 
   var bind = typeof port === 'string'
-    ? 'Pipe ' + port
-    : 'Port ' + port;
+      ? 'Pipe ' + port
+      : 'Port ' + port;
 
   // handle specific listen errors with friendly messages
   switch (error.code) {
@@ -90,7 +93,7 @@ function onError(error) {
 function onListening() {
   var addr = server.address();
   var bind = typeof addr === 'string'
-    ? 'pipe ' + addr
-    : 'port ' + addr.port;
+      ? 'pipe ' + addr
+      : 'port ' + addr.port;
   debug('Listening on ' + bind);
 }
