@@ -6,25 +6,29 @@ const socket = io("http://localhost:3000"); //main server address
 
 function DiscussionRoom() {
     const { id:id_room } = useParams(); //retrieving id room from url
+    const username = localStorage.getItem("username");
     const [messages, setMessages] = useState([]);
     const [newMessage, setNewMessage] = useState(""); //state to track the message typed (the next one to be sent)
 
     useEffect(() => {
-        console.log("id_room: " + id_room)
-        socket.emit('joinRoom', id_room);
-        socket.on('message', (message) => { //new message arrived, update state -> re-render
-            setMessages((prevMessages) => [...prevMessages, message]);
+        socket.emit('create or join', id_room, username);
+
+        //listener for new incoming message
+        socket.on("message", (room, senderUsername, chatText) => {
+            setMessages(prevMessages => [...prevMessages, { sender: senderUsername, text: chatText}]);
         });
-        // clean up socket listeners when the component unmounts
-        return () => { //it's kinda callback to run when component unmounted
-            socket.off('message');
+
+        // callback to cleanup the socket
+        return () => {
+            socket.off("message");
         };
-    }, [id_room]);
+    }, [id_room, username]);
 
     const handleSend = () => {
         if (newMessage.trim() !== "") { //if message isn't empty
+            socket.emit("message", id_room, username, newMessage)
             setMessages([...messages, { sender: "You", text: newMessage }]);
-            setNewMessage("");
+            setNewMessage(""); //cleanup textbox
         }
     };
 
