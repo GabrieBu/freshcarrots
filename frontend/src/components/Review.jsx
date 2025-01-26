@@ -1,5 +1,3 @@
-import CommentSection from "./CommentSection.jsx";
-
 const formatDate = (dateString) => {
     const date = new Date(dateString);
     return date.toLocaleDateString("en-US", {
@@ -35,7 +33,6 @@ function Review({review}) {
                     <p>{formatDate(review_date)}</p>
                 </div>
                 <a href={link} className="btn btn-primary btn-md" type="button">Read more on RottenTomatoes</a>
-                <CommentSection />
             </div>
         </div>
     )
