@@ -17,7 +17,6 @@ const messageSchema = new mongoose.Schema({
 
 var DiscussionSchema = new Schema(
     {
-        _id: {type: Schema.Types.ObjectId, ref: 'Discussion'},
         id: {type: String, required: true},
         title: {type: String, required: true},
         messages: {type: [messageSchema], required: true, default: []}, //array of messages
