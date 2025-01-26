@@ -22,6 +22,8 @@ function DiscussionRoom() {
         return () => {
             socket.off("message");
         };
+
+        //query to mongo for messages
     }, [id_room, username]);
 
     const handleSend = () => {

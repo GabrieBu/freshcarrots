@@ -1,20 +1,16 @@
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
-
-/* @TODO EDIT with query to mongodb */
-const discussionsInit = [
-    { id: 1, title: "React Best Practices" },
-    { id: 2, title: "State Management Strategies" },
-    { id: 3, title: "Upcoming React Features" },
-];
+import useDiscussions from "../hooks/useDiscussions.js";
+import Loader from "../ui/Loader.jsx";
 
 function DiscussionList() {
     const [joinedDiscussions, setJoinedDiscussions] = useState([]);
-    const [discussions, setDiscussions] = useState(discussionsInit);
     const [username, setUsername] = useState("");
     const [newTitle, setNewTitle] = useState("");
     const [showCreateDiscussion, setShowCreateDiscussion] = useState(false);
+    const [errorCreate, setErrorCreate] = useState(false);
+    const {discussions, setDiscussions, error, isLoading} = useDiscussions();
 
     // load joined discussions from localstorage when the component for the first time rendered
     useEffect(() => {
@@ -56,16 +52,12 @@ function DiscussionList() {
     };
 
     function handleCreateDiscussion() {
-        if (newTitle.trim() === "") return; // Prevent empty discussions
+        if (newTitle.trim() === "") return; // prevent empty discussions
 
         const newDiscussion = {
-            id: Math.random().toString(36).substr(2, 16), // generate random ID of 16 chars
+            id: Math.random().toString(36).substr(2, 9), // generate random id room
             title: newTitle,
         };
-
-        const updatedDiscussions = [...discussions, newDiscussion];
-        setDiscussions(updatedDiscussions);
-        setNewTitle(""); // reset input field
 
         // query to mongo
         axios({
@@ -73,9 +65,13 @@ function DiscussionList() {
             url: `http://localhost:3000/newDiscussion`,
             data: newDiscussion}
         ).then(res=>{
-            console.log(res) //to handle better
+            console.log(res)
+            const updatedDiscussions = [...discussions, newDiscussion];
+            setDiscussions(updatedDiscussions);
+            setNewTitle(""); // reset input field
         }).catch(err=>{
-            console.log(err) //to handle better
+            console.log(err)
+            setErrorCreate(true);
         })
     }
 
@@ -109,6 +105,7 @@ function DiscussionList() {
                 </div>
             </div>
 
+            {errorCreate && (<h2 className="text-danger">Error creating new discussion. Try again later!</h2>)}
             {showCreateDiscussion && <div className="container mt-4">
                 <h2>Create a New Discussion</h2>
                 <div className="input-group mb-3">
@@ -130,32 +127,35 @@ function DiscussionList() {
             </div>
 
             <div className="container mt-4">
-                <h2>Discussions</h2>
-                <ul className="list-group">
-                    {discussions.map((discussion) => (
-                        <li key={discussion.id}
-                            className="list-group-item d-flex justify-content-between align-items-center">
-                            <div>
-                                <Link to={`/discussion/${discussion.id}`} className="text-decoration-none fw-bold">
-                                    {discussion.title}
-                                </Link>
-                                {joinedDiscussions.includes(discussion.id) && (
-                                    <span className="badge bg-success ms-2">Joined</span>
+                {error && <h2 className="text-danger">Could not load past discussions.</h2>}
+                {!isLoading ? <>
+                    <h2>Discussions</h2>
+                    <ul className="list-group">
+                        {discussions.map((discussion) => (
+                            <li key={discussion.id}
+                                className="list-group-item d-flex justify-content-between align-items-center">
+                                <div>
+                                    <Link to={`/discussion/${discussion.id}`} className="text-decoration-none fw-bold">
+                                        {discussion.title}
+                                    </Link>
+                                    {joinedDiscussions.includes(discussion.id) && (
+                                        <span className="badge bg-success ms-2">Joined</span>
+                                    )}
+                                </div>
+                                {joinedDiscussions.includes(discussion.id) ? (
+                                    <button className="btn btn-danger" onClick={() => handleLeave(discussion.id)}>
+                                        Leave Room
+                                    </button>
+                                ) : (
+                                    <Link to={`/discussion/${discussion.id}`} className="btn btn-primary"
+                                          onClick={() => handleJoin(discussion.id)}>
+                                        Join Room
+                                    </Link>
                                 )}
-                            </div>
-                            {joinedDiscussions.includes(discussion.id) ? (
-                                <button className="btn btn-danger" onClick={() => handleLeave(discussion.id)}>
-                                    Leave Room
-                                </button>
-                            ) : (
-                                <Link to={`/discussion/${discussion.id}`} className="btn btn-primary"
-                                      onClick={() => handleJoin(discussion.id)}>
-                                    Join Room
-                                </Link>
-                            )}
-                        </li>
-                    ))}
-                </ul>
+                            </li>
+                        ))}
+                    </ul>
+                </> : <Loader />}
             </div>
         </>
     );

@@ -3,6 +3,7 @@ import {useInView} from "react-intersection-observer";
 import useReviews from "../hooks/useReviews.js";
 
 const Layout = lazy(() => import("../ui/Layout"));
+const Loader = lazy(() => import("../ui/Loader"));
 const LayoutNavbar = lazy(() => import("../ui/LayoutNavbar"));
 const LayoutContent = lazy(() => import("../ui/LayoutContent"));
 const Footer = lazy(() => import("../components/Footer"));
@@ -78,11 +79,7 @@ function Reviews() {
                 {reviews?.map((review, index) => <Review review={review} key={index}/>)}
             </LayoutContent>
             {
-                loading &&
-                <div className="d-flex justify-content-center">
-                    <div className="spinner-border" role="status">
-                    </div>
-                </div>
+                loading && <Loader />
             }
             <div ref={ref}></div>
             <Footer/>
