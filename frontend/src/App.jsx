@@ -2,6 +2,7 @@ import {BrowserRouter, Routes, Route} from "react-router-dom";
 import Homepage from "./pages/Homepage";
 import Community from "./pages/Community";
 import Reviews from "./pages/Reviews";
+import DiscussionRoom from "./pages/DiscussionRoom.jsx";
 
 
 function App() {
@@ -12,6 +13,7 @@ function App() {
               <Route path="home" element={<Homepage />}/>
               <Route path="community" element={<Community />}/>
               <Route path="reviews" element={<Reviews />}/>
+              <Route path="/discussion/:id" element={<DiscussionRoom />} />
               <Route path="*" element={<p>Page not Found! Error 404</p>} />
           </Routes>
       </BrowserRouter>

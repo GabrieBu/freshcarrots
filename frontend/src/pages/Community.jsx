@@ -1,4 +1,5 @@
 import { lazy} from "react";
+import DiscussionList from "../components/DiscussionList.jsx";
 
 const Layout = lazy(() => import("../ui/Layout"));
 const LayoutNavbar = lazy(() => import("../ui/LayoutNavbar"));
@@ -13,7 +14,7 @@ function Community() {
         <Navbar />
       </LayoutNavbar>
       <LayoutContent>
-        <p>Content</p>
+        <DiscussionList />
       </LayoutContent>
       <Footer />
     </Layout>
