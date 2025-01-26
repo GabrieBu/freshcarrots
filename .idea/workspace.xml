@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="428c4096-4c1c-4737-995b-2a8561aa491a" name="Changes" comment="" />
+    <list default="true" id="428c4096-4c1c-4737-995b-2a8561aa491a" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/MainServer/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/MainServer/.idea/workspace.xml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -10,9 +12,21 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 0
+  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
+  "lastFilter": {
+    "state": "OPEN",
+    "assignee": "GabrieBu"
+  }
 }]]></component>
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/GabrieBu/TWEB_2425.git",
+    "accountId": "a6301aeb-9ede-49d8-b9e9-44896c477dfc"
+  }
+}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 0
+}</component>
   <component name="ProjectId" id="2q5ALvUx6urk7K2yCakU4EcbdfQ" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -22,9 +36,11 @@
   "keyToString": {
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "dart.analysis.tool.window.visible": "false",
-    "git-widget-placeholder": "deploy",
+    "git-widget-placeholder": "main__server",
     "javascript.nodejs.core.library.configured.version": "22.9.0",
     "javascript.nodejs.core.library.typings.version": "22.9.4",
+    "node.js.detected.package.eslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
     "nodejs_interpreter_path": "node",
     "nodejs_package_manager_path": "npm",
     "vue.rearranger.settings.migration": "true"
@@ -46,6 +62,7 @@
       <option name="presentableId" value="Default" />
       <updated>1733942009300</updated>
       <workItem from="1733942010368" duration="113000" />
+      <workItem from="1737882540986" duration="4000" />
     </task>
     <servers />
   </component>
