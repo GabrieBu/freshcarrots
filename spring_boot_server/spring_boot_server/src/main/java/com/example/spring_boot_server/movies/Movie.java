@@ -4,31 +4,30 @@ import jakarta.persistence.*;
 import java.time.LocalDate;
 
 @Entity
-@Table(name="movies")
+@Table(name = "movies")
 public class Movie {
     @Id
     @Column(name = "id", nullable = false)
     private Long id;
-    @Column(name = "name", nullable = true)
+    @Column(name = "name")
     private String name;
-    @Column(name = "date", nullable = true)
-    private LocalDate date;
-    @Column(name = "tagline", nullable = true)
+    @Column(name = "date")
+    private Float date;
+    @Column(name = "tagline")
     private String tagline;
-    @Column(name = "description",nullable = true)
+    @Column(name = "description")
     private String description;
-    @Column(name = "minute", nullable = true)
+    @Column(name = "minute")
     private Float minute;
-    @Column(name = "rating", nullable = true)
+    @Column(name = "rating")
     private Float rating;
-    @JoinColumn
     @OneToOne(mappedBy = "movie", cascade = CascadeType.ALL)
     private Poster poster;
 
 
     public Movie() {}
 
-    public Movie(Long id, String name, LocalDate date, String tagline, String description, Float minute, Float rating, Poster poster) {
+    public Movie(Long id, String name, Float date, String tagline, String description, Float minute, Float rating, Poster poster) {
         this.id = id;
         this.name = name;
         this.date = date;
@@ -37,6 +36,24 @@ public class Movie {
         this.minute = minute;
         this.rating = rating;
         this.poster = poster;
+    }
+
+    @Override
+    public String toString() {
+        return "Movie{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", date=" + date +
+                ", tagline='" + tagline + '\'' +
+                ", description='" + description + '\'' +
+                ", minute=" + minute +
+                ", rating=" + rating +
+                ", poster=" + (poster != null ? poster.getId() : "null") +
+                '}';
+    }
+
+    public Poster getPoster() {
+        return poster;
     }
 
     public Long getId() {
@@ -55,11 +72,11 @@ public class Movie {
         this.name = name;
     }
 
-    public LocalDate getDate() {
+    public Float getDate() {
         return date;
     }
 
-    public void setDate(LocalDate date) {
+    public void setDate(Float date) {
         this.date = date;
     }
 

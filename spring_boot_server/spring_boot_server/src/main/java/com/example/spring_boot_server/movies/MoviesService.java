@@ -14,8 +14,6 @@ public class MoviesService {
     }
 
     public List<Movie> findTopFiveMovies() {
-        List<Movie> movies = moviesRepository.findTopFiveMovies();
-        System.out.println("Repository query executed. Movies retrieved: " + movies.size());
-        return movies;
+        return moviesRepository.findTop5ByRatingIsNotNullAndDateIsNotNullOrderByRatingDescDateDesc();
     }
 }

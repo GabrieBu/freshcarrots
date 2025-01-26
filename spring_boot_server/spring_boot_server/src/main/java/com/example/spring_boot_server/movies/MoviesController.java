@@ -16,9 +16,15 @@ public class MoviesController {
         this.moviesService = moviesService;
     }
 
-    @GetMapping("/findTopFiveMovies")
+    @GetMapping("/getTopFiveMovies")
     public ResponseEntity<List<Movie>> findTopFiveMovies() {
         List<Movie> movies = moviesService.findTopFiveMovies();
+
+        for(Movie movie : movies) {
+            System.out.println(movie);
+            System.out.println(movie.getPoster().getLink());
+        }
+
         if (movies.isEmpty() || movies.size() < 5) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
