@@ -16,7 +16,6 @@ function Community() {
       <LayoutContent>
         <DiscussionList />
       </LayoutContent>
-      <Footer />
     </Layout>
   );
 }
