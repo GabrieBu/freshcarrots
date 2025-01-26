@@ -1,15 +1,17 @@
 exports.init = function(io) {
-    io.sockets.on('connection', function (socket) {
+    io.on('connection', function (socket) {
         try {
-            socket.on('create or join', function (room, userId) {
+            socket.on('create or join', function (room, username) {
+                console.log(username + " connected to " + room);
                 socket.join(room);
-                io.sockets.to(room).broadcast.emit('joined', room, userId);
+                socket.to(room).emit('joined', room, username);
             });
-            socket.on('message', function(room, userId, chatText) {
-                socket.to(room).broadcast.emit('message', room, userId, chatText);
+            socket.on('message', function(room, username, chatText) {
+                console.log(`message ${chatText} sent in the room ${room} by ${username}`);
+                socket.to(room).emit('message', room, username, chatText);
             })
-            socket.on('disconnect', function (room,userID){
-                console.log(`user ${userID} disconnected from ${room}`);
+            socket.on('disconnect', function (room,username){
+                console.log(`user ${username} disconnected from ${room}`);
             })
         }
         catch (error) {
