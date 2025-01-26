@@ -35,4 +35,14 @@ router.post('/newDiscussion', async function(req, res, next) {
   }
 });
 
+/* GET past discussions */
+router.get('/getDiscussions', async function(req, res, next) {
+  try {
+    const response = await axios.get('http://localhost:3001/getDiscussions');
+    res.json(response.data);
+  } catch (error) {
+    res.status(500).send('Error occured: getDiscussions ' + error.message);
+  }
+});
+
 module.exports = router;
