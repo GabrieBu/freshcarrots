@@ -1,5 +1,4 @@
 package com.example.spring_boot_server.movies;
-import com.example.spring_boot_server.actors.Actor;
 import com.example.spring_boot_server.genres.Genre;
 import com.example.spring_boot_server.posters.Poster;
 import jakarta.persistence.*;
@@ -43,27 +42,16 @@ public class Movie {
         this.genres = genres;
     }
 
-    @Override
-    public String toString() {
-        System.out.println("Movie");
-        for (Genre genre : genres) {
-            System.out.println(genre);
-        }
-        return "Movie{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", date=" + date +
-                ", tagline='" + tagline + '\'' +
-                ", description='" + description + '\'' +
-                ", minute=" + minute +
-                ", rating=" + rating +
-                ", poster=" + (poster != null ? poster.getId() : "null") +
-                ", genress=" + (genres != null ? "listgen" : "null") +
-                '}';
+    public List<Genre> getGenres() {
+        return genres;
     }
 
     public Poster getPoster() {
         return poster;
+    }
+
+    public String getPosterLink(){
+        return poster.getLink();
     }
 
     public Long getId() {

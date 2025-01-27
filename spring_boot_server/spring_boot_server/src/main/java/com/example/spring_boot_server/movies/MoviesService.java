@@ -1,26 +1,30 @@
 package com.example.spring_boot_server.movies;
 
+import com.example.spring_boot_server.movies.dtos.MovieTitlePosterlinkDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class MoviesService {
-    private final MoviesRepository moviesRepository;
     @Autowired
-    public MoviesService(MoviesRepository moviesRepository) {
-        this.moviesRepository = moviesRepository;
-    }
+    private MoviesRepository moviesRepository;
 
-    public List<Movie> findTopFiveMovies() {
-        return moviesRepository.findTop5ByRatingIsNotNullAndDateIsNotNullOrderByRatingDescDateDesc();
+    public List<MovieTitlePosterlinkDTO> findTopFiveMovies() {
+        List<Movie> movies = moviesRepository.findTop5ByRatingIsNotNullAndDateIsNotNullOrderByRatingDescDateDesc();
+
+        return movies.stream()
+                .map(movie -> new MovieTitlePosterlinkDTO(
+                        movie.getId(),
+                        movie.getName(),
+                        (movie.getPoster() != null) ? movie.getPoster().getLink() : null  // Only extract link
+                ))
+                .collect(Collectors.toList());
     }
 
     public List<Movie> findMovieByName(String name) {
-        return moviesRepository.findMovieByName(name);
+        return moviesRepository.findMovieByName(name); //returns all fields
     }
-
-   /* public List<Movie> findMovieByGenre(String genre) {
-        return moviesRepository.findMoviesByGenre(genre);
-    }*/
 }

@@ -7,6 +7,6 @@ import java.util.List;
 @Repository
 public interface GenresRepository extends JpaRepository<Genre, Long> {
 
-    @Query(value = "SELECT * FROM genres WHERE id_film = :movieId", nativeQuery = true)
-    List<Genre> findByMovie(Integer movieId);
+    /*@Query("SELECT DISTINCT genre FROM genres")
+    List<Genre> findAllDistinctGenres();*/
 }
