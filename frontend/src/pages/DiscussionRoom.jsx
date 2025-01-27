@@ -15,25 +15,21 @@ function DiscussionRoom() {
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
-        setLoading(true);
-        setError(false);
-        axios({
-            method: "GET",
-            url: "http://localhost:3000/getMessages",
-            params: {
-                id_room: id_room
+        async function fetchMessages() {
+            try {
+                const res = await axios.get("http://localhost:3000/getMessages", {
+                    params: { id_room }
+                });
+                setMessages(res.data); // set messages from the database in the local state
+            } catch (err) {
+                console.error("Error fetching messages:", err);
+                setError(true);
+            } finally {
+                setLoading(false);
             }
-        })
-        .then((res) => {
-            setMessages(res.data);
-            setLoading(false);
-        })
-        .catch((err) => {
-            console.error(err);
-            setError(true);
-            setLoading(false);
-        })
+        };
 
+        fetchMessages(); //run the callback
 
         socket.emit('create or join', id_room, username);
 
@@ -50,9 +46,22 @@ function DiscussionRoom() {
         //query to mongo for messages
     }, [id_room, username]);
 
-    const handleSend = () => {
+    const handleSend = async () => {
         if (newMessage.trim() !== "") { //if message isn't empty
             socket.emit("message", id_room, username, newMessage)
+
+            try {
+                await axios.post("http://localhost:3000/newMessage", {
+                    discussionId: id_room,
+                    sender: username,
+                    message: newMessage
+                });
+            } catch (error) {
+                /* @TODO handle better, displaying message*/
+                console.error("Error saving message:", error);
+                return;
+            }
+
             setMessages([...messages, { sender: "You", text: newMessage }]);
             setNewMessage(""); //cleanup textbox
         }
