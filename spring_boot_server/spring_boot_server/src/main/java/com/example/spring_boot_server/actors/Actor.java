@@ -3,7 +3,7 @@ package com.example.spring_boot_server.actors;
 import jakarta.persistence.*;
 
 @Entity
-@Table
+@Table(name="actors")
 public class Actor {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

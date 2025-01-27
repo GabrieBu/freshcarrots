@@ -2,7 +2,7 @@ package com.example.spring_boot_server.studios;
 import jakarta.persistence.*;
 
 @Entity
-@Table
+@Table(name="studios")
 public class Studios {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

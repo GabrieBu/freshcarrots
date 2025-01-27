@@ -13,9 +13,7 @@ public class MoviesService {
         this.moviesRepository = moviesRepository;
     }
 
-    public List<Movie> findMovie(String title) {
-        return moviesRepository.findMovie(title);
+    public List<Movie> findTopFiveMovies() {
+        return moviesRepository.findTop5ByRatingIsNotNullAndDateIsNotNullOrderByRatingDescDateDesc();
     }
-
-    public List<Movie> findTopFiveMovies() { return moviesRepository.findTopFiveMovies(); }
 }

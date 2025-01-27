@@ -3,7 +3,7 @@ package com.example.spring_boot_server.languages;
 import jakarta.persistence.*;
 
 @Entity
-@Table
+@Table(name="languages")
 public class Language {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

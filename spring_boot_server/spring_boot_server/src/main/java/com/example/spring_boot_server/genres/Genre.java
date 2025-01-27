@@ -3,7 +3,7 @@ package com.example.spring_boot_server.genres;
 import jakarta.persistence.*;
 
 @Entity
-@Table
+@Table(name="genres")
 public class Genre {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

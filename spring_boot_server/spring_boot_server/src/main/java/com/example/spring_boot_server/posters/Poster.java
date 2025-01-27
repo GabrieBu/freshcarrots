@@ -1,26 +1,34 @@
 package com.example.spring_boot_server.posters;
 
+import com.example.spring_boot_server.movies.Movie;
 import jakarta.persistence.*;
 
 @Entity
-@Table
+@Table(name = "posters")
 public class Poster {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "id_film", nullable = false, columnDefinition = "BIGINT")
-    private Long id_film;
     @Column(name = "link", columnDefinition = "TEXT")
     private String link;
+    @OneToOne
+    @JoinColumn(name = "id_film", referencedColumnName = "id", nullable = false, columnDefinition = "BIGINT")
+    private Movie movie;
 
-
-    public Poster(){
-
+    public Poster(Long id, String link, Movie movie) {
+        this.id = id;
+        this.movie = movie;
+        this.link = link;
     }
 
-    public Poster(Long id_film, String type) {
-        this.id_film = id_film;
-        this.link = type;
+    public Poster() {}
+
+    public String getLink(){
+        return link;
+    }
+
+    public void setLink(String link){
+        this.link = link;
     }
 
     public Long getId() {
@@ -29,14 +37,6 @@ public class Poster {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public Long getId_film() {
-        return id_film;
-    }
-
-    public void setId_film(Long id_film) {
-        this.id_film = id_film;
     }
 
     public String getType() {
