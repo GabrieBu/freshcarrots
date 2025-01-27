@@ -1,7 +1,10 @@
 package com.example.spring_boot_server.movies;
+import com.example.spring_boot_server.actors.Actor;
+import com.example.spring_boot_server.genres.Genre;
 import com.example.spring_boot_server.posters.Poster;
 import jakarta.persistence.*;
-import java.time.LocalDate;
+
+import java.util.List;
 
 @Entity
 @Table(name = "movies")
@@ -23,11 +26,12 @@ public class Movie {
     private Float rating;
     @OneToOne(mappedBy = "movie", cascade = CascadeType.ALL)
     private Poster poster;
-
+    @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<Genre> genres;
 
     public Movie() {}
 
-    public Movie(Long id, String name, Float date, String tagline, String description, Float minute, Float rating, Poster poster) {
+    public Movie(Long id, String name, Float date, String tagline, String description, Float minute, Float rating, Poster poster, List<Genre> genres) {
         this.id = id;
         this.name = name;
         this.date = date;
@@ -36,10 +40,15 @@ public class Movie {
         this.minute = minute;
         this.rating = rating;
         this.poster = poster;
+        this.genres = genres;
     }
 
     @Override
     public String toString() {
+        System.out.println("Movie");
+        for (Genre genre : genres) {
+            System.out.println(genre);
+        }
         return "Movie{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
@@ -49,6 +58,7 @@ public class Movie {
                 ", minute=" + minute +
                 ", rating=" + rating +
                 ", poster=" + (poster != null ? poster.getId() : "null") +
+                ", genress=" + (genres != null ? "listgen" : "null") +
                 '}';
     }
 

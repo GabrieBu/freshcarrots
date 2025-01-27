@@ -9,4 +9,6 @@ import java.util.List;
 public interface MoviesRepository extends JpaRepository<Movie, Long> {
 
     List<Movie> findTop5ByRatingIsNotNullAndDateIsNotNullOrderByRatingDescDateDesc();
+    List<Movie> findMovieByName(String name);
+    //List<Movie> findMoviesByGenre(String genre);
 }

@@ -7,7 +7,6 @@ import java.util.List;
 @Service
 public class MoviesService {
     private final MoviesRepository moviesRepository;
-
     @Autowired
     public MoviesService(MoviesRepository moviesRepository) {
         this.moviesRepository = moviesRepository;
@@ -16,4 +15,12 @@ public class MoviesService {
     public List<Movie> findTopFiveMovies() {
         return moviesRepository.findTop5ByRatingIsNotNullAndDateIsNotNullOrderByRatingDescDateDesc();
     }
+
+    public List<Movie> findMovieByName(String name) {
+        return moviesRepository.findMovieByName(name);
+    }
+
+   /* public List<Movie> findMovieByGenre(String genre) {
+        return moviesRepository.findMoviesByGenre(genre);
+    }*/
 }
