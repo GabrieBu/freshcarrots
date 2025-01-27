@@ -2,42 +2,47 @@ var express = require('express');
 var router = express.Router();
 const axios = require('axios')
 
-/* GET movies */
-router.get('/movies', async function(req, res, next) {
+/* GET reviews. */
+router.get('/getReviews', async function(req, res, next) {
   try {
-    const response = await axios.get(
-        'http://localhost:3001/get_all_movies');
+    const response = await axios.get('http://localhost:3001/getReviews', {
+      params: req.query // Pass all query parameters dynamically
+    });
+
     res.json(response.data);
   } catch (error) {
-    res.status(500).send('Error occured: get_movies ' + error.message);
+    res.status(500).send('Error occured: getReviews ' + error.message);
   }
 });
 
-
-/* GET reviews */
-router.get('/get_review/:id', async function(req, res, next) {
-  const { id } = req.params;
+/* GET top 5. */
+router.get('/getTopFiveMovies', async function(req, res, next) {
   try {
-    const response = await axios.get(
-        `http://localhost:3001/get_review_movie/${id}`);
+    const response = await axios.get('http://localhost:3002/findTopFiveMovies');
     res.json(response.data);
   } catch (error) {
-    res.status(500).send('Error occured: get_review_movie ' + error.message);
+    res.status(500).send('Error occured: getTopFiveMovies ' + error.message);
   }
 });
 
-
-/* GET actors. */
-router.get('/actor/:id', async function(req, res, next) {
-  const { id } = req.params;
+/* POST new discussion. */
+router.post('/newDiscussion', async function(req, res, next) {
   try {
-    const response = await axios.get(
-        'http://localhost:3002/get_actors_movie/${id}');
-    res.json(response.data);
+    await axios.post('http://localhost:3001/newDiscussion', req.body);
+    res.status(200).json({ message: "Discussion created!"});
   } catch (error) {
-    res.status(500).send('Error occured: get_actor_movie ' + error.message);
+    res.status(500).json({ error: error.message });
   }
 });
 
+/* GET past discussions */
+router.get('/getDiscussions', async function(req, res, next) {
+  try {
+    const response = await axios.get('http://localhost:3001/getDiscussions');
+    res.json(response.data);
+  } catch (error) {
+    res.status(500).send('Error occured: getDiscussions ' + error.message);
+  }
+});
 
 module.exports = router;
