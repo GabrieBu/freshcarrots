@@ -34,22 +34,20 @@ export const getMessages = async (req, res) => {
 
 export const newMessage = async (req, res) => {
     try {
-        const { discussionId, sender, message } = req.body; // Extract data from request
-        const discussion = await Discussion.findOne({ id: discussionId });
+        const { id_room, sender, message } = req.body;
 
-        if (!discussion) { //discussion doesn't exist
+        if (!id_room || !sender || !message) {
+            return res.status(400).json({ error: "Missing required fields" });
+        }
+
+        const discussion = await Discussion.findOne({ id: id_room });
+
+        if (!discussion) {
             return res.status(404).json({ error: "Discussion not found" });
         }
 
-        const newMessage = {
-            sender,
-            message,
-            time_stamp: new Date(),
-        };
-
-        discussion.messages.push(newMessage);
+        discussion.messages.push({ sender, message, time_stamp: new Date() });
         await discussion.save();
-
         res.status(200).json();
     } catch (error) {
         res.status(500).json({ error: error.message });
