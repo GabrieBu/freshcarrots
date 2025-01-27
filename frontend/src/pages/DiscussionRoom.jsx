@@ -1,6 +1,8 @@
 import {useEffect, useState} from "react";
 import { useParams } from "react-router-dom";
+import axios from "axios";
 import io from "socket.io-client";
+import Loader from "../ui/Loader.jsx";
 
 const socket = io("http://localhost:3000"); //main server address
 
@@ -9,8 +11,30 @@ function DiscussionRoom() {
     const username = localStorage.getItem("username");
     const [messages, setMessages] = useState([]);
     const [newMessage, setNewMessage] = useState(""); //state to track the message typed (the next one to be sent)
+    const [error, setError] = useState(false);
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
+        setLoading(true);
+        setError(false);
+        axios({
+            method: "GET",
+            url: "http://localhost:3000/getMessages",
+            params: {
+                id_room: id_room
+            }
+        })
+        .then((res) => {
+            setMessages(res.data);
+            setLoading(false);
+        })
+        .catch((err) => {
+            console.error(err);
+            setError(true);
+            setLoading(false);
+        })
+
+
         socket.emit('create or join', id_room, username);
 
         //listener for new incoming message
@@ -37,7 +61,9 @@ function DiscussionRoom() {
     return (
         <div className="container mt-4">
             <h2>Chat Room {id_room}</h2>
+            {error && <h3 className="text-danger">Error loading messages from database!</h3>}
             <div className="border p-3 mb-3" style={{ height: "300px", overflowY: "auto" }}>
+                {loading && <Loader />}
                 {messages.map((msg, index) => (
                     <div
                         key={index}
