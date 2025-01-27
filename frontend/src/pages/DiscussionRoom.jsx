@@ -13,6 +13,7 @@ function DiscussionRoom() {
     const [newMessage, setNewMessage] = useState(""); //state to track the message typed (the next one to be sent)
     const [error, setError] = useState(false);
     const [loading, setLoading] = useState(false);
+    const [title, setTitle] = useState("");
 
     useEffect(() => {
         async function fetchMessages() {
@@ -20,15 +21,15 @@ function DiscussionRoom() {
                 const res = await axios.get("http://localhost:3000/getMessages", {
                     params: { id_room }
                 });
-                setMessages(res.data); // set messages from the database in the local state
+                setMessages(res.data.messages); // set messages from the database in the local state
+                setTitle(res.data.title);
             } catch (err) {
                 console.error("Error fetching messages:", err);
                 setError(true);
             } finally {
                 setLoading(false);
             }
-        };
-
+        }
         fetchMessages(); //run the callback
 
         socket.emit('create or join', id_room, username);
@@ -69,7 +70,7 @@ function DiscussionRoom() {
 
     return (
         <div className="container mt-4">
-            <h2>Chat Room {id_room}</h2>
+            <h2>{title}</h2>
             {error && <h3 className="text-danger">Error loading messages from database!</h3>}
             <div className="border p-3 mb-3" style={{ height: "300px", overflowY: "auto" }}>
                 {loading && <Loader />}
