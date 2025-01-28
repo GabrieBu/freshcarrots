@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import io from "socket.io-client";
 import Loader from "../ui/Loader.jsx";
+import { format } from "date-fns";
 
 const socket = io("http://localhost:3000"); //main server address
 
@@ -53,7 +54,7 @@ function DiscussionRoom() {
 
             try {
                 await axios.post("http://localhost:3000/newMessage", {
-                    discussionId: id_room,
+                    id_room: id_room,
                     sender: username,
                     message: newMessage
                 });
@@ -63,8 +64,26 @@ function DiscussionRoom() {
                 return;
             }
 
-            setMessages([...messages, { sender: "You", text: newMessage }]);
+            setMessages([...messages, { sender: username, text: newMessage, time_stamp: Date.now() }]);
             setNewMessage(""); //cleanup textbox
+        }
+    };
+
+    const formatTimestamp = (timestamp) => {
+        const date = new Date(timestamp);
+        const today = new Date();
+
+        const isToday =
+            date.getDate() === today.getDate() &&
+            date.getMonth() === today.getMonth() &&
+            date.getFullYear() === today.getFullYear();
+
+        if (isToday) {
+            return format(date, "HH:mm"); // Show hours and minutes
+        } else if (date.getFullYear() === today.getFullYear()) {
+            return format(date, "MM/dd"); // Show month and day
+        } else {
+            return format(date, "yyyy/MM/dd"); // Show full date
         }
     };
 
@@ -77,10 +96,11 @@ function DiscussionRoom() {
                 {messages.map((msg, index) => (
                     <div
                         key={index}
-                        className={`d-flex mb-2 ${msg.sender === "You" ? "justify-content-end" : "justify-content-start"}`}
+                        className={`d-flex mb-2 ${msg.sender === username ? "justify-content-end" : "justify-content-start"}`}
                     >
-                        <div className={`p-2 ${msg.sender === "You" ? "bg-primary text-white" : "bg-light"}`}>
-                            <strong>{msg.sender}:</strong> {msg.text}
+                        <div className={`p-2 ${msg.sender === username ? "bg-primary text-white" : "bg-light"}`}>
+                            <strong>{msg.sender}:</strong> {msg?.message}
+                            <div className="text-muted small text-end">{formatTimestamp(msg?.time_stamp)}</div>
                         </div>
                     </div>
                 ))}
