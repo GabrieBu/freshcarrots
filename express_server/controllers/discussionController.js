@@ -22,11 +22,17 @@ export const getDiscussions = async (req, res) => {
 
 export const getMessages = async (req, res) => {
     try {
-        const {id_room} = req.body
-        const discussion = await Discussion.find({id: id_room});
-        console.log("discussion" + JSON.stringify(discussion));
-        const {title, messages} = discussion;
-        res.json({title, messages});
+        const { id_room } = req.query;
+        if (!id_room) {
+            return res.status(400).json({ error: "Room ID is required" });
+        }
+        const discussion = await Discussion.findOne({ id: id_room });
+        if (!discussion) {
+            return res.status(404).json({ error: "Discussion not found" });
+        }
+
+        console.log("Discussion:", discussion);
+        res.json({ title: discussion.title, messages: discussion.messages });
     } catch (error) {
         res.json({ error_message: error.message });
     }
