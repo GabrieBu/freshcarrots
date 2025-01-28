@@ -6,9 +6,9 @@ exports.init = function(io) {
                 socket.join(room);
                 socket.to(room).emit('joined', room, username);
             });
-            socket.on('message', function(room, username, chatText) {
+            socket.on('message', function(room, username, chatText, timestamp) {
                 console.log(`message ${chatText} sent in the room ${room} by ${username}`);
-                socket.to(room).emit('message', room, username, chatText);
+                socket.to(room).emit('message', room, username, chatText, timestamp);
             })
             socket.on('disconnect', function (room,username){
                 console.log(`user ${username} disconnected from ${room}`);

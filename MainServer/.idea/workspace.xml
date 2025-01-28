@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="09f61af7-d139-41f0-9180-01e3b14267b7" name="Changes" comment="setup" />
+    <list default="true" id="09f61af7-d139-41f0-9180-01e3b14267b7" name="Changes" comment="feature: fixed socket.io &quot;message&quot;" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -24,12 +24,12 @@
     &quot;assignee&quot;: &quot;GabrieBu&quot;
   }
 }</component>
-  <component name="GithubPullRequestsUISettings"><![CDATA[{
-  "selectedUrlAndAccountId": {
-    "url": "git@github.com:GabrieBu/TWEB_2425.git",
-    "accountId": "a6301aeb-9ede-49d8-b9e9-44896c477dfc"
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/GabrieBu/TWEB_2425.git&quot;,
+    &quot;accountId&quot;: &quot;a6301aeb-9ede-49d8-b9e9-44896c477dfc&quot;
   }
-}]]></component>
+}</component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 1
 }</component>
@@ -74,23 +74,8 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1733942123299</updated>
-      <workItem from="1733942124327" duration="160000" />
-      <workItem from="1733942287144" duration="486000" />
-      <workItem from="1737133851542" duration="35000" />
-      <workItem from="1737711413224" duration="1883000" />
-      <workItem from="1737797257219" duration="2521000" />
-      <workItem from="1737882545988" duration="1338000" />
-      <workItem from="1738020037338" duration="38000" />
     </task>
-    <task id="LOCAL-00001" summary="setup">
-      <option name="closed" value="true" />
-      <created>1733943732895</created>
-      <option name="number" value="00001" />
-      <option name="presentableId" value="LOCAL-00001" />
-      <option name="project" value="LOCAL" />
-      <updated>1733943732895</updated>
-    </task>
-    <option name="localTasksCounter" value="2" />
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -121,6 +106,7 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="setup" />
-    <option name="LAST_COMMIT_MESSAGE" value="setup" />
+    <MESSAGE value="feature: fixed socket.io &quot;message&quot;" />
+    <option name="LAST_COMMIT_MESSAGE" value="feature: fixed socket.io &quot;message&quot;" />
   </component>
 </project>
