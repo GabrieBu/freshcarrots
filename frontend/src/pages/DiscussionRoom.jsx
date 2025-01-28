@@ -36,8 +36,8 @@ function DiscussionRoom() {
         socket.emit('create or join', id_room, username);
 
         //listener for new incoming message
-        socket.on("message", (room, senderUsername, chatText) => {
-            setMessages(prevMessages => [...prevMessages, { sender: senderUsername, text: chatText}]);
+        socket.on("message", (room, senderUsername, chatText, time_stamp) => {
+            setMessages(prevMessages => [...prevMessages, { sender: senderUsername, message: chatText, time_stamp: time_stamp }]);
         });
 
         // callback to cleanup the socket
@@ -50,13 +50,15 @@ function DiscussionRoom() {
 
     const handleSend = async () => {
         if (newMessage.trim() !== "") { //if message isn't empty
-            socket.emit("message", id_room, username, newMessage)
+            const time_stamp_message = new Date()
+            socket.emit("message", id_room, username, newMessage, time_stamp_message)
 
             try {
                 await axios.post("http://localhost:3000/newMessage", {
                     id_room: id_room,
                     sender: username,
-                    message: newMessage
+                    message: newMessage,
+                    time_stamp:  time_stamp_message
                 });
             } catch (error) {
                 /* @TODO handle better, displaying message*/
@@ -64,7 +66,7 @@ function DiscussionRoom() {
                 return;
             }
 
-            setMessages([...messages, { sender: username, text: newMessage, time_stamp: Date.now() }]);
+            setMessages([...messages, { sender: username, message: newMessage, time_stamp: time_stamp_message }]);
             setNewMessage(""); //cleanup textbox
         }
     };
@@ -81,9 +83,9 @@ function DiscussionRoom() {
         if (isToday) {
             return format(date, "HH:mm"); // Show hours and minutes
         } else if (date.getFullYear() === today.getFullYear()) {
-            return format(date, "MM/dd"); // Show month and day
+            return format(date, "MM/dd HH:mm"); // Show month and day
         } else {
-            return format(date, "yyyy/MM/dd"); // Show full date
+            return format(date, "yyyy/MM/dd HH:mm"); // Show full date
         }
     };
 
@@ -91,7 +93,7 @@ function DiscussionRoom() {
         <div className="container mt-4">
             <h2>{title}</h2>
             {error && <h3 className="text-danger">Error loading messages from database!</h3>}
-            <div className="border p-3 mb-3" style={{ height: "300px", overflowY: "auto" }}>
+            <div className="border p-3 mb-3" style={{ height: "500px", overflowY: "auto" }}>
                 {loading && <Loader />}
                 {messages.map((msg, index) => (
                     <div
@@ -99,7 +101,7 @@ function DiscussionRoom() {
                         className={`d-flex mb-2 ${msg.sender === username ? "justify-content-end" : "justify-content-start"}`}
                     >
                         <div className={`p-2 ${msg.sender === username ? "bg-primary text-white" : "bg-light"}`}>
-                            <strong>{msg.sender}:</strong> {msg?.message}
+                            {msg.sender !== username && <strong>{msg.sender}:</strong>} {msg?.message}
                             <div className="text-muted small text-end">{formatTimestamp(msg?.time_stamp)}</div>
                         </div>
                     </div>
@@ -109,7 +111,7 @@ function DiscussionRoom() {
                 <input
                     type="text"
                     className="form-control"
-                    placeholder="Let them know your thoughts..."
+                    placeholder="Give your opinion..."
                     value={newMessage}
                     onChange={(e) => setNewMessage(e.target.value)}
                 />
