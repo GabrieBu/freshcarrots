@@ -16,7 +16,7 @@ export const getDiscussions = async (req, res) => {
         const discussions = await Discussion.find({})
         res.json(discussions);
     } catch (error) {
-        res.json({ error_message: error.message });
+        res.json({ error: error.message });
     }
 };
 
@@ -40,7 +40,7 @@ export const getMessages = async (req, res) => {
 
 export const newMessage = async (req, res) => {
     try {
-        const { id_room, sender, message } = req.body;
+        const { id_room, sender, message, time_stamp } = req.body;
 
         if (!id_room || !sender || !message) {
             return res.status(400).json({ error: "Missing required fields" });
@@ -52,7 +52,7 @@ export const newMessage = async (req, res) => {
             return res.status(404).json({ error: "Discussion not found" });
         }
 
-        discussion.messages.push({ sender, message, time_stamp: new Date() });
+        discussion.messages.push({ sender, message, time_stamp });
         await discussion.save();
         res.status(200).json();
     } catch (error) {
