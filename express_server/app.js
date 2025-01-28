@@ -1,13 +1,30 @@
-var createError = require('http-errors');
-var express = require('express');
-const mongoose = require('mongoose');
-const cors = require("cors");
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
+const mongoDB = "mongodb://localhost:27017/tweb2425";
+import createError from 'http-errors';
+import express from 'express';
+import mongoose from "mongoose";
+import cors from "cors";
+import path from 'path';
+import cookieParser from 'cookie-parser';
+import logger from 'morgan';
+import { fileURLToPath } from 'url';
+import indexRouter from './routes/index.js';
+import usersRouter from './routes/users.js';
 
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+mongoose.Promise = global.Promise;
+
+/*
+* @TODO better to use await
+*/
+mongoose.connect(mongoDB)
+    .then(() => {
+        console.log('connection to mongodb worked!');
+    })
+    .catch((error) => {
+        console.log('connection to mongodb did not work! '+ JSON.stringify(error));
+    });
 
 var app = express();
 
@@ -47,4 +64,4 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
-module.exports = app;
+export default app;

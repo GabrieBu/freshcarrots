@@ -1,18 +1,24 @@
-var express = require('express');
+import express from 'express';
 var router = express.Router();
-const axios = require('axios')
+import {getReviews} from "../controllers/reviewController.js";
+import {newDiscussion, getDiscussions, getMessages, newMessage} from "../controllers/discussionController.js";
 
-
-/* GET home page. */
+/* GET home page. UNUSED SO FAR */
 router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
 });
 
-//will match requests to /movies
-router.get('/get_all_movies', function (req, res) {
-  res.json({name: 'Movies'});
-})
+//will match requests to /getReviews
+router.get('/getReviews', getReviews)
+
+router.post('/newDiscussion', newDiscussion)
+
+router.get('/getDiscussions', getDiscussions)
+
+router.get('/getMessages', getMessages)
+
+router.post("/newMessage", newMessage);
 
 
 
-module.exports = router;
+export default router;
