@@ -100,7 +100,7 @@ function DiscussionRoom() {
                         key={index}
                         className={`d-flex mb-2 ${msg.sender === username ? "justify-content-end" : "justify-content-start"}`}
                     >
-                        <div className={`p-2 ${msg.sender === username ? "bg-primary text-white" : "bg-light"}`}>
+                        <div className={`p-2 rounded ${msg.sender === username ? "bg-primary text-white" : "bg-light"}`}>
                             {msg.sender !== username && <strong>{msg.sender}:</strong>} {msg?.message}
                             <div className="text-muted small text-end">{formatTimestamp(msg?.time_stamp)}</div>
                         </div>
