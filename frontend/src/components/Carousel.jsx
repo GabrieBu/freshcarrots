@@ -1,15 +1,17 @@
 import { useState } from "react";
 import "./Carousel.css";
-import Skeleton from "../ui/Skeleton.jsx"; // Custom styles
+import Skeleton from "../ui/Skeleton.jsx";
+import {Link} from "react-router-dom"; // Custom styles
 
 // eslint-disable-next-line react/prop-types
 function Carousel({genre, movies, loading}){
     const [currentIndex, setCurrentIndex] = useState(0);
-    const itemsVisible = 16;
+    const itemsVisible = 8;
+    // eslint-disable-next-line react/prop-types
+    const moviesLength = movies?.length;
 
     const nextPage = () => {
-        // eslint-disable-next-line react/prop-types
-        if (currentIndex < movies.length - itemsVisible) {
+        if (currentIndex < moviesLength - itemsVisible) {
           setCurrentIndex(currentIndex + 1);
         }
     };
@@ -37,20 +39,20 @@ function Carousel({genre, movies, loading}){
                           </div>
                       ))
                       // eslint-disable-next-line react/prop-types
-                      : movies.map((movie) => (
-                          <div
-                              key={movie.id}
-                              className="movie-card"
-                              onClick={() => alert(`Hai cliccato su: ${movie?.name}`)}
-                          >
-                              <img src={movie?.link} alt={movie?.name} />
-                              <p>{movie?.name}</p>
-                          </div>
+                      : movies.map((movie, index) => (
+                          <Link key={index} to={`/movie/${movie?.id}`}>
+                              <div
+                                  key={movie.id}
+                                  className="movie-card"
+                              >
+                                  <img src={movie?.link} alt={movie?.name} />
+                                  <p>{movie?.name}</p>
+                              </div>
+                          </Link>
                       ))}
               </div>
           </div>
-          {/* eslint-disable-next-line react/prop-types */}
-          <button className="carousel-control next" onClick={nextPage} disabled={currentIndex >= movies.length - itemsVisible}>
+          <button className="carousel-control next" onClick={nextPage} disabled={currentIndex >= moviesLength - itemsVisible}>
               ❯
           </button>
       </div>

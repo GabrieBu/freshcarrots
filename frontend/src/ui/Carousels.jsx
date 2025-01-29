@@ -43,7 +43,7 @@ function Carousels() {
             <div className="row g-4">
                 {hotGenres.map((genre) => (
                     <div key={genre} className="col-12 mb-4">
-                        <Carousel genre={genre} movies={moviesByGenre[genre]} loading={loading}/>
+                        <Carousel genre={genre} movies={moviesByGenre[genre] || []} loading={loading}/>
                     </div>
                 ))}
             </div>

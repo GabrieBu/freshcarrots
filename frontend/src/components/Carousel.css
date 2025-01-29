@@ -22,7 +22,7 @@
 .movie-card {
   flex: 0 0 calc(100% / 8 - 20px);
   max-width: 120px;
-  text-align: center;
+  text-align: left;
   cursor: pointer;
 }
 
@@ -41,7 +41,7 @@
   color: #333; /* Minimal dark color */
   border: none;
   cursor: pointer;
-  font-size: 20px; /* Keep small and clean */
+  font-size: 20px;
 }
 
 .prev {
@@ -58,7 +58,7 @@
 }
 
 .carousel-control:hover {
-  color: #000; /* Slight hover effect */
+  color: #000;
 }
 
 .skeleton {
