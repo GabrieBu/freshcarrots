@@ -1,0 +1,101 @@
+.carousel-container {
+  position: relative;
+  width: 100%;
+  margin: auto;
+  padding: 10px;
+}
+
+.carousel-wrapper {
+  width: 100%;
+  overflow: hidden;
+  display: flex;
+  justify-content: flex-start;
+}
+
+.carousel-inner {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 20px;
+  transition: transform 0.5s ease-in-out;
+}
+
+.movie-card {
+  flex: 0 0 calc(100% / 8 - 20px);
+  max-width: 120px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.movie-card img {
+  width: 100%;
+  height: 180px;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+.carousel-control {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  color: #333; /* Minimal dark color */
+  border: none;
+  cursor: pointer;
+  font-size: 20px; /* Keep small and clean */
+}
+
+.prev {
+  left: 0;
+}
+
+.next {
+  right: 0;
+}
+
+.carousel-control:disabled {
+  color: rgba(0, 0, 0, 0.3); /* Subtle disabled state */
+  cursor: not-allowed;
+}
+
+.carousel-control:hover {
+  color: #000; /* Slight hover effect */
+}
+
+.skeleton {
+  display: inline-block;
+  width: 12.5%;
+  padding: 10px;
+  margin: 0 5px;
+  background-color: #f0f0f0;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.skeleton-image {
+  width: 100%;
+  height: 150px;
+  background-color: #ccc;
+  border-radius: 8px;
+  animation: pulse 1.5s infinite ease-in-out;
+}
+
+.skeleton-title {
+  width: 80%;
+  height: 20px;
+  margin-top: 10px;
+  background-color: #ccc;
+  border-radius: 4px;
+  animation: pulse 1.5s infinite ease-in-out;
+}
+
+@keyframes pulse {
+  0% {
+    background-color: #ccc;
+  }
+  50% {
+    background-color: #e1e1e1;
+  }
+  100% {
+    background-color: #ccc;
+  }
+}
