@@ -1,6 +1,12 @@
 package com.example.spring_boot_server.movies;
+import com.example.spring_boot_server.actors.Actor;
+import com.example.spring_boot_server.crew.Crew;
 import com.example.spring_boot_server.genres.Genre;
+import com.example.spring_boot_server.languages.Language;
 import com.example.spring_boot_server.posters.Poster;
+import com.example.spring_boot_server.studios.Studios;
+import com.example.spring_boot_server.studios.StudiosController;
+import com.example.spring_boot_server.themes.Theme;
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -25,12 +31,32 @@ public class Movie {
     private Float rating;
     @OneToOne(mappedBy = "movie", cascade = CascadeType.ALL)
     private Poster poster;
+
+    public List<Theme> getThemes() {
+        return themes;
+    }
+
+    public void setThemes(List<Theme> themes) {
+        this.themes = themes;
+    }
+
     @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Genre> genres;
+    @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Actor> actors;
+    @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Studios> studios;
+    @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Crew> crew;
+    @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Language> languages;
+    @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Theme> themes;
+
 
     public Movie() {}
 
-    public Movie(Long id, String name, Float date, String tagline, String description, Float minute, Float rating, Poster poster, List<Genre> genres) {
+    public Movie(Long id, String name, Float date, String tagline, String description, Float minute, Float rating, Poster poster, List<Genre> genres, List<Actor> actors, List<Crew> crew, List<Language> languages, List<Studios> studios) {
         this.id = id;
         this.name = name;
         this.date = date;
@@ -40,6 +66,50 @@ public class Movie {
         this.rating = rating;
         this.poster = poster;
         this.genres = genres;
+        this.actors = actors;
+        this.crew = crew;
+        this.languages = languages;
+        this.studios = studios;
+    }
+
+    public void setPoster(Poster poster) {
+        this.poster = poster;
+    }
+
+    public void setGenres(List<Genre> genres) {
+        this.genres = genres;
+    }
+
+    public List<Actor> getActors() {
+        return actors;
+    }
+
+    public void setActors(List<Actor> actors) {
+        this.actors = actors;
+    }
+
+    public List<Studios> getStudios() {
+        return studios;
+    }
+
+    public void setStudios(List<Studios> studios) {
+        this.studios = studios;
+    }
+
+    public List<Crew> getCrew() {
+        return crew;
+    }
+
+    public void setCrew(List<Crew> crew) {
+        this.crew = crew;
+    }
+
+    public List<Language> getLanguages() {
+        return languages;
+    }
+
+    public void setLanguages(List<Language> languages) {
+        this.languages = languages;
     }
 
     public List<Genre> getGenres() {

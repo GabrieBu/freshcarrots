@@ -1,5 +1,6 @@
 package com.example.spring_boot_server.actors;
 
+import com.example.spring_boot_server.movies.Movie;
 import jakarta.persistence.*;
 
 @Entity
@@ -8,22 +9,24 @@ public class Actor {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "id_film", nullable = false, columnDefinition = "BIGINT")
-    private Long id_film;
     @Column(name = "name", nullable = false, columnDefinition = "TEXT")
     private String name;
     @Column(name = "role", nullable = false, columnDefinition = "TEXT")
     private String role;
+    @ManyToOne
+    @JoinColumn(name = "id_film", referencedColumnName = "id", nullable = false)
+    private Movie movie;
 
     // Default constructor
     public Actor() {
     }
 
     // Constructor with all fields
-    public Actor(Long id_film, String name, String role) {
-        this.id_film = id_film;
+    public Actor(Long id, String name, String role, Movie movie) {
+        this.id = id;
         this.name = name;
         this.role = role;
+        this.movie = movie;
     }
 
     public String toString(){
@@ -38,14 +41,6 @@ public class Actor {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public Long getId_film() {
-        return id_film;
-    }
-
-    public void setId_film(Long id_film) {
-        this.id_film = id_film;
     }
 
     public String getName() {
