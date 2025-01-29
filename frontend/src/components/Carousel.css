@@ -1,24 +1,62 @@
-/* Personalizzazione dei pulsanti prev/next */
-.carousel-control-prev,
-.carousel-control-next {
-  width: 50px; 
-  opacity: 0.5; 
-  transition: opacity 0.3s ease; 
+.carousel-container {
+  position: relative;
+  width: 100%; /* Ensure it spans the full width */
+  margin: auto;
+  padding: 10px;
 }
 
-.carousel-control-prev:hover,
-.carousel-control-next:hover {
-  opacity: 1; 
+.carousel-wrapper {
+  width: 100%;
+  overflow: hidden;
+  display: flex;
+  justify-content: flex-start; /* Align content to the left */
 }
 
-.carousel-control-prev-icon,
-.carousel-control-next-icon {
-  width: 30px; 
-  height: 30px; 
-}
-
-/* Spaziatura tra le immagini laterali e il pulsante */
 .carousel-inner {
-  padding-left: 10px;
-  padding-right: 10px; 
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 20px; /* Small space between cards */
+  transition: transform 0.5s ease-in-out;
+}
+
+.movie-card {
+  flex: 0 0 calc(100% / 8 - 8px); /* 8 items per row with spacing */
+  max-width: 120px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.movie-card img {
+  width: 100%;
+  height: 180px;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+.carousel-control {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  color: #333; /* Minimal dark color */
+  border: none;
+  cursor: pointer;
+  font-size: 20px; /* Keep small and clean */
+}
+
+.prev {
+  left: 0;
+}
+
+.next {
+  right: 0;
+}
+
+.carousel-control:disabled {
+  color: rgba(0, 0, 0, 0.3); /* Subtle disabled state */
+  cursor: not-allowed;
+}
+
+.carousel-control:hover {
+  color: #000; /* Slight hover effect */
 }

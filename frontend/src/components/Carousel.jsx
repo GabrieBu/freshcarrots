@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import "./Carousel.css"; // Per le personalizzazioni finali
+import { useState } from "react";
+import "./Carousel.css"; // Custom styles
 
 const Carousel = () => {
   const movies = [
@@ -16,11 +16,10 @@ const Carousel = () => {
   ];
 
   const [currentIndex, setCurrentIndex] = useState(0);
-  const itemsPerPage = 4;
-  const totalPages = Math.ceil(movies.length / itemsPerPage);
+  const itemsVisible = 8;
 
   const nextPage = () => {
-    if (currentIndex < totalPages - 1) {
+    if (currentIndex < movies.length - itemsVisible) {
       setCurrentIndex(currentIndex + 1);
     }
   };
@@ -31,91 +30,27 @@ const Carousel = () => {
     }
   };
 
-  const handleMovieClick = (movie) => {
-    alert(`Hai cliccato su: ${movie.title}`);
-  };
-
-  // Dividi i film in gruppi da 4 per ciascuna slide
-  const movieSlides = [];
-  for (let i = 0; i < totalPages; i++) {
-    movieSlides.push(movies.slice(i * itemsPerPage, (i + 1) * itemsPerPage));
-  }
-
-  useEffect(() => {
-    const nextButton = document.querySelector(".carousel-control-next");
-    const prevButton = document.querySelector(".carousel-control-prev");
-
-    if (currentIndex === totalPages - 1) {
-      nextButton.setAttribute("disabled", "true");
-    } else {
-      nextButton.removeAttribute("disabled");
-    }
-
-    if (currentIndex === 0) {
-      prevButton.setAttribute("disabled", "true");
-    } else {
-      prevButton.removeAttribute("disabled");
-    }
-  }, [currentIndex]);
-
   return (
-    <div className="carousel-container mt-4">
-      <div id="carouselGenre" className="carousel slide" data-bs-ride="carousel" data-bs-wrap="false">
+      <div className="carousel-container">
+        <button className="carousel-control prev" onClick={prevPage} disabled={currentIndex === 0}>
+          ❮
+        </button>
 
-        <div className="carousel-inner">
-          {movieSlides.map((movies, index) => (
-            <div
-              className={`carousel-item ${index === currentIndex ? "active" : ""}`}
-              key={index}
-            >
-              <div className="row justify-content-center">
-                {movies.map((movie) => (
-                  <div key={movie.id} className="col-3 mb-4">
-                    <div
-                      className="card movie-card"
-                      onClick={() => handleMovieClick(movie)}
-                      style={{ cursor: "pointer" }}
-                    >
-                      <img
-                        src={movie.image}
-                        alt={movie.title}
-                        className="card-img-top movie-img"
-                      />
-                      <div className="card-body text-center">
-                        <p className="card-text movie-title">{movie.title}</p>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          ))}
+        <div className="carousel-wrapper">
+          <div className="carousel-inner" style={{ transform: `translateX(-${currentIndex * 12.5}%)` }}>
+            {movies.map((movie) => (
+                <div key={movie.id} className="movie-card" onClick={() => alert(`Hai cliccato su: ${movie.title}`)}>
+                  <img src={movie.image} alt={movie.title} />
+                  <p>{movie.title}</p>
+                </div>
+            ))}
+          </div>
         </div>
 
-        <button
-          className="carousel-control-prev"
-          type="button"
-          data-bs-target="#carouselGenre"
-          data-bs-slide="prev"
-          onClick={prevPage}
-          disabled={currentIndex === 0}
-        >
-          <span className="carousel-control-prev-icon" aria-hidden="true"></span>
-          <span className="visually-hidden">Previous</span>
-        </button>
-        <button
-          className="carousel-control-next"
-          type="button"
-          data-bs-target="#carouselGenre"
-          data-bs-slide="next"
-          onClick={nextPage}
-          disabled={currentIndex === totalPages - 1}
-        >
-          <span className="carousel-control-next-icon" aria-hidden="true"></span>
-          <span className="visually-hidden">Next</span>
+        <button className="carousel-control next" onClick={nextPage} disabled={currentIndex >= movies.length - itemsVisible}>
+          ❯
         </button>
       </div>
-    </div>
   );
 };
 
