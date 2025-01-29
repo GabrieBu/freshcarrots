@@ -1,20 +1,12 @@
-function Movie() {
-    //generated movie to test
-    const movie = {
-        title: "Inception",
-        tagline: "Your mind is the scene of the crime.",
-        description: "A thief who steals corporate secrets through the use of dream-sharing technology is given the task of implanting an idea into the mind of a CEO.",
-        poster: "https://m.media-amazon.com/images/I/51k4nFv1v3L._AC_SY679_.jpg", // Poster image URL
-        crew: ["Christopher Nolan (Director)", "Emma Thomas (Producer)", "Hans Zimmer (Composer)"],
-        studios: ["Warner Bros.", "Syncopy"],
-        languages: ["English", "Japanese", "French"],
-        actors: ["Leonardo DiCaprio", "Joseph Gordon-Levitt", "Ellen Page"],
-        duration: 148,
-        rating: 8.8,
-    };
+import {useParams} from "react-router-dom";
+import useMovie from "../hooks/useMovie.js";
 
+function Movie() {
+    const {id} = useParams();
+
+    const {movie, error} = useMovie(id);
     return (
-        <div className="container mt-5">
+        error ? <h2 className="text-danger">Error fetching movie</h2> : <div className="container mt-5">
             <div className="row">
                 <div className="col-md-4">
                     <img
