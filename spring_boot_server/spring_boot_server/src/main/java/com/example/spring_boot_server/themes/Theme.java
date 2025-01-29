@@ -1,4 +1,5 @@
 package com.example.spring_boot_server.themes;
+import com.example.spring_boot_server.movies.Movie;
 import jakarta.persistence.*;
 
 @Entity
@@ -7,16 +8,18 @@ public class Theme {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "id_film", nullable = false, columnDefinition = "BIGINT")
-    private Long id_film;
     @Column(name = "theme", columnDefinition = "TEXT")
     private String theme;
+    @ManyToOne
+    @JoinColumn(name = "id_film", referencedColumnName = "id", nullable = false)
+    private Movie movie;
 
     public Theme() {}
 
-    public Theme(Long id_film, String themes) {
-        this.id_film = id_film;
+    public Theme(Long id, String themes, Movie movie) {
+        this.id = id;
         this.theme = themes;
+        this.movie = movie;
     }
 
     public Long getId() {
@@ -27,15 +30,8 @@ public class Theme {
         this.id = id;
     }
 
-    public Long getId_film() {
-        return id_film;
-    }
 
-    public void setId_film(Long id_film) {
-        this.id_film = id_film;
-    }
-
-    public String getThemes() {
+    public String getTheme() {
         return theme;
     }
 

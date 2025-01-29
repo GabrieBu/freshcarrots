@@ -1,28 +1,30 @@
 package com.example.spring_boot_server.crew;
+import com.example.spring_boot_server.movies.Movie;
 import jakarta.persistence.*;
 
 
 @Entity
-@Table(name="crews")
+@Table(name="crew")
 public class Crew {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "id_film", nullable = false, columnDefinition = "BIGINT")
-    private Long id_film;
     @Column(name = "role", columnDefinition = "TEXT")
     private String role;
     @Column(name = "name", columnDefinition = "TEXT")
     private String name;
+    @ManyToOne
+    @JoinColumn(name = "id_film", referencedColumnName = "id", nullable = false)
+    private Movie movie;
 
     public Crew() {
 
     }
 
-    public Crew(Long id_film, String role, String name) {
-        this.id_film = id_film;
+    public Crew(Long id, String role, String name, Movie movie) {
         this.role = role;
         this.name = name;
+        this.movie = movie;
     }
 
 
@@ -32,14 +34,6 @@ public class Crew {
 
     public void setRole(String role) {
         this.role = role;
-    }
-
-    public Long getId_film() {
-        return id_film;
-    }
-
-    public void setId_film(Long id_film) {
-        this.id_film = id_film;
     }
 
     public Long getId() {
