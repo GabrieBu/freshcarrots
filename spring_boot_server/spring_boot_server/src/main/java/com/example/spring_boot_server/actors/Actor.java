@@ -26,6 +26,12 @@ public class Actor {
         this.role = role;
     }
 
+    public String toString(){
+        return "Movie{" +
+                "id=" + id +
+                ", name='" + name + " - " + "role=" + role + "}";
+    }
+
     public Long getId() {
         return id;
     }
