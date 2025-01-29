@@ -1,17 +1,14 @@
 import { useState } from "react";
 import "./Carousel.css";
-import useMoviesCarousel from "../hooks/useMoviesCarousel.js";
 import Skeleton from "../ui/Skeleton.jsx"; // Custom styles
 
-
 // eslint-disable-next-line react/prop-types
-function Carousel({genre}){
-    const {movies, loading, error} = useMoviesCarousel(genre);
-
+function Carousel({genre, movies, loading}){
     const [currentIndex, setCurrentIndex] = useState(0);
-    const itemsVisible = 8;
+    const itemsVisible = 16;
 
     const nextPage = () => {
+        // eslint-disable-next-line react/prop-types
         if (currentIndex < movies.length - itemsVisible) {
           setCurrentIndex(currentIndex + 1);
         }
@@ -25,7 +22,6 @@ function Carousel({genre}){
 
     return (
       <div className="carousel-container">
-          {error && <h4 className="text-danger">Error loading {genre} movies</h4>}
           {loading ? <Skeleton /> : <h2 className="carousel-title">{genre} movies you can like</h2>}
           <button className="carousel-control prev" onClick={prevPage} disabled={currentIndex === 0}>
               ❮
@@ -40,6 +36,7 @@ function Carousel({genre}){
                               <div className="skeleton-title"></div>
                           </div>
                       ))
+                      // eslint-disable-next-line react/prop-types
                       : movies.map((movie) => (
                           <div
                               key={movie.id}
@@ -52,9 +49,8 @@ function Carousel({genre}){
                       ))}
               </div>
           </div>
-
-          <button className="carousel-control next" onClick={nextPage}
-                  disabled={currentIndex >= movies.length - itemsVisible}>
+          {/* eslint-disable-next-line react/prop-types */}
+          <button className="carousel-control next" onClick={nextPage} disabled={currentIndex >= movies.length - itemsVisible}>
               ❯
           </button>
       </div>
