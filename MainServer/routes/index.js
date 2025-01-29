@@ -65,4 +65,17 @@ router.post('/newMessage', async function(req, res, next) {
   }
 });
 
+router.get('/topRated', async function(req, res, next) {
+  console.log("params: " + JSON.stringify(req.query));
+  try {
+    const response = await axios.get('http://localhost:3002/movies/topRated', {
+      params: req.query
+    });
+    console.log("response: " + JSON.stringify(response.data));
+    res.json(response.data);
+  } catch (error) {
+    res.status(500).send('Error occured: newMessage ' + error.message);
+  }
+});
+
 module.exports = router;
