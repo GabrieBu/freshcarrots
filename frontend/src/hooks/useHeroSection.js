@@ -18,7 +18,7 @@ export default function useHeroSection() {
         setLoading(false);
       })
       .catch((err) => {
-        console.error(err);
+        console.error("Error five topMovies: " + err);
         setError(true); 
         setLoading(false);
       });

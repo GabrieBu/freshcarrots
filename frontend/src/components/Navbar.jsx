@@ -1,4 +1,5 @@
 import {Link} from "react-router-dom";
+import Searchbar from "./Searchbar.jsx";
 
 function Navbar() {
     return (
@@ -10,9 +11,8 @@ function Navbar() {
                         aria-label="Toggle navigation">
                     <span className="navbar-toggler-icon"></span>
                 </button>
-                <div className="collapse navbar-collapse" id="navbarsExample05">
+                <div className="collapse navbar-collapse">
                     <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-                        <Link to="/community"></Link>
                         <li className="nav-item">
                             <Link className="nav-link" to="/community">Community</Link>
                         </li>
@@ -20,9 +20,9 @@ function Navbar() {
                             <Link className="nav-link" to="/reviews">Reviews</Link>
                         </li>
                     </ul>
-                    <form role="search">
-                        <input className="form-control" type="search" placeholder="Search" aria-label="Search"/>
-                    </form>
+                    <div className="w-50">
+                        <Searchbar/>
+                    </div>
                 </div>
             </div>
         </nav>
