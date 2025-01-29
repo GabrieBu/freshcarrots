@@ -1,6 +1,6 @@
 .carousel-container {
   position: relative;
-  width: 100%; /* Ensure it spans the full width */
+  width: 100%;
   margin: auto;
   padding: 10px;
 }
@@ -9,18 +9,18 @@
   width: 100%;
   overflow: hidden;
   display: flex;
-  justify-content: flex-start; /* Align content to the left */
+  justify-content: flex-start;
 }
 
 .carousel-inner {
   display: flex;
   flex-wrap: nowrap;
-  gap: 20px; /* Small space between cards */
+  gap: 20px;
   transition: transform 0.5s ease-in-out;
 }
 
 .movie-card {
-  flex: 0 0 calc(100% / 8 - 8px); /* 8 items per row with spacing */
+  flex: 0 0 calc(100% / 8 - 20px);
   max-width: 120px;
   text-align: center;
   cursor: pointer;
@@ -59,4 +59,43 @@
 
 .carousel-control:hover {
   color: #000; /* Slight hover effect */
+}
+
+.skeleton {
+  display: inline-block;
+  width: 12.5%;
+  padding: 10px;
+  margin: 0 5px;
+  background-color: #f0f0f0;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.skeleton-image {
+  width: 100%;
+  height: 150px;
+  background-color: #ccc;
+  border-radius: 8px;
+  animation: pulse 1.5s infinite ease-in-out;
+}
+
+.skeleton-title {
+  width: 80%;
+  height: 20px;
+  margin-top: 10px;
+  background-color: #ccc;
+  border-radius: 4px;
+  animation: pulse 1.5s infinite ease-in-out;
+}
+
+@keyframes pulse {
+  0% {
+    background-color: #ccc;
+  }
+  50% {
+    background-color: #e1e1e1;
+  }
+  100% {
+    background-color: #ccc;
+  }
 }
