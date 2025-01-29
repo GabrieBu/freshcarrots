@@ -15,8 +15,8 @@ function Reviews() {
     const { ref, inView } = useInView({});
     const [criticFilter, setCriticFilter] = useState("all_critics");
     const [typeFilter, setTypeFilter] = useState("all_types");
-
-    const {loading, error, reviews, hasMore} = useReviews(pageNumber,criticFilter,typeFilter);
+    const [dateFilter, setDate] = useState("all_dates");
+    const {loading, error, reviews, hasMore} = useReviews(pageNumber,criticFilter,typeFilter,dateFilter);
 
     useEffect(() => {
         if (inView && hasMore) {
@@ -36,9 +36,15 @@ function Reviews() {
         setTypeFilter(event.target.value);
     };
 
+    const handleDateChange = (event) => {
+        setDate(event.target.value);
+    };
+
+
     const handleResetFilters = () => {
         setCriticFilter("all_critics");
         setTypeFilter("all_types");
+        setDate(""); 
     };
 
     return (
@@ -46,7 +52,6 @@ function Reviews() {
             <LayoutNavbar>
                 <Navbar/>
             </LayoutNavbar>
-
             {error && <h2 className="text-danger">Server is not responding 404. Try again later...</h2>}
             <LayoutContent>
                 <h1>Reviews: </h1>
@@ -68,6 +73,10 @@ function Reviews() {
                                 <option value="Rotten">Rotten</option>
                                 <option value="Fresh">Fresh</option>
                             </select>
+                        </div>
+                        <div className="col-md-3">
+                            <label htmlFor="dateFilter" className="form-label">Date:</label>
+                            <input id="dateFilter" type="date" className="form-control" value={dateFilter} onChange={handleDateChange}/>
                         </div>
                         <div className="col-md-2 text-end">
                         <button className="btn btn-outline-secondary" onClick={handleResetFilters}>
