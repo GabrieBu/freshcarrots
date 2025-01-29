@@ -25,7 +25,7 @@ public class Movie {
     private Float rating;
     @OneToOne(mappedBy = "movie", cascade = CascadeType.ALL)
     private Poster poster;
-    @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Genre> genres;
 
     public Movie() {}

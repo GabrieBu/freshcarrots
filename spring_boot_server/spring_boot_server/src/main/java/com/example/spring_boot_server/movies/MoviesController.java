@@ -27,4 +27,10 @@ public class MoviesController {
         List<Movie> movies = moviesService.findMovieByName(name);
         return new ResponseEntity<>(movies, HttpStatus.OK);
     }
+
+    @GetMapping("/topRated")
+    public ResponseEntity<List<MovieTitlePosterlinkDTO>> findMovieByGenre(@RequestParam("genre") String genreName) {
+        List<MovieTitlePosterlinkDTO> movies = moviesService.findMoviesByGenre(genreName);
+        return new ResponseEntity<>(movies, HttpStatus.OK);
+    }
 }
