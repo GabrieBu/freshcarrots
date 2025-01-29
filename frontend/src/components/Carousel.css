@@ -1,0 +1,24 @@
+/* Personalizzazione dei pulsanti prev/next */
+.carousel-control-prev,
+.carousel-control-next {
+  width: 50px; 
+  opacity: 0.5; 
+  transition: opacity 0.3s ease; 
+}
+
+.carousel-control-prev:hover,
+.carousel-control-next:hover {
+  opacity: 1; 
+}
+
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+  width: 30px; 
+  height: 30px; 
+}
+
+/* Spaziatura tra le immagini laterali e il pulsante */
+.carousel-inner {
+  padding-left: 10px;
+  padding-right: 10px; 
+}

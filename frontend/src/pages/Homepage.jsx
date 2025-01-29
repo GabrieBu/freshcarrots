@@ -7,6 +7,7 @@ const Cards = lazy(() => import("../components/Cards"));
 const Footer = lazy(() => import("../components/Footer"));
 const Navbar = lazy(() => import("../components/Navbar"));
 const HeroSection = lazy(() => import("../components/HeroSection"));
+const Carousel = lazy(() => import("../components/Carousel"));
 
 
 function Homepage() {
@@ -18,6 +19,7 @@ function Homepage() {
             </LayoutNavbar>
             <HeroSection />
             <LayoutContent>
+                <Carousel />
                 <Cards />
             </LayoutContent>
             <Footer />
