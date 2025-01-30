@@ -61,6 +61,16 @@ router.post('/newMessage', async function(req, res, next) {
     const response = await axios.post('http://localhost:3001/newMessage', req.body);
     res.json(response.data);
   } catch (error) {
+    res.status(500).send('Error occured: newImage ' + error.message);
+  }
+});
+
+router.post('/newImage', async function(req, res, next) {
+  console.log(JSON.stringify(req.body));
+  try {
+    const response = await axios.post('http://localhost:3001/newImage', req.body);
+    res.json(response.data);
+  } catch (error) {
     res.status(500).send('Error occured: newMessage ' + error.message);
   }
 });
