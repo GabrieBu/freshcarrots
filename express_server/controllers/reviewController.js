@@ -1,7 +1,8 @@
 import Review from "../models/Review.js";
 
 export const getReviews = async (req, res) => {
-    const {criticFilter, typeFilter,dateFilter} = req.query;
+    const {criticFilter, typeFilter} = req.query;
+    let {minDateFilter, maxDateFilter} = req.query;
     const page = parseInt(req.query.page) || 1;
     const toSkip = (page - 1) * 10;
     try {
@@ -12,9 +13,15 @@ export const getReviews = async (req, res) => {
         if(typeFilter && typeFilter !== "all_types"){
             filters.review_type = typeFilter;
         }
-        if(dateFilter && dateFilter !== "all_dates"){
-            filters.review_date = dateFilter;
+        if(minDateFilter && minDateFilter !== "all_dates"){
+            minDateFilter = new Date(`${minDateFilter}T00:00:00.000Z`);
+            filters.review_date = { ...filters.review_date, $gte: minDateFilter };
         }
+        if(maxDateFilter && maxDateFilter !== "all_dates"){
+            maxDateFilter = new Date(`${maxDateFilter}T00:00:00.000Z`);
+            filters.review_date = { ...filters.review_date, $lte: maxDateFilter };
+        }
+
         console.log("filter: " + filters);
         const review = await Review.find(filters)
             .sort({ review_date: -1 }) //from latest to oldest
