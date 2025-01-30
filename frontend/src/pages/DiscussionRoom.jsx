@@ -53,6 +53,22 @@ function DiscussionRoom() {
         if (newMessage.trim() !== "" || selectedFile) { //if message isn't empty
             const time_stamp_message = new Date();
 
+            if(selectedFile) {
+                socket.emit("image", id_room, username, selectedFile, time_stamp_message)
+
+                try {
+                    await axios.post("http://localhost:3000/newImage", {
+                        id_room: id_room,
+                        sender: username,
+                        image: selectedFile,
+                        time_stamp:  time_stamp_message
+                    });
+                } catch (error) {
+                    /* @TODO handle better, displaying message*/
+                    console.error("Error saving message:", error);
+                    return;
+                }
+            }
 
             socket.emit("message", id_room, username, newMessage, time_stamp_message)
 
