@@ -42,7 +42,7 @@ export const newMessage = async (req, res) => {
     try {
         const { id_room, sender, message, time_stamp } = req.body;
 
-        if (!id_room || !sender || !message) {
+        if (!id_room || !sender || !message || !time_stamp) {
             return res.status(400).json({ error: "Missing required fields" });
         }
 
@@ -53,6 +53,28 @@ export const newMessage = async (req, res) => {
         }
 
         discussion.messages.push({ sender, message, time_stamp });
+        await discussion.save();
+        res.status(200).json();
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+}
+
+export const newImage = async (req, res) => {
+    try {
+        const { id_room, sender, image, time_stamp } = req.body;
+
+        if (!id_room || !sender || !image || !time_stamp) {
+            return res.status(400).json({ error: "Missing required fields" });
+        }
+
+        const discussion = await Discussion.findOne({ id: id_room });
+
+        if (!discussion) {
+            return res.status(404).json({ error: "Discussion not found" });
+        }
+
+        discussion.messages.push({ sender, image, time_stamp });
         await discussion.save();
         res.status(200).json();
     } catch (error) {
