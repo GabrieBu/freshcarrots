@@ -1,7 +1,7 @@
 import Review from "../models/Review.js";
 
 export const getReviews = async (req, res) => {
-    const {criticFilter, typeFilter} = req.query;
+    const {criticFilter, typeFilter,dateFilter} = req.query;
     const page = parseInt(req.query.page) || 1;
     const toSkip = (page - 1) * 10;
     try {
@@ -11,6 +11,9 @@ export const getReviews = async (req, res) => {
         }
         if(typeFilter && typeFilter !== "all_types"){
             filters.review_type = typeFilter;
+        }
+        if(dateFilter && dateFilter !== "all_dates"){
+            filters.review_date = dateFilter;
         }
         console.log("filter: " + filters);
         const review = await Review.find(filters)
