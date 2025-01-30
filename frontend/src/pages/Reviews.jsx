@@ -63,7 +63,7 @@ function Reviews() {
                 <h1>Reviews: </h1>
                 <div className="bg-light p-3 mb-4 shadow-sm rounded" style={{ border: "1px solid #ccc" }}>
                     <div className="row gy-2">
-                        <div className="col-md-3">
+                        <div className="col-md-2">
                             <label htmlFor="criticFilter" className="form-label">Critic:</label>
                             <select id="criticFilter" className="form-select" value={criticFilter}
                                     onChange={handleCriticFilterChange}>
@@ -72,7 +72,7 @@ function Reviews() {
                                 <option value="False">Normal</option>
                             </select>
                         </div>
-                        <div className="col-md-3">
+                        <div className="col-md-2">
                             <label htmlFor="typeFilter" className="form-label">Type:</label>
                             <select id="typeFilter" className="form-select" value={typeFilter}
                                     onChange={handleRottenChange}>
@@ -81,18 +81,21 @@ function Reviews() {
                                 <option value="Fresh">Fresh</option>
                             </select>
                         </div>
-                        <div className="col-md-3">
+                        <div className="col-md-2">
                             <label htmlFor="minDateFilter" className="form-label">From date:</label>
                             <input id="minDateFilter" type="date" className="form-control" value={minDateFilter}
                                    onChange={handleMinDate}/>
                         </div>
-                        <div className="col-md-3">
+                        <div className="col-md-2">
                             <label htmlFor="maxDateFilter" className="form-label">To date:</label>
                             <input id="maxDateFilter" type="date" className="form-control" value={maxDateFilter}
                                    onChange={handleMaxDate}/>
                         </div>
-                        <div className="col-md-2 text-end">
-                            <button className="btn btn-outline-secondary" onClick={handleResetFilters}>
+                        <div className="col-md-2">
+                            <label htmlFor="maxDateFilter" className="form-label">Name movie:</label>
+                        </div>
+                        <div className="col-md-2">
+                        <button className="btn btn-outline-secondary" onClick={handleResetFilters}>
                                 Reset Filters
                             </button>
                         </div>
