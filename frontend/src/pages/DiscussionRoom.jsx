@@ -15,6 +15,7 @@ function DiscussionRoom() {
     const [error, setError] = useState(false);
     const [loading, setLoading] = useState(false);
     const [title, setTitle] = useState("");
+    const [selectedFile, setSelectedFile] = useState(null);
 
     useEffect(() => {
         async function fetchMessages() {
@@ -49,8 +50,10 @@ function DiscussionRoom() {
     }, [id_room, username]);
 
     const handleSend = async () => {
-        if (newMessage.trim() !== "") { //if message isn't empty
-            const time_stamp_message = new Date()
+        if (newMessage.trim() !== "" || selectedFile) { //if message isn't empty
+            const time_stamp_message = new Date();
+
+
             socket.emit("message", id_room, username, newMessage, time_stamp_message)
 
             try {
@@ -89,6 +92,13 @@ function DiscussionRoom() {
         }
     };
 
+    function handleFileSelect(ev) {
+        const file = ev.target.files[0];
+        if (file) {
+            setSelectedFile(file);
+        }
+    }
+
     return (
         <div className="container mt-4">
             <h2>{title}</h2>
@@ -115,6 +125,7 @@ function DiscussionRoom() {
                     value={newMessage}
                     onChange={(e) => setNewMessage(e.target.value)}
                 />
+                <input type="file" className="form-control" onChange={handleFileSelect} accept="image/*,video/*"/>
                 <button className="btn btn-primary" onClick={handleSend}>Send</button>
             </div>
         </div>
