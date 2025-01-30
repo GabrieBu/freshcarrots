@@ -41,6 +41,11 @@ function DiscussionRoom() {
             setMessages(prevMessages => [...prevMessages, { sender: senderUsername, message: chatText, time_stamp: time_stamp }]);
         });
 
+        //listener for new incoming message
+        socket.on("image", (room, senderUsername, image, time_stamp) => {
+            setMessages(prevMessages => [...prevMessages, { sender: senderUsername, image: image, time_stamp: time_stamp }]);
+        });
+
         // callback to cleanup the socket
         return () => {
             socket.off("message");
@@ -53,6 +58,22 @@ function DiscussionRoom() {
         if (newMessage.trim() !== "" || selectedFile) { //if message isn't empty
             const time_stamp_message = new Date();
 
+            if(selectedFile) {
+                socket.emit("image", id_room, username, selectedFile, time_stamp_message)
+
+                try {
+                    await axios.post("http://localhost:3000/newImage", {
+                        id_room: id_room,
+                        sender: username,
+                        image: selectedFile,
+                        time_stamp:  time_stamp_message
+                    });
+                } catch (error) {
+                    /* @TODO handle better, displaying message*/
+                    console.error("Error saving message:", error);
+                    return;
+                }
+            }
 
             socket.emit("message", id_room, username, newMessage, time_stamp_message)
 
@@ -69,8 +90,10 @@ function DiscussionRoom() {
                 return;
             }
 
-            setMessages([...messages, { sender: username, message: newMessage, time_stamp: time_stamp_message }]);
+            setMessages([...messages, { sender: username, message: newMessage, image: selectedFile, time_stamp: time_stamp_message }]);
             setNewMessage(""); //cleanup textbox
+            setSelectedFile(null); //cleanup selection
+
         }
     };
 
@@ -112,6 +135,18 @@ function DiscussionRoom() {
                     >
                         <div className={`p-2 rounded ${msg.sender === username ? "bg-primary text-white" : "bg-light"}`}>
                             {msg.sender !== username && <strong>{msg.sender}:</strong>} {msg?.message}
+                            {msg?.image && (
+                                <>
+                                    {msg?.image.match(/\.(jpeg|jpg|png|gif)$/) ? (
+                                        <img src={msg?.image} alt="Attachment" className="img-fluid mt-2" style={{ maxWidth: "200px" }} />
+                                    ) : (
+                                        <video controls className="mt-2" style={{ maxWidth: "200px" }}>
+                                            <source src={msg?.image} type="video/mp4" />
+                                            Your browser does not support the video tag.
+                                        </video>
+                                    )}
+                                </>
+                            )}
                             <div className="text-muted small text-end">{formatTimestamp(msg?.time_stamp)}</div>
                         </div>
                     </div>
