@@ -10,6 +10,10 @@ exports.init = function(io) {
                 console.log(`message ${chatText} sent in the room ${room} by ${username}`);
                 socket.to(room).emit('message', room, username, chatText, timestamp);
             })
+            socket.on('image', function(room, username, image, timestamp) {
+                console.log(`image ${image} sent in the room ${room} by ${username}`);
+                socket.to(room).emit('message', room, username, image, timestamp);
+            })
             socket.on('disconnect', function (room,username){
                 console.log(`user ${username} disconnected from ${room}`);
             })
