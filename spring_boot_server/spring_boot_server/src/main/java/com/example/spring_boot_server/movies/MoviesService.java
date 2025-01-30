@@ -69,7 +69,7 @@ public class MoviesService {
     }
 
     public List<MovieTitlePosterlinkDTO> findMoviesByGenre(String genreName){
-        List<Movie> movies = moviesRepository.findTop20ByGenres_GenreOrderByRatingDesc(genreName);
+        List<Movie> movies = moviesRepository.findTop20ByGenres_GenreOrderByRatingDescDateDesc(genreName);
 
         return movies.stream()
                 .map(movie -> new MovieTitlePosterlinkDTO(
