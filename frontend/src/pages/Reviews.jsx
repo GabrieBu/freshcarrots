@@ -15,8 +15,9 @@ function Reviews() {
     const { ref, inView } = useInView({});
     const [criticFilter, setCriticFilter] = useState("all_critics");
     const [typeFilter, setTypeFilter] = useState("all_types");
-    const [dateFilter, setDate] = useState("all_dates");
-    const {loading, error, reviews, hasMore} = useReviews(pageNumber,criticFilter,typeFilter,dateFilter);
+    const [minDateFilter, setMinDate] = useState("all_dates");
+    const [maxDateFilter, setMaxDate] = useState("all_dates");
+    const {loading, error, reviews, hasMore} = useReviews(pageNumber,criticFilter,typeFilter, minDateFilter, maxDateFilter);
 
     useEffect(() => {
         if (inView && hasMore) {
@@ -36,15 +37,20 @@ function Reviews() {
         setTypeFilter(event.target.value);
     };
 
-    const handleDateChange = (event) => {
-        setDate(event.target.value);
+    const handleMinDate = (event) => {
+        setMinDate(event.target.value);
+    };
+
+    const handleMaxDate = (event) => {
+        setMaxDate(event.target.value);
     };
 
 
     const handleResetFilters = () => {
         setCriticFilter("all_critics");
         setTypeFilter("all_types");
-        setDate(""); 
+        setMinDate("all_dates");
+        setMaxDate("all_dates");
     };
 
     return (
@@ -68,18 +74,25 @@ function Reviews() {
                         </div>
                         <div className="col-md-3">
                             <label htmlFor="typeFilter" className="form-label">Type:</label>
-                            <select id="typeFilter" className="form-select" value={typeFilter} onChange={handleRottenChange}>
+                            <select id="typeFilter" className="form-select" value={typeFilter}
+                                    onChange={handleRottenChange}>
                                 <option value="all_types">All</option>
                                 <option value="Rotten">Rotten</option>
                                 <option value="Fresh">Fresh</option>
                             </select>
                         </div>
                         <div className="col-md-3">
-                            <label htmlFor="dateFilter" className="form-label">Date:</label>
-                            <input id="dateFilter" type="date" className="form-control" value={dateFilter} onChange={handleDateChange}/>
+                            <label htmlFor="minDateFilter" className="form-label">From date:</label>
+                            <input id="minDateFilter" type="date" className="form-control" value={minDateFilter}
+                                   onChange={handleMinDate}/>
+                        </div>
+                        <div className="col-md-3">
+                            <label htmlFor="maxDateFilter" className="form-label">To date:</label>
+                            <input id="maxDateFilter" type="date" className="form-control" value={maxDateFilter}
+                                   onChange={handleMaxDate}/>
                         </div>
                         <div className="col-md-2 text-end">
-                        <button className="btn btn-outline-secondary" onClick={handleResetFilters}>
+                            <button className="btn btn-outline-secondary" onClick={handleResetFilters}>
                                 Reset Filters
                             </button>
                         </div>
@@ -88,7 +101,7 @@ function Reviews() {
                 {reviews?.map((review, index) => <Review review={review} key={index}/>)}
             </LayoutContent>
             {
-                loading && <Loader />
+                loading && <Loader/>
             }
             <div ref={ref}></div>
             <Footer/>
