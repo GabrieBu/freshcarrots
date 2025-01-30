@@ -9,6 +9,6 @@ import java.util.Optional;
 public interface MoviesRepository extends JpaRepository<Movie, Long> {
     List<Movie> findTop5ByRatingIsNotNullAndDateIsNotNullOrderByRatingDescDateDesc();
     List<Movie> findMovieByName(String name);
-    List<Movie> findTop20ByGenres_GenreOrderByRatingDesc(String genreName);
+    List<Movie> findTop20ByGenres_GenreOrderByRatingDescDateDesc(String genreName);
     Optional<Movie> findMovieById(Long id);
 }
