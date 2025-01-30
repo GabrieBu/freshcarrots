@@ -20,7 +20,7 @@
 }
 
 .movie-card {
-  flex: 0 0 calc(100% / 8 - 20px);
+  flex: 0 0 120px;
   max-width: 120px;
   text-align: left;
   cursor: pointer;
@@ -38,12 +38,16 @@
   object-fit: cover;
 }
 
+.list-group a{
+  text-decoration: none;
+}
+
 .carousel-control {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
   background: transparent;
-  color: #333; /* Minimal dark color */
+  color: #333;
   border: none;
   cursor: pointer;
   font-size: 20px;
