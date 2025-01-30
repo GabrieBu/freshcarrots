@@ -6,7 +6,7 @@ import {Link} from "react-router-dom"; // Custom styles
 // eslint-disable-next-line react/prop-types
 function Carousel({genre, movies, loading}){
     const [currentIndex, setCurrentIndex] = useState(0);
-    const itemsVisible = 8;
+    const itemsVisible = 8; /* @TODO calculate it dynamically*/
     // eslint-disable-next-line react/prop-types
     const moviesLength = movies?.length;
 
@@ -32,7 +32,7 @@ function Carousel({genre, movies, loading}){
           <div className="carousel-wrapper">
               <div className="carousel-inner" style={{transform: `translateX(-${currentIndex * 12.5}%)`}}>
                   {loading
-                      ? Array.from({ length: itemsVisible }).map((_, index) => (
+                      ? Array.from({ length: itemsVisible * 2 }).map((_, index) => (
                           <div key={index} className="movie-card skeleton">
                               <div className="skeleton-image"></div>
                               <div className="skeleton-title"></div>
@@ -57,6 +57,6 @@ function Carousel({genre, movies, loading}){
           </button>
       </div>
     );
-};
+}
 
 export default Carousel;

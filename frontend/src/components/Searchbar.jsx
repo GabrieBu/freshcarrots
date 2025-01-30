@@ -1,11 +1,14 @@
 import { useState } from "react";
+import useSearch from "../hooks/useSearch.js";
+import Loader from "../ui/Loader.jsx";
 
 function Searchbar() {
-    const [searchQuery, setSearchQuery] = useState('');
-    const [filteredMovies, setFilteredMovies] = useState([]);
+    const [query, setQuery] = useState('');
+
+    const {moviesSearched, loading, error} = useSearch(query)
 
     const handleSearch = (event) => {
-       /* @TODO query to main server*/
+       setQuery(event.target.value);
     };
 
     return (
@@ -14,14 +17,14 @@ function Searchbar() {
                 type="text"
                 className="form-control"
                 placeholder="Search for a movie..."
-                value={searchQuery}
+                value={query}
                 onChange={handleSearch}
             />
             <button className="btn btn-outline-secondary" type="button">Search</button>
-
-            {filteredMovies.length > 0 && (
+            {error && <h2 className="text-danger">Error searching movies</h2>}
+            {moviesSearched?.length > 0 && (
                 <ul className="list-group position-absolute w-100" style={{ zIndex: 1000, top: '100%' }}>
-                    {filteredMovies.map(movie => (
+                    {!loading ? moviesSearched?.map(movie => (
                         <li key={movie?.id} className="list-group-item d-flex align-items-center">
                             <img
                                 src={movie?.link}
@@ -33,7 +36,7 @@ function Searchbar() {
                                 <h6 className="mb-0">{movie?.name}</h6>
                             </div>
                         </li>
-                    ))}
+                    )) : <Loader />}
                 </ul>
             )}
         </div>

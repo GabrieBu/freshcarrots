@@ -24,6 +24,11 @@
   max-width: 120px;
   text-align: left;
   cursor: pointer;
+  transition: transform 0.3s ease-in-out;
+}
+
+.movie-card:hover {
+  transform: scale(1.1);
 }
 
 .movie-card img {
