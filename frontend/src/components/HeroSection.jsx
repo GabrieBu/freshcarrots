@@ -22,14 +22,14 @@ function HeroSection() {
                 ))}
             </div>
 
+            {/* @TODO insert navigate(/movie/:id/ taken from movie?.id */}
             <div className="carousel-inner h-100">
                 {movies?.map((movie, index) => (
                     <div key={index} className={`carousel-item h-100 ${index === currentIndex ? "active" : ""}`}>
-                        <img src={movie?.link_image} className="d-block w-100 h-100 object-fit-cover"
+                        <img src={movie?.link} className="d-block w-100 h-100 object-fit-cover"
                              alt={`Slide ${index + 1}`}/>
                         <div className="carousel-caption d-none d-md-block">
                             {loading ? <Skeleton value={4} /> : <h3>{movie?.name}</h3>}
-                            {loading ? <Skeleton velue={7}/> : <h4>{movie?.description}</h4>}
                             {loading ? <Skeleton velue={4}/> : <h5>{movie?.rating}</h5>}
                         </div>
                     </div>))}
