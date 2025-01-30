@@ -18,7 +18,7 @@ router.get('/getReviews', async function(req, res, next) {
 /* GET top 5. */
 router.get('/getTopFiveMovies', async function(req, res, next) {
   try {
-    const response = await axios.get('http://localhost:3002/getTopFiveMovies');
+    const response = await axios.get('http://localhost:3002/movies/getTopFiveMovies');
     res.json(response.data);
   } catch (error) {
     res.status(500).send('Error occured: getTopFiveMovies ' + error.message);
