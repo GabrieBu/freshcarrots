@@ -124,7 +124,26 @@ function DiscussionRoom() {
         const file = ev.target.files[0];
         if (file) {
             selectedFileRef.current = file;
+            loadImageToCanvas(file);
         }
+    };
+
+    const loadImageToCanvas = (file) => {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+            const img = new Image();
+            img.onload = function () {
+                const canvas = canvasRef.current;
+                const ctx = canvas.getContext("2d");
+
+                // Set canvas size to image size
+                canvas.width = img.width;
+                canvas.height = img.height;
+                ctx.drawImage(img, 0, 0, img.width, img.height);
+            };
+            img.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
     };
 
     const convertCanvasToImage = () => {
