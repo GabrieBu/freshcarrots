@@ -31,6 +31,8 @@ var app = express();
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
+app.use(express.json({ limit: '2mb' })); // increase the limit due to images uploading
+app.use(express.urlencoded({ limit: '2mb', extended: true })); // increase the limit due to images uploading
 
 app.use(logger('dev'));
 app.use(
