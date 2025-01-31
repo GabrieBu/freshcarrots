@@ -1,4 +1,5 @@
 package com.example.spring_boot_server.releases;
+import com.example.spring_boot_server.movies.Movie;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
@@ -9,8 +10,6 @@ public class Release {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "id_film", nullable = false, columnDefinition = "BIGINT")
-    private Long id_film;
     @Column(name = "country", columnDefinition = "TEXT")
     private String country;
     @Column(name = "date", columnDefinition = "TIMESTAMP")
@@ -19,12 +18,14 @@ public class Release {
     private String type;
     @Column(name = "age_min", columnDefinition = "INTEGER")
     private Integer age_min;
-
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_film", referencedColumnName = "id", nullable = false, columnDefinition = "BIGINT")
+    private Movie movie;
 
     public Release() {}
 
-    public Release(Long id_film, String country, LocalDateTime date, String type, Integer age_min) {
-        this.id_film = id_film;
+    public Release(String country, LocalDateTime date, String type, Integer age_min,Movie movie) {
+        this.movie = movie;
         this.country = country;
         this.date = date;
         this.type = type;
@@ -37,14 +38,6 @@ public class Release {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public Long getId_film() {
-        return id_film;
-    }
-
-    public void setId_film(Long id_film) {
-        this.id_film = id_film;
     }
 
     public String getCountry() {

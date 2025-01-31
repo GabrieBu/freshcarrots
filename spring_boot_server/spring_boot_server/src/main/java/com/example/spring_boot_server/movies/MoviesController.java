@@ -49,4 +49,14 @@ public class MoviesController {
         }
         return new ResponseEntity<>(movies, HttpStatus.OK);
     }
+
+    @GetMapping("/AgeMin")
+    public ResponseEntity<List<MovieTitlePosterDTO>> findMovieByAgeMin(@RequestParam("age_min") int ageMin) {
+        List<MovieTitlePosterDTO> movies=moviesService.findMoviesByAgeMin(ageMin);
+        if (movies.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }else
+            return new ResponseEntity<>(movies, HttpStatus.OK);
+    }
+
 }

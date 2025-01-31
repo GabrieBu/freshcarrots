@@ -4,6 +4,7 @@ import com.example.spring_boot_server.crew.Crew;
 import com.example.spring_boot_server.genres.Genre;
 import com.example.spring_boot_server.languages.Language;
 import com.example.spring_boot_server.posters.Poster;
+import com.example.spring_boot_server.releases.Release;
 import com.example.spring_boot_server.studios.Studios;
 import com.example.spring_boot_server.studios.StudiosController;
 import com.example.spring_boot_server.themes.Theme;
@@ -43,6 +44,8 @@ public class Movie {
     private List<Language> languages;
     @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Theme> themes;
+    @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Release> releases;
 
     public List<Theme> getThemes() {
         return themes;

@@ -53,4 +53,10 @@ public class MoviesService {
     public List<MovieTitlePosterDTO> findMoviesByGenre(String genreName){
         return moviesRepository.findTop20MoviesByGenre(genreName);
     }
+
+    public List<MovieTitlePosterDTO> findMoviesByAgeMin(int minAge){
+        return moviesRepository.findTop20MoviesByAgeMin(minAge);
+    }
+
+
 }
