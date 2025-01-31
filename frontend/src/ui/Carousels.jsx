@@ -44,7 +44,7 @@ function Carousels() {
     useEffect(() => {
         setLoading(true);
         axios
-          .get("http://localhost:3000/topRated", {
+          .get("http://localhost:3000/ageMin", {
             params: { age_min: "18" } 
           })
           .then(response => {
