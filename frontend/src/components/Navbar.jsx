@@ -5,7 +5,7 @@ function Navbar() {
     return (
         <nav className="navbar navbar-expand-lg navbar-dark bg-dark w-100" aria-label="Main navigation">
             <div className="container-fluid">
-                <Link className="navbar-brand" to="/home">Future Logo</Link>
+                <Link to="/home"><img src="" aria-label="Logo" alt="Logo"/></Link>
                 <button className="navbar-toggler" type="button" data-bs-toggle="collapse"
                         data-bs-target="#navbarsExample05" aria-controls="navbarsExample05" aria-expanded="false"
                         aria-label="Toggle navigation">
