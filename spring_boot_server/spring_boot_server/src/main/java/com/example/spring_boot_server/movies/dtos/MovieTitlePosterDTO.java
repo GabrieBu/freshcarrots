@@ -1,11 +1,11 @@
 package com.example.spring_boot_server.movies.dtos;
 
-public class MovieTitlePosterlinkDTO {
+public class MovieTitlePosterDTO {
     private Long id;
     private String name;
     private final String link;
 
-    public MovieTitlePosterlinkDTO(Long id, String name, String link) {
+    public MovieTitlePosterDTO(Long id, String name, String link) {
         this.id = id;
         this.name = name;
         this.link = link;

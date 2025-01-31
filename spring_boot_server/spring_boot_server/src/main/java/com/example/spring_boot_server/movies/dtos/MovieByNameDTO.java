@@ -3,16 +3,16 @@ package com.example.spring_boot_server.movies.dtos;
 public class MovieByNameDTO {
     private Long id;
     private String name;
-    private Float year;
-    private String poster;
+    private Float date;
+    private String link;
 
     public MovieByNameDTO() {}
 
-    public MovieByNameDTO(Long id, String name, Float year, String poster) {
+    public MovieByNameDTO(Long id, String name, Float date, String link) {
         this.id = id;
         this.name = name;
-        this.year = year;
-        this.poster = poster;
+        this.date = date;
+        this.link = link;
     }
 
     public Long getId() {
@@ -32,18 +32,18 @@ public class MovieByNameDTO {
     }
 
     public Float getYear() {
-        return year;
+        return date;
     }
 
-    public void setYear(Float year) {
-        this.year = year;
+    public void setYear(Float date) {
+        this.date = date;
     }
 
     public String getPoster() {
-        return poster;
+        return link;
     }
 
-    public void setPoster(String poster) {
-        this.poster = poster;
+    public void setPoster(String link) {
+        this.link = link;
     }
 }

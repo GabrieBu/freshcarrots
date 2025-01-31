@@ -1,18 +1,18 @@
 package com.example.spring_boot_server.movies.dtos;
 
-import java.time.LocalDate;
-
-public class MovieLatestReleasesDTO {
+public class MovieTitlePosterRatingDTO {
     private Long id;
     private String name;
-    private LocalDate releaseDate;
     private String link;
+    private Float rating;
 
-    public MovieLatestReleasesDTO(Long id, String name, LocalDate releaseDate, String link) {
+    public MovieTitlePosterRatingDTO() {}
+
+    public MovieTitlePosterRatingDTO(Long id, String name, String link, Float rating) {
         this.id = id;
         this.name = name;
-        this.releaseDate = releaseDate;
         this.link = link;
+        this.rating = rating;
     }
 
     public Long getId() {
@@ -31,19 +31,19 @@ public class MovieLatestReleasesDTO {
         this.name = name;
     }
 
-    public LocalDate getReleaseDate() {
-        return releaseDate;
-    }
-
-    public void setReleaseDate(LocalDate releaseDate) {
-        this.releaseDate = releaseDate;
-    }
-
     public String getLink() {
         return link;
     }
 
     public void setLink(String link) {
         this.link = link;
+    }
+
+    public Float getRating() {
+        return rating;
+    }
+
+    public void setRating(Float rating) {
+        this.rating = rating;
     }
 }
