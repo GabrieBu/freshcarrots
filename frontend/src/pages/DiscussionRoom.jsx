@@ -82,7 +82,9 @@ function DiscussionRoom() {
 
             if (selectedFileRef.current) {
                 console.log("image")
+                setUploading(true);
                 imageBlob = await convertCanvasToImage();
+                setUploading(false);
                 socket.emit("image", id_room, username, imageBlob, time_stamp_message);
                 try {
                     await axios.post("http://localhost:3000/newImage", {
@@ -146,7 +148,7 @@ function DiscussionRoom() {
                         <div className={`p-2 rounded ${msg.sender === username ? "bg-primary text-white" : "bg-light"}`}>
                             {msg.sender !== username && <strong>{msg.sender}:</strong>} {msg?.message}
                             {msg?.image && (
-                                <img src={msg?.image} alt="Attachment" className="img-fluid mt-2" style={{ maxWidth: "200px" }} />
+                                <img src={msg?.image} alt="Attachment" className="img-fluid mt-2" style={{ maxWidth: "548px", minWidth: "308px" }} />
                             )}
                             <div className="text-muted small text-end">{formatTimestamp(msg?.time_stamp)}</div>
                         </div>
@@ -172,6 +174,7 @@ function DiscussionRoom() {
                 <button className="btn btn-primary" onClick={handleSend}>
                     {uploading ? "Uploading..." : "Send"}
                 </button>
+                <canvas ref={canvasRef} style={{display: "none"}}></canvas>
             </div>
         </div>
     );
