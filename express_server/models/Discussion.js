@@ -7,7 +7,11 @@ const messageSchema = new mongoose.Schema({
     },
     message: {
         type: String,
-        required: true,
+        default: "",
+    },
+    image: {
+        type: String,
+        default: ""
     },
     time_stamp: {
         type: Date,
