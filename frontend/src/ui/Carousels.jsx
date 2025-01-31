@@ -5,7 +5,10 @@ import axios from "axios";
 const hotGenres = ["Action", "Drama", "Adventure", "Comedy"];
 function Carousels() {
     const [moviesByGenre, setMoviesByGenre] = useState({});
+    const [moviesForAdult, setMoviesForAdult] = useState([]);
     const [loading, setLoading] = useState(true);
+    //const [loadingAdult, setLoadingAdult] = useState(true);
+
 
     useEffect(() => {
         setLoading(true);
@@ -38,6 +41,23 @@ function Carousels() {
         }
     }
 
+    useEffect(() => {
+        setLoading(true);
+        axios
+          .get("http://localhost:3000/topRated", {
+            params: { age_min: "18" } 
+          })
+          .then(response => {
+            setMoviesForAdult(response.data);
+            setLoadingAdult(false);
+          })
+          .catch(error => {
+            console.error("Error fetching adult movies", error);
+            setLoadingAdult(false);
+          });
+      }, []);
+
+
     return (
         <div className="container mt-4">
             <div className="row g-4">
@@ -47,6 +67,9 @@ function Carousels() {
                     </div>
                 ))}
             </div>
+            <div className="mb-4">
+                <Carousel genre={"PG 18"}  movies={moviesForAdult} loading={loading} />
+            </div>    
         </div>
     );
 }
