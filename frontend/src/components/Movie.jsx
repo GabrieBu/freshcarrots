@@ -1,5 +1,6 @@
 import { useParams } from "react-router-dom";
 import useMovie from "../hooks/useMovie.js";
+import {useState} from "react";
 
 function Movie() {
     const { id } = useParams();
@@ -56,16 +57,36 @@ function Movie() {
 }
 
 // eslint-disable-next-line react/prop-types
-const MovieDetails = ({ title, data }) => (
-    <div className="mb-3">
-        <h5 className="fw-bold">{title}</h5>
-        <ul className="list-unstyled">
-            {/* eslint-disable-next-line react/prop-types */}
-            {data?.map((item, index) => (
-                <li key={index} className="text-muted">{item?.role ? `${item.role}: ${item.name}` : item}</li>
-            ))}
-        </ul>
-    </div>
-);
+const MovieDetails = ({ title, data }) => {
+    const [isOpen, setIsOpen] = useState(false);
+
+    const handleToggle = () => setIsOpen(!isOpen);
+
+    return (
+        <div className="mb-3">
+            <h5 className="fw-bold" onClick={handleToggle} style={{ cursor: "pointer" }}>
+                {title}
+            </h5>
+            <ul
+                className={`list-unstyled collapse ${isOpen ? "show" : ""}`}
+                style={{ transition: "max-height 0.3s ease-in-out", overflow: "hidden" }}
+            >
+                {/* eslint-disable-next-line react/prop-types */}
+                {data?.map((item, index) => (
+                    <li key={index} className="text-muted">
+                        {item?.role ? `${item.role}: ${item.name}` : item}
+                    </li>
+                ))}
+            </ul>
+            <button
+                className="btn btn-link text-primary"
+                onClick={handleToggle}
+                style={{ padding: 0, marginTop: "10px", fontSize: "16px" }}
+            >
+                {isOpen ? "Show less" : "Show more"}
+            </button>
+        </div>
+    );
+};
 
 export default Movie;

@@ -105,10 +105,10 @@ function DiscussionRoom() {
     }
 
     return (
-        <div className="container mt-4">
-            <h2>{title}</h2>
+        <div className="container-fluid vh-100 d-flex flex-column">
+            <h2 className="p-3">{title}</h2>
             {error && <h3 className="text-danger">Error loading messages from database!</h3>}
-            <div className="border p-3 mb-3" style={{ height: "500px", overflowY: "auto" }}>
+            <div className="border p-3 flex-grow-1 overflow-auto">
                 {loading && <Loader />}
                 {messages.map((msg, index) => (
                     <div
@@ -134,7 +134,8 @@ function DiscussionRoom() {
                     </div>
                 ))}
             </div>
-            <div className="input-group">
+
+            <div className="input-group p-2 border-top">
                 <input
                     type="text"
                     className="form-control"
