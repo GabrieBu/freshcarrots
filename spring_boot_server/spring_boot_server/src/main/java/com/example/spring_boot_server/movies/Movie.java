@@ -31,15 +31,6 @@ public class Movie {
     private Float rating;
     @OneToOne(mappedBy = "movie", cascade = CascadeType.ALL)
     private Poster poster;
-
-    public List<Theme> getThemes() {
-        return themes;
-    }
-
-    public void setThemes(List<Theme> themes) {
-        this.themes = themes;
-    }
-
     @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Genre> genres;
     @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
@@ -52,6 +43,15 @@ public class Movie {
     private List<Language> languages;
     @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Theme> themes;
+
+    public List<Theme> getThemes() {
+        return themes;
+    }
+
+    public void setThemes(List<Theme> themes) {
+        this.themes = themes;
+    }
+
 
 
     public Movie() {}

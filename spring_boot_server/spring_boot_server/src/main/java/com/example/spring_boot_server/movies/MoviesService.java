@@ -4,7 +4,8 @@ import com.example.spring_boot_server.actors.dtos.ActorDTO;
 import com.example.spring_boot_server.crew.dtos.CrewDTO;
 import com.example.spring_boot_server.movies.dtos.MovieByIdDTO;
 import com.example.spring_boot_server.movies.dtos.MovieByNameDTO;
-import com.example.spring_boot_server.movies.dtos.MovieTitlePosterlinkDTO;
+import com.example.spring_boot_server.movies.dtos.MovieTitlePosterDTO;
+import com.example.spring_boot_server.movies.dtos.MovieTitlePosterRatingDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,31 +18,12 @@ public class MoviesService {
     @Autowired
     private MoviesRepository moviesRepository;
 
-    public List<MovieTitlePosterlinkDTO> findTopFiveMovies() {
-        List<Movie> movies = moviesRepository.findTop5ByRatingIsNotNullAndDateIsNotNullOrderByRatingDescDateDesc();
-
-        return movies.stream()
-                .map(movie -> new MovieTitlePosterlinkDTO(
-                        movie.getId(),
-                        movie.getName(),
-                        (movie.getPoster() != null) ? movie.getPoster().getLink() : null
-                ))
-                .collect(Collectors.toList());
+    public List<MovieTitlePosterRatingDTO> findTopFiveMovies() {
+        return moviesRepository.findTop5ByRating();
     }
 
     public List<MovieByNameDTO> findMovieByName(String name) {
-        List<Movie> movies = moviesRepository.findMovieByName(name);
-        if(!movies.isEmpty()){
-            return movies.stream()
-                    .map(movie -> new MovieByNameDTO(
-                            movie.getId(),
-                            movie.getName(),
-                            movie.getDate(),
-                            movie.getPoster() != null ? movie.getPoster().getLink() : null
-                    ))
-                    .collect(Collectors.toList());
-        }
-        return List.of();
+        return moviesRepository.findMovieByNameStartingWith(name);
     }
 
     public MovieByIdDTO findMovieById(Long id) {
@@ -68,15 +50,7 @@ public class MoviesService {
         return null;
     }
 
-    public List<MovieTitlePosterlinkDTO> findMoviesByGenre(String genreName){
-        List<Movie> movies = moviesRepository.findTop20ByGenres_GenreOrderByRatingDescDateDesc(genreName);
-
-        return movies.stream()
-                .map(movie -> new MovieTitlePosterlinkDTO(
-                        movie.getId(),
-                        movie.getName(),
-                        (movie.getPoster() != null) ? movie.getPoster().getLink() : null
-                ))
-                .collect(Collectors.toList());
+    public List<MovieTitlePosterDTO> findMoviesByGenre(String genreName){
+        return moviesRepository.findTop20MoviesByGenre(genreName);
     }
 }

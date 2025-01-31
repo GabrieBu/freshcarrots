@@ -1,7 +1,7 @@
 package com.example.spring_boot_server.genres;
 import com.example.spring_boot_server.genres.dtos.GenreNameDTO;
 import com.example.spring_boot_server.genres.dtos.GenresDTO;
-import com.example.spring_boot_server.movies.dtos.MovieTitlePosterlinkDTO;
+import com.example.spring_boot_server.movies.dtos.MovieTitlePosterDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
