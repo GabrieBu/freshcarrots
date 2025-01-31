@@ -1,4 +1,4 @@
-import {useEffect, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import io from "socket.io-client";
@@ -6,16 +6,37 @@ import Loader from "../ui/Loader.jsx";
 import { format } from "date-fns";
 
 const socket = io("http://localhost:3000"); //main server address
+const formatTimestamp = (timestamp) => {
+    const date = new Date(timestamp);
+    const today = new Date();
+
+    const isToday =
+        date.getDate() === today.getDate() &&
+        date.getMonth() === today.getMonth() &&
+        date.getFullYear() === today.getFullYear();
+
+    if (isToday) {
+        return format(date, "HH:mm"); // Show hours and minutes
+    } else if (date.getFullYear() === today.getFullYear()) {
+        return format(date, "MM/dd HH:mm"); // Show month and day
+    } else {
+        return format(date, "yyyy/MM/dd HH:mm"); // Show full date
+    }
+};
 
 function DiscussionRoom() {
-    const { id:id_room } = useParams(); //retrieving id room from url
+    const { id: id_room } = useParams()
     const username = localStorage.getItem("username");
     const [messages, setMessages] = useState([]);
-    const [newMessage, setNewMessage] = useState(""); //state to track the message typed (the next one to be sent)
+    const [newMessage, setNewMessage] = useState("");
     const [error, setError] = useState(false);
     const [loading, setLoading] = useState(false);
     const [title, setTitle] = useState("");
-    const [selectedFile, setSelectedFile] = useState(null);
+    const [uploading, setUploading] = useState(false);
+
+    const fileInputRef = useRef(null);
+    const canvasRef = useRef(null);
+    const selectedFileRef = useRef(null); //to avoid no necessary re-renders
 
     useEffect(() => {
         async function fetchMessages() {
@@ -23,7 +44,7 @@ function DiscussionRoom() {
                 const res = await axios.get("http://localhost:3000/getMessages", {
                     params: { id_room }
                 });
-                setMessages(res.data.messages); // set messages from the database in the local state
+                setMessages(res.data.messages);
                 setTitle(res.data.title);
             } catch (err) {
                 console.error("Error fetching messages:", err);
@@ -32,77 +53,84 @@ function DiscussionRoom() {
                 setLoading(false);
             }
         }
-        fetchMessages(); //run the callback
+        fetchMessages();
 
-        socket.emit('create or join', id_room, username);
+        socket.emit("create or join", id_room, username);
 
-        //listener for new incoming message
         socket.on("message", (room, senderUsername, chatText, time_stamp) => {
-            setMessages(prevMessages => [...prevMessages, { sender: senderUsername, message: chatText, time_stamp: time_stamp }]);
+            setMessages(prevMessages => [
+                ...prevMessages, { sender: senderUsername, message: chatText, time_stamp }
+            ]);
         });
 
-        //listener for new incoming message
         socket.on("image", (room, senderUsername, image, time_stamp) => {
-            setMessages(prevMessages => [...prevMessages, { sender: senderUsername, image: image, time_stamp: time_stamp }]);
+            setMessages(prevMessages => [
+                ...prevMessages, { sender: senderUsername, image, time_stamp }
+            ]);
         });
 
-        // callback to cleanup the socket
         return () => {
             socket.off("message");
+            socket.off("image");
         };
-
-        //query to mongo for messages
     }, [id_room, username]);
 
     const handleSend = async () => {
-        if (newMessage.trim() !== "" || selectedFile) { //if message isn't empty
+        if (newMessage.trim() !== "" || selectedFileRef.current) {
             const time_stamp_message = new Date();
-            socket.emit("message", id_room, username, newMessage, time_stamp_message)
+            let imageBlob = null;
 
-            try {
-                await axios.post("http://localhost:3000/newMessage", {
-                    id_room: id_room,
-                    sender: username,
-                    message: newMessage,
-                    time_stamp:  time_stamp_message
-                });
-            } catch (error) {
-                /* @TODO handle better, displaying message*/
-                console.error("Error saving message:", error);
-                return;
+            if (selectedFileRef.current) {
+                console.log("image")
+                imageBlob = await convertCanvasToImage();
+                socket.emit("image", id_room, username, imageBlob, time_stamp_message);
+                try {
+                    await axios.post("http://localhost:3000/newImage", {
+                        id_room,
+                        sender: username,
+                        image: imageBlob,
+                        time_stamp: time_stamp_message
+                    });
+                } catch (error) {
+                    console.error("Error saving message:", error);
+                    return;
+                }
+            } else {
+                console.log("message")
+                socket.emit("message", id_room, username, newMessage, time_stamp_message);
+
+                try {
+                    await axios.post("http://localhost:3000/newMessage", {
+                        id_room,
+                        sender: username,
+                        message: newMessage,
+                        time_stamp: time_stamp_message
+                    });
+                } catch (error) {
+                    console.error("Error saving message:", error);
+                    return;
+                }
             }
 
-            setMessages([...messages, { sender: username, message: newMessage, image: selectedFile, time_stamp: time_stamp_message }]);
-            setNewMessage(""); //cleanup textbox
-            setSelectedFile(null); //cleanup selection
-
+            setMessages([...messages, { sender: username, message: newMessage, image: imageBlob, time_stamp: time_stamp_message }]);
+            setNewMessage("");
+            selectedFileRef.current = null;
         }
     };
 
-    const formatTimestamp = (timestamp) => {
-        const date = new Date(timestamp);
-        const today = new Date();
-
-        const isToday =
-            date.getDate() === today.getDate() &&
-            date.getMonth() === today.getMonth() &&
-            date.getFullYear() === today.getFullYear();
-
-        if (isToday) {
-            return format(date, "HH:mm"); // Show hours and minutes
-        } else if (date.getFullYear() === today.getFullYear()) {
-            return format(date, "MM/dd HH:mm"); // Show month and day
-        } else {
-            return format(date, "yyyy/MM/dd HH:mm"); // Show full date
-        }
-    };
-
-    function handleFileSelect(ev) {
+    const handleFileSelect = (ev) => {
         const file = ev.target.files[0];
         if (file) {
-            setSelectedFile(file);
+            selectedFileRef.current = file;
         }
-    }
+    };
+
+    const convertCanvasToImage = () => {
+        return new Promise((resolve) => {
+            const canvas = canvasRef.current;
+            resolve(canvas.toDataURL("image/png")); // convert to Base64 (blob)
+        });
+    };
 
     return (
         <div className="container-fluid vh-100 d-flex flex-column">
@@ -118,16 +146,7 @@ function DiscussionRoom() {
                         <div className={`p-2 rounded ${msg.sender === username ? "bg-primary text-white" : "bg-light"}`}>
                             {msg.sender !== username && <strong>{msg.sender}:</strong>} {msg?.message}
                             {msg?.image && (
-                                <>
-                                    {msg?.image.match(/\.(jpeg|jpg|png|gif)$/) ? (
-                                        <img src={msg?.image} alt="Attachment" className="img-fluid mt-2" style={{ maxWidth: "200px" }} />
-                                    ) : (
-                                        <video controls className="mt-2" style={{ maxWidth: "200px" }}>
-                                            <source src={msg?.image} type="video/mp4" />
-                                            Your browser does not support the video tag.
-                                        </video>
-                                    )}
-                                </>
+                                <img src={msg?.image} alt="Attachment" className="img-fluid mt-2" style={{ maxWidth: "200px" }} />
                             )}
                             <div className="text-muted small text-end">{formatTimestamp(msg?.time_stamp)}</div>
                         </div>
@@ -143,8 +162,16 @@ function DiscussionRoom() {
                     value={newMessage}
                     onChange={(e) => setNewMessage(e.target.value)}
                 />
-                <input type="file" className="form-control" onChange={handleFileSelect} accept="image/*,video/*"/>
-                <button className="btn btn-primary" onClick={handleSend}>Send</button>
+                <input
+                    type="file"
+                    className="form-control"
+                    ref={fileInputRef}
+                    onChange={handleFileSelect}
+                    accept="image/*"
+                />
+                <button className="btn btn-primary" onClick={handleSend}>
+                    {uploading ? "Uploading..." : "Send"}
+                </button>
             </div>
         </div>
     );

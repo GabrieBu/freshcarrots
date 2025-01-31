@@ -10,7 +10,7 @@ function HeroSection() {
     const navigate = useNavigate();
 
     function handleClickCarousel(id_film) {
-        navigate(`http://localhost:5173/movie/${id_film}"`);
+        navigate(`/movie/${id_film}"`);
     }
 
     return (

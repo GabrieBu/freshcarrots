@@ -27,7 +27,7 @@ function Reviews() {
 
     useEffect(() => {
         setPageNumber(1); //restore to first page
-    }, [criticFilter, typeFilter]);
+    }, [criticFilter, typeFilter, minDateFilter, maxDateFilter]);
 
     const handleCriticFilterChange = (event) => {
         setCriticFilter(event.target.value);
