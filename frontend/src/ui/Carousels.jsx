@@ -1,75 +1,56 @@
 import Carousel from "../components/Carousel.jsx";
-import {useEffect, useState} from "react";
-import axios from "axios";
+import useMoviesByCategory from "../hooks/useMoviesByCategory.js";
 
-const hotGenres = ["Action", "Drama", "Adventure", "Comedy"];
-function Carousels() {
-    const [moviesByGenre, setMoviesByGenre] = useState({});
-    const [moviesForAdult, setMoviesForAdult] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [loadingAdult, setLoadingAdult] = useState(true);
-
-
-    useEffect(() => {
-        setLoading(true);
-        Promise.all(hotGenres.map(genre => {
-            return fetchMoviesForGenre(genre);
-        }))
-            .then(results => {
-                const moviesObj = results.reduce((acc, {genre, movies}) => {
-                    acc[genre] = movies;
-                    return acc;
-                }, {});
-                setMoviesByGenre(moviesObj);
-                setLoading(false);
-            })
-            .catch(error => {
-                console.error(error);
-                setLoading(false);
-            });
-    }, []);
-
-    async function fetchMoviesForGenre(genre){
-        try {
-            const response = await axios.get('http://localhost:3000/topRated', {
-                params: {genre}
-            });
-            return { genre, movies: response.data };
-        } catch (error) {
-            console.error(`Error fetching movies for genre: ${genre}`, error);
-            return { genre, movies: [] };
-        }
+const hotGenres = [
+    {
+        genre: "Action",
+        title: "🔥 High-Octane Thrills",
+    },
+    {
+        genre: "Drama",
+        title: "🎭 Captivating Dramas",
+    },
+    {
+        genre: "Adventure",
+        title: "🌍 Epic Adventures Await",
+    },
+    {
+        genre: "Documentary",
+        title: "📖 True Stories & Insights",
+    },
+    {
+        genre: "Romance",
+        title: "❤️ Love & Heartfelt Moments",
     }
+];
 
-    useEffect(() => {
-        setLoading(true);
-        axios
-          .get("http://localhost:3000/ageMin", {
-            params: { age_min: "18" } 
-          })
-          .then(response => {
-            setMoviesForAdult(response.data);
-            setLoadingAdult(false);
-          })
-          .catch(error => {
-            console.error("Error fetching adult movies", error);
-            setLoadingAdult(false);
-          });
-      }, []);
+function Carousels() {
+    const { moviesByCategory, loading } = useMoviesByCategory(hotGenres);
+    const {moviesByGenre, moviesForAdult, moviesForFamilies, worldwideMovies,cultLanguageMovies} = moviesByCategory;
 
 
+    /* TODO HANDLING ERROR*/
     return (
         <div className="container mt-4">
             <div className="row g-4">
-                {hotGenres.map((genre) => (
-                    <div key={genre} className="col-12 mb-2">
-                        <Carousel genre={genre} movies={moviesByGenre[genre] || []} loading={loading}/>
+                {hotGenres.map((item) => (
+                    <div key={item.genre} className="col-12 mb-2">
+                        <Carousel title={item.title} movies={moviesByGenre[item.genre] || []} loading={loading}/>
                     </div>
                 ))}
             </div>
-            <div className="mb-4">
-                <Carousel genre={"PG 18"}  movies={moviesForAdult} loading={loading} />
-            </div>    
+            <div className="mt-4">
+                <Carousel title="🌍 Cult Classics in Their Original Language" movies={cultLanguageMovies} loading={loading}/>
+            </div>
+            <div className="mt-4">
+                <Carousel title="🔞 PG-18: Only for Adults" movies={moviesForAdult} loading={loading}/>
+            </div>
+            <div className="mt-4">
+                <Carousel title="🌎 Trending Worldwide Hits" movies={worldwideMovies} loading={loading}/>
+            </div>
+            <div className="mt-4">
+                <Carousel title="👨‍👩‍👧‍👦 Fun for the Whole Family" movies={moviesForFamilies}/>
+            </div>
         </div>
     );
 }

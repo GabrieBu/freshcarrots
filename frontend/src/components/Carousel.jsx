@@ -26,7 +26,7 @@ function Carousel({genre, movies, loading}){
     return (
         <div className="carousel-container">
             {loading ? <Skeleton /> : <h2 className="carousel-title mb-3">{genre} movies you can like</h2>}
-            <button className="carousel-control prev" onClick={prevPage} disabled={currentIndex === 0} >
+            <button className="carousel-control prev" onClick={prevPage} disabled={currentIndex === 0} style={{zIndex: 1}}>
                 ❮
             </button>
 
@@ -53,7 +53,7 @@ function Carousel({genre, movies, loading}){
                         ))}
                 </div>
             </div>
-            <button className="carousel-control next" onClick={nextPage} disabled={currentIndex >= moviesLength - itemsVisible}>
+            <button className="carousel-control next" onClick={nextPage} disabled={currentIndex >= moviesLength - itemsVisible} style={{zIndex: 1}}>
                 ❯
             </button>
         </div>
