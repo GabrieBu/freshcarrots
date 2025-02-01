@@ -44,3 +44,9 @@ html, body {
   filter: none;
   opacity: 1;
 }
+
+.blurred {
+  filter: blur(5px);
+  opacity: 0.4;
+  transition: filter 0.3s ease, opacity 0.3s ease;
+}

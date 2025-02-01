@@ -5,7 +5,7 @@ import {Link} from "react-router-dom";
 import MovieCard from "./MovieCard.jsx"; // Custom styles
 
 // eslint-disable-next-line react/prop-types
-function Carousel({genre, movies, loading}){
+function Carousel({title, movies, loading}){
     const [currentIndex, setCurrentIndex] = useState(0);
     /* @TODO modify with current width device (formula is correct) */
     const itemsVisible = Math.floor((1570 + 20) / (120 + 20)); //should be correct
@@ -26,7 +26,7 @@ function Carousel({genre, movies, loading}){
 
     return (
         <div className="carousel-container">
-            {loading ? <Skeleton/> : <h2 className="carousel-title mb-3">{genre} movies you can like</h2>}
+            {loading ? <Skeleton/> : <h2 className="carousel-title mb-3">{title}</h2>}
             <button className="carousel-control prev" onClick={prevPage} disabled={currentIndex === 0}
                     style={{zIndex: 1}}>
                 ❮
