@@ -1,4 +1,5 @@
 package com.example.spring_boot_server.actors;
+import com.example.spring_boot_server.actors.dtos.ActorNameDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,11 +15,11 @@ public class ActorsService {
     }
 
 
-    /*public List<Actor> findActorsByName(String name) {
-        return actorsRepository.findActorsByNameCustomQuery(name);
+    public List<ActorNameDTO> findActorsByName(String name) {
+        return actorsRepository.findActorsByName(name);
     }
 
-    /*public Optional<Actor> findActorsByMovie(String name) {
-        return actorsRepository.findByMovie(name);
-    }*/
+    public List<ActorNameDTO> findtest() {
+        return actorsRepository.findTest();
+    }
 }

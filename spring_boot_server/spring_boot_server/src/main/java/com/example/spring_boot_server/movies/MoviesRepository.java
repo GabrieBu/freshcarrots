@@ -4,6 +4,7 @@ import com.example.spring_boot_server.movies.dtos.MovieTitlePosterCountDTO;
 import com.example.spring_boot_server.movies.dtos.MovieTitlePosterDTO;
 import com.example.spring_boot_server.movies.dtos.MovieTitlePosterRatingDTO;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -13,7 +14,8 @@ import java.util.Optional;
 
 
 @Repository
-public interface MoviesRepository extends JpaRepository<Movie, Long> {
+public interface MoviesRepository extends JpaRepository<Movie, Long>, JpaSpecificationExecutor<Movie> {
+
     @Query(value="SELECT new com.example.spring_boot_server.movies.dtos.MovieTitlePosterRatingDTO(m.id, m.name, m.poster.link, m.rating)" +
             "FROM Movie m " +
             "JOIN Poster p ON m.id = p.movie.id " +

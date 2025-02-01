@@ -12,14 +12,7 @@ public class GenresService {
     @Autowired
     private GenresRepository genresRepository;
 
-    /*public List<GenresDTO> findDistinctGenres() {
-        List<Genre> genres = genresRepository.findAllDistinctGenres();
-
-        return genres.stream()
-                .map(genre -> new GenresDTO(
-                        genre.getId(),
-                        genre.getGenre()
-                ))
-                .collect(Collectors.toList());
-    }*/
+    public List<GenreNameDTO> findDistinctGenres() {
+        return genresRepository.findAllDistinctGenres();
+    }
 }
