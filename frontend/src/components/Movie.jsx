@@ -44,11 +44,9 @@ function Movie() {
                                 ⭐ {movie?.rating} / 5
                             </h5>
                         </div>
-
-                        <MovieDetails title="Directed by:" data={movie?.crew} />
-                        <MovieDetails title="Studios:" data={movie?.studios} />
-                        <MovieDetails title="Themes:" data={movie?.themes} />
-                        <MovieDetails title="Actors:" data={movie?.actors} />
+                        <MovieDetailsBothCollapse title="cast" firstData={movie?.crew} secondData={movie?.actor} />
+                        <MovieDetailsCollapse title="Themes" data={movie?.themes} />
+                        <MovieDetailsCollapse title="Studios" data={movie?.studios} />
                     </div>
                 </div>
             )}
@@ -57,36 +55,56 @@ function Movie() {
 }
 
 // eslint-disable-next-line react/prop-types
-const MovieDetails = ({ title, data }) => {
-    const [isOpen, setIsOpen] = useState(false);
-
-    const handleToggle = () => setIsOpen(!isOpen);
-
-    return (
-        <div className="mb-3">
-            <h5 className="fw-bold" onClick={handleToggle} style={{ cursor: "pointer" }}>
-                {title}
-            </h5>
-            <ul
-                className={`list-unstyled collapse ${isOpen ? "show" : ""}`}
-                style={{ transition: "max-height 0.3s ease-in-out", overflow: "hidden" }}
-            >
-                {/* eslint-disable-next-line react/prop-types */}
-                {data?.map((item, index) => (
-                    <li key={index} className="text-muted">
-                        {item?.role ? `${item.role}: ${item.name}` : item}
-                    </li>
-                ))}
-            </ul>
-            <button
-                className="btn btn-link text-primary"
-                onClick={handleToggle}
-                style={{ padding: 0, marginTop: "10px", fontSize: "16px" }}
-            >
-                {isOpen ? "Show less" : "Show more"}
+const MovieDetailsBothCollapse = ({title, firstData, secondData}) => {
+    return(<>
+        <p>
+            <button className="btn btn-primary" type="button" data-toggle="collapse"
+                    data-target=".multi-collapse" aria-expanded="false"
+                    aria-controls="multiCollapseExample1 multiCollapseExample2">Show {title}
             </button>
-        </div>
-    );
+        </p>
+        <div className="row">
+            <div className="col">
+                <div className="collapse multi-collapse" id="multiCollapseExample1">
+                    <div className="card card-body">
+                        <h3>Directed by: </h3>
+                        {/* eslint-disable-next-line react/prop-types */}
+                        {firstData?.map(member => `${member?.name}: ${member?.role}`).join(', ')}
+                    </div>
+                </div>
+            </div>
+            <div className="col">
+                <div className="collapse multi-collapse" id="multiCollapseExample2">
+                    <div className="card card-body">
+                        <h3>Actors: </h3>
+                        {/* eslint-disable-next-line react/prop-types */}
+                        {secondData?.map(member => `${member?.name}: ${member?.role}`).join(', ')}
+                    </div>
+                </div>
+            </div>
+        </div></>
+    )
+};
+
+// eslint-disable-next-line react/prop-types
+const MovieDetailsCollapse = ({title, data}) => {
+    return(<>
+            <p>
+                <button className="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample"
+                        aria-expanded="false" aria-controls="collapseExample">
+                    Show {title}
+                </button>
+            </p>
+            <div className="collapse" id="collapseExample">
+                <div className="card card-body">
+                    <h3>{title}: </h3>
+                    {data?.map((item) => (
+                            item?.role ? `${item?.name}: ${item?.role}`.join(', ') : item
+                    ))}
+                </div>
+            </div>
+        </>
+    )
 };
 
 export default Movie;

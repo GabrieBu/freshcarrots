@@ -7,7 +7,7 @@ function Carousels() {
     const [moviesByGenre, setMoviesByGenre] = useState({});
     const [moviesForAdult, setMoviesForAdult] = useState([]);
     const [loading, setLoading] = useState(true);
-    //const [loadingAdult, setLoadingAdult] = useState(true);
+    const [loadingAdult, setLoadingAdult] = useState(true);
 
 
     useEffect(() => {
