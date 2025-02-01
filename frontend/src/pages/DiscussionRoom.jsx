@@ -165,9 +165,16 @@ function DiscussionRoom() {
                         className={`d-flex mb-2 ${msg.sender === username ? "justify-content-end" : "justify-content-start"}`}
                     >
                         <div className={`p-2 rounded ${msg.sender === username ? "bg-primary text-white" : "bg-light"}`}>
-                            {msg.sender !== username && <strong>{msg.sender}:</strong>} {msg?.message}
+                            {msg.sender !== username && <strong>{msg.sender}:</strong>}
+                            {msg?.message && (
+                                <div className="message-text" style={{ padding: "2px" }}>
+                                    {msg?.message}
+                                </div>
+                            )}
                             {msg?.image && (
-                                <img src={msg?.image} alt="Attachment" className="img-fluid mt-2" style={{ maxWidth: "548px", minWidth: "308px" }} />
+                                <div className="image-container" style={{ padding: "0" }}>
+                                    <img src={msg?.image} alt="Attachment" className="img-fluid mt-2" style={{ maxWidth: "548px", minWidth: "308px" }} />
+                                </div>
                             )}
                             <div className="text-muted small text-end">{formatTimestamp(msg?.time_stamp)}</div>
                         </div>
