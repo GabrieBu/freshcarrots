@@ -4,6 +4,8 @@ import com.example.spring_boot_server.actors.dtos.ActorDTO;
 import com.example.spring_boot_server.crew.dtos.CrewDTO;
 import com.example.spring_boot_server.movies.dtos.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
