@@ -93,7 +93,7 @@
 }
 
 .carousel-control:disabled {
-  color: rgba(248, 0, 0, 0.8); /* Subtle disabled state */
+  color: rgba(184, 184, 184, 0.8); /* Subtle disabled state */
   cursor: not-allowed;
 }
 
