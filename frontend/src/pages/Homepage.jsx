@@ -1,4 +1,5 @@
-import {lazy} from "react";
+import {lazy, useEffect, useState} from "react";
+import { useInView } from "react-intersection-observer";
 
 const Layout = lazy(() => import("../ui/Layout"));
 const LayoutNavbar = lazy(() => import("../ui/LayoutNavbar"));
@@ -10,13 +11,29 @@ const Carousels = lazy(() => import("../ui/Carousels"));
 
 
 function Homepage() {
+    const [showNav, setShowNav] = useState(false);
+    console.log(inView)
+
+    const { ref, inView } = useInView({
+        triggerOnce: false,
+        threshold: 0.75, //trigger when 3/4 already scrolled
+    });
+
+    useEffect(() => {
+        if (inView) {
+            setShowNav(true);
+        } else {
+            setShowNav(false);
+        }
+    }, [inView]);
+
 
     return (
         <Layout>
             <LayoutNavbar>
-                <Navbar />
+                {showNav && <Navbar className={`navbar-transition ${showNav ? "show-navbar" : ""}`} />}
             </LayoutNavbar>
-            <HeroSection />
+            <HeroSection ref={ref} />
             <LayoutContent>
                 <Carousels />
             </LayoutContent>

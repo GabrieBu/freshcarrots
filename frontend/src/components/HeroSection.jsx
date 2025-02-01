@@ -1,10 +1,10 @@
 import {useState} from "react";
 import useHeroSection from "../hooks/useHeroSection.js";
-import Skeleton from "../ui/Skeleton.jsx";
 import {useNavigate} from "react-router-dom";
 
 
-function HeroSection() {
+// eslint-disable-next-line react/prop-types
+function HeroSection({ref}) {
     const {movies, loading, error} = useHeroSection();
     const [currentIndex, setCurrentIndex] = useState(0);
     const navigate = useNavigate();
@@ -16,7 +16,7 @@ function HeroSection() {
     return (
         error ? <h1 className="text-danger">Error loading Top 5 movies. Try again later...</h1>
                 :
-            <div id="carouselExampleFade" className="carousel slide carousel-fade w-100 vh-100" data-bs-ride="carousel">
+            <div id="carouselExampleFade" className="carousel slide carousel-fade w-100 vh-100" data-bs-ride="carousel" ref={ref}>
                 <div className="carousel-indicators">
                     {movies?.map((_, index) => (
                         <li
