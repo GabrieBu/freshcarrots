@@ -33,16 +33,20 @@ function DiscussionRoom() {
     const [loading, setLoading] = useState(false);
     const [title, setTitle] = useState("");
     const [uploading, setUploading] = useState(false);
+    const [pageNumber, setPageNumber] = useState(1);
 
     const fileInputRef = useRef(null);
     const canvasRef = useRef(null);
     const selectedFileRef = useRef(null); //to avoid no necessary re-renders
+    const firstMessageRef = useRef(null);
+    const containerRef = useRef(null);
+
 
     useEffect(() => {
         async function fetchMessages() {
             try {
                 const res = await axios.get("http://localhost:3000/getMessages", {
-                    params: { id_room }
+                    params: { id_room,page: 1  }
                 });
                 setMessages(res.data.messages);
                 setTitle(res.data.title);
@@ -74,6 +78,48 @@ function DiscussionRoom() {
             socket.off("image");
         };
     }, [id_room, username]);
+
+    useEffect(() => {
+        async function loadOlderMessages() {
+            setLoading(true);
+            try {
+                const res = await axios.get("http://localhost:3000/getMessages", {
+                    params: { id_room, page: pageNumber }
+                });
+
+                if (res.data.messages.length > 0) {
+                    setMessages(prevMessages => [...res.data.messages, ...prevMessages]);
+                    setTimeout(() => {
+                        firstMessageRef.current?.scrollIntoView({ behavior: "smooth" });
+                    }, 100);
+                }
+            } catch (err) {
+                console.error("Error fetching older messages:", err);
+                setError(true);
+            } finally {
+                setLoading(false);
+            }
+        }
+
+        if (pageNumber > 1) {
+            loadOlderMessages();
+        }
+    }, [pageNumber]);
+
+    useEffect(() => {
+        const container = containerRef.current;
+
+        const handleScroll = () => {
+            if (container.scrollTop === 0 && !loading) {
+                setPageNumber(prev => prev + 1);
+            }
+        };
+
+        container.addEventListener("scroll", handleScroll);
+        return () => container.removeEventListener("scroll", handleScroll);
+    }, [loading]);
+
+
 
     const handleSend = async () => {
         if (newMessage.trim() !== "" || selectedFileRef.current) {
