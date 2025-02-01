@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState} from "react";
 import axios from "axios";
 
 const API_BASE_URL = "http://localhost:3000";
@@ -9,12 +9,12 @@ export default function useMoviesByCategory(hotGenres) {
     const [moviesByCategory, setMoviesByCategory] = useState({
         moviesByGenre: {},
         moviesForAdult: [],
-        moviesForFamilies: [],
         worldwideMovies: [],
         cultLanguageMovies: []
     });
 
-    const fetchMovies = useCallback(async (endpoint, params = {}) => {
+    const fetchMovies = async (endpoint, params = {}) => {
+        console.log("params: ", params);
         try {
             const response = await axios.get(`${API_BASE_URL}/${endpoint}`, { params });
             return response.data;
@@ -22,29 +22,27 @@ export default function useMoviesByCategory(hotGenres) {
             console.error(`Error fetching ${endpoint}:`, error);
             return [];
         }
-    }, []);
+    }
 
     useEffect(() => {
         const fetchAllMovies = async () => {
             setLoading(true);
             try {
-                const [genreResults, adultMovies, familiesMovies,worldwideMovies, cultMovies] = await Promise.all([
-                    Promise.all(hotGenres.map(genre => fetchMovies("topRated", { genre }))),
+                const [genreResults, adultMovies,worldwideMovies, cultMovies] = await Promise.all([
+                    Promise.all(hotGenres.map((item) => fetchMovies("topRated", { genre: item?.genre }))),
                     fetchMovies("ageMin", { age_min: "18" }),
-                    fetchMovies("ageMin", { age_min: "2" }),
                     fetchMovies("getWorldwideMovies"),
-                    fetchMovies("getCultLanguage")
+                    fetchMovies("getCultLanguage", {language: "French"})
                 ]);
 
-                const moviesByGenre = hotGenres.reduce((acc, genre, index) => {
-                    acc[genre] = genreResults[index] || [];
+                const moviesByGenre = hotGenres.reduce((acc, item, index) => {
+                    acc[item.genre] = genreResults[index] || [];
                     return acc;
                 }, {});
 
                 setMoviesByCategory({
                     moviesByGenre,
                     moviesForAdult: adultMovies,
-                    moviesForFamilies: familiesMovies,
                     worldwideMovies,
                     cultLanguageMovies: cultMovies
                 });
@@ -58,7 +56,7 @@ export default function useMoviesByCategory(hotGenres) {
         };
 
         fetchAllMovies();
-    }, []); //deps vuote = only on first mount
+    }, []); //deps empty = only on first mount
 
     return {
         moviesByCategory,

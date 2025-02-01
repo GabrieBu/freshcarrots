@@ -8,7 +8,7 @@ function Movie() {
     if (error) return <h2 className="text-danger text-center mt-4">Error fetching movie</h2>;
 
     return (
-        <div className="container mt-5">
+        <div className="container mt-5 my-5">
             {loading ? (
                 <div className="row">
                     <div className="col-md-4">
@@ -26,7 +26,7 @@ function Movie() {
                         <img
                             src={movie?.link}
                             alt={movie?.name}
-                            className="img-fluid rounded shadow-lg w-100"
+                            className="img-fluid rounded w-100"
                             style={{ maxHeight: "450px", objectFit: "cover" }}
                         />
                     </div>
@@ -56,12 +56,10 @@ function Movie() {
 // eslint-disable-next-line react/prop-types
 const MovieDetailsBothCollapse = ({title, firstData, secondData}) => {
     return(<>
-        <p>
-            <button className="btn btn-primary" type="button" data-toggle="collapse"
-                    data-target=".multi-collapse" aria-expanded="false"
-                    aria-controls="multiCollapseExample1 multiCollapseExample2">Show {title}
-            </button>
-        </p>
+        <button className="btn btn-primary" type="button" data-toggle="collapse"
+                data-target=".multi-collapse" aria-expanded="false"
+                aria-controls="multiCollapseExample1 multiCollapseExample2">Show {title}
+        </button>
         <div className="row">
             <div className="col">
                 <div className="collapse multi-collapse" id="multiCollapseExample1">
@@ -86,25 +84,24 @@ const MovieDetailsBothCollapse = ({title, firstData, secondData}) => {
 };
 
 // eslint-disable-next-line react/prop-types
-const MovieDetailsCollapse = ({title, data}) => {
-    return(<>
-            <p>
-                <button className="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample"
-                        aria-expanded="false" aria-controls="collapseExample">
-                    Show {title}
-                </button>
-            </p>
-            <div className="collapse" id="collapseExample">
+const MovieDetailsCollapse = ({ title, data }) => {
+    return (
+        <>
+            <button className="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target={`#collapse-${title}`} aria-expanded="false" aria-controls={`collapse-${title}`}>
+                Show {title}
+            </button>
+            <div className="collapse" id={`collapse-${title}`} >
                 <div className="card card-body">
                     <h3>{title}: </h3>
                     {/* eslint-disable-next-line react/prop-types */}
-                    {data?.map((item) => (
-                            item?.role ? `${item?.name}: ${item?.role}`.join(', ') : item
+                    {data?.map((item, index) => (
+                        <p key={index}>{item?.role ? `${item?.name}: ${item?.role}` : item}</p>
                     ))}
                 </div>
             </div>
         </>
-    )
+    );
 };
+
 
 export default Movie;

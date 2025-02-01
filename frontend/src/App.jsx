@@ -7,6 +7,7 @@ import Community from "./pages/Community";
 import Reviews from "./pages/Reviews";
 import DiscussionRoom from "./pages/DiscussionRoom.jsx";
 import Movie from "./components/Movie.jsx";
+import Discover from "./pages/Discover.jsx";
 
 
 function App() {

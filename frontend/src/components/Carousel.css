@@ -32,6 +32,7 @@
 
 .movie-card {
   flex: 0 0 120px;
+  gap: 10px;
   max-width: 120px;
   min-width: 120px;
   text-align: left;
@@ -92,7 +93,7 @@
 }
 
 .carousel-control:disabled {
-  color: rgba(248, 0, 0, 0.8); /* Subtle disabled state */
+  color: rgba(184, 184, 184, 0.8); /* Subtle disabled state */
   cursor: not-allowed;
 }
 
