@@ -1,14 +1,18 @@
 import { useParams } from "react-router-dom";
 import useMovie from "../hooks/useMovie.js";
+import { useState } from "react";
 
 function Movie() {
     const { id } = useParams();
     const { movie, loading, error } = useMovie(id);
+    const [showCast, setShowCast] = useState(false);
+    const [showThemes, setShowThemes] = useState(false);
+    const [showStudios, setShowStudios] = useState(false);
 
     if (error) return <h2 className="text-danger text-center mt-4">Error fetching movie</h2>;
 
     return (
-        <div className="container mt-5">
+        <div className="container mt-5 my-4">
             {loading ? (
                 <div className="row">
                     <div className="col-md-4">
@@ -43,80 +47,46 @@ function Movie() {
                                 ⭐ {movie?.rating} / 5
                             </h5>
                         </div>
-                        <MovieDetailsBothCollapse title="cast" firstData={movie?.crew} secondData={movie?.actor} />
-                        <MovieDetailsCollapse title="Themes" data={movie?.themes} />
-                        <MovieDetailsCollapse title="Studios" data={movie?.studios} />
+                        <div className="d-flex gap-3">
+                            <button className="btn btn-primary" onClick={() => setShowCast(!showCast)}>
+                                {showCast ? "Hide cast" : "Show cast"}
+                            </button>
+                            <button className="btn btn-primary" onClick={() => setShowThemes(!showThemes)}>
+                                {showThemes ? "Hide themes" : "Show themes"}
+                            </button>
+                            <button className="btn btn-primary" onClick={() => setShowStudios(!showStudios)}>
+                                {showStudios ? "Hide studios" : "Show studios"}
+                            </button>
+                        </div>
+                        {showCast && (
+                            <div className="row align-items-start mb-3">
+                                <div className="col border p-3">
+                                    <h3>Actors: </h3>
+                                    <p>{movie?.crew.map((member) => `${member?.name}: ${member?.role}`).join(', ')}</p>
+                                </div>
+                            </div>
+                        )}
+                        {showThemes && (
+                            <div className="row align-items-start mb-3">
+                                <div className="col border p-3">
+                                    <h3>Themes: </h3>
+                                    <p>{movie?.themes?.join(', ')}</p>
+                                </div>
+                            </div>
+                        )}
+                        {showStudios && (
+                            <div className="row align-items-start mb-3">
+                                <div className="col border p-3">
+                                    <h3>Studios: </h3>
+                                    <p>{movie?.studios?.join(', ')}</p>
+                                </div>
+                            </div>
+                        )}
                     </div>
                 </div>
             )}
         </div>
     );
 }
-
-// eslint-disable-next-line react/prop-types
-const MovieDetailsBothCollapse = ({ title, firstData, secondData }) => {
-    return (
-        <div className="d-flex gap-3 mb-3">
-            <button
-                className="btn btn-primary"
-                type="button"
-                data-bs-toggle="collapse"
-                data-bs-target={`#collapse-${title}-1`}
-                aria-expanded="false"
-                aria-controls={`collapse-${title}-1`}
-            >
-                Show {title}
-            </button>
-            <div className="row mt-2">
-                <div className="col">
-                    <div className="collapse" id={`collapse-${title}-1`}>
-                        <div className="card card-body">
-                            <h3>Directed by: </h3>
-                            {firstData?.map((member, index) => (
-                                <p key={index}>{member?.name}: {member?.role}</p>
-                            ))}
-                        </div>
-                    </div>
-                </div>
-                <div className="col">
-                    <div className="collapse" id={`collapse-${title}-2`}>
-                        <div className="card card-body">
-                            <h3>Actors: </h3>
-                            {secondData?.map((member, index) => (
-                                <p key={index}>{member?.name}: {member?.role}</p>
-                            ))}
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    );
-};
-
-// eslint-disable-next-line react/prop-types
-const MovieDetailsCollapse = ({ title, data }) => {
-    return (
-        <div className="d-flex gap-3 mb-3">
-            <button
-                className="btn btn-primary"
-                type="button"
-                data-bs-toggle="collapse"
-                data-bs-target={`#collapse-${title}`}
-                aria-expanded="false"
-                aria-controls={`collapse-${title}`}
-            >
-                Show {title}
-            </button>
-            <div className="collapse mt-2" id={`collapse-${title}`}>
-                <div className="card card-body">
-                    <h3>{title}: </h3>
-                    {data?.map((item, index) => (
-                        <p key={index}>{item?.role ? `${item?.name}: ${item?.role}` : item}</p>
-                    ))}
-                </div>
-            </div>
-        </div>
-    );
-};
 
 export default Movie;
