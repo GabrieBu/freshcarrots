@@ -1,7 +1,8 @@
-import { useState, useRef } from "react";
+import { useState} from "react";
 import "./Carousel.css";
 import Skeleton from "../ui/Skeleton.jsx";
-import {Link} from "react-router-dom"; // Custom styles
+import {Link} from "react-router-dom";
+import MovieCard from "./MovieCard.jsx"; // Custom styles
 
 // eslint-disable-next-line react/prop-types
 function Carousel({genre, movies, loading}){
@@ -25,37 +26,37 @@ function Carousel({genre, movies, loading}){
 
     return (
         <div className="carousel-container">
-            {loading ? <Skeleton /> : <h2 className="carousel-title mb-3">{genre} movies you can like</h2>}
-            <button className="carousel-control prev" onClick={prevPage} disabled={currentIndex === 0} style={{zIndex: 1}}>
+            {loading ? <Skeleton/> : <h2 className="carousel-title mb-3">{genre} movies you can like</h2>}
+            <button className="carousel-control prev" onClick={prevPage} disabled={currentIndex === 0}
+                    style={{zIndex: 1}}>
                 ❮
             </button>
 
             <div className="carousel-wrapper">
                 <div className="carousel-inner-custom" style={{transform: `translateX(-${currentIndex * 12.5}%)`}}>
                     {loading
-                        ? Array.from({ length: itemsVisible}).map((_, index) => (
+                        ? Array.from({length: itemsVisible}).map((_, index) => (
                             <div key={index} className="movie-card skeleton">
                                 <div className="skeleton-image"></div>
                                 <div className="skeleton-title"></div>
                             </div>
                         ))
                         // eslint-disable-next-line react/prop-types
-                        : movies.map((movie, index) => (
-                            <Link key={index} to={`/movie/${movie?.id}`}>
-                                <div
-                                    key={movie.id}
-                                    className="movie-card"
-                                >
-                                    <img src={movie?.link} alt={movie?.name} />
-                                    <p>{movie?.name}</p>
-                                </div>
-                            </Link>
-                        ))}
+                        : movies.map((movie, index) => (<MovieCard key={index} movie={movie}/>))}
                 </div>
             </div>
-            <button className="carousel-control next" onClick={nextPage} disabled={currentIndex >= moviesLength - itemsVisible} style={{zIndex: 1}}>
+            <button className="carousel-control next" onClick={nextPage}
+                    disabled={currentIndex >= moviesLength - itemsVisible} style={{zIndex: 1}}>
                 ❯
             </button>
+
+            <Link
+                className="btn btn-primary"
+                to="discover"
+                style={{marginTop: "10px", cursor: "pointer"}}
+            >
+                Show All
+            </Link>
         </div>
     );
 }

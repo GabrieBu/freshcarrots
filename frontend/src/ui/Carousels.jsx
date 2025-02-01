@@ -7,10 +7,6 @@ const hotGenres = [
         title: "🔥 High-Octane Thrills",
     },
     {
-        genre: "Drama",
-        title: "🎭 Captivating Dramas",
-    },
-    {
         genre: "Adventure",
         title: "🌍 Epic Adventures Await",
     },
@@ -21,13 +17,29 @@ const hotGenres = [
     {
         genre: "Romance",
         title: "❤️ Love & Heartfelt Moments",
+    },
+    {
+        genre: "Drama",
+        title: "🎭 Captivating Dramas",
     }
 ];
+const languageMap = {
+    'en': 'English',
+    'fr': 'French',
+    'it': 'Italian',
+    'de': 'German',
+    'es': 'Spanish',
+    'pt': 'Portuguese',
+    'ru': 'Russian',
+    'zh': 'Chinese',
+    'ja': 'Japanese',
+    'ko': 'Korean',
+};
 
 function Carousels() {
     const { moviesByCategory, loading } = useMoviesByCategory(hotGenres);
-    const {moviesByGenre, moviesForAdult, moviesForFamilies, worldwideMovies,cultLanguageMovies} = moviesByCategory;
-
+    const {moviesByGenre, moviesForAdult, worldwideMovies,cultLanguageMovies} = moviesByCategory;
+    const userLanguage = languageMap[navigator.language.substring(0, 2)]; //getting dynamically the language of the user, to query db
 
     /* TODO HANDLING ERROR*/
     return (
@@ -40,16 +52,13 @@ function Carousels() {
                 ))}
             </div>
             <div className="mt-4">
-                <Carousel title="🌍 Cult Classics in Their Original Language" movies={cultLanguageMovies} loading={loading}/>
+                <Carousel title={`🌍 Cult Classics in ${userLanguage}`} movies={cultLanguageMovies} loading={loading}/>
             </div>
             <div className="mt-4">
                 <Carousel title="🔞 PG-18: Only for Adults" movies={moviesForAdult} loading={loading}/>
             </div>
             <div className="mt-4">
                 <Carousel title="🌎 Trending Worldwide Hits" movies={worldwideMovies} loading={loading}/>
-            </div>
-            <div className="mt-4">
-                <Carousel title="👨‍👩‍👧‍👦 Fun for the Whole Family" movies={moviesForFamilies}/>
             </div>
         </div>
     );
