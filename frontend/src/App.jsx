@@ -17,6 +17,7 @@ function App() {
                 <Route path="home" element={<Homepage />}/>
                 <Route path="community" element={<Community />}/>
                 <Route path="reviews" element={<Reviews />}/>
+                <Route path="discover" element={<Discover />}/>
                 <Route path="/discussion/:id" element={<DiscussionRoom />} />
                 <Route path="/movie/:id" element={<Movie />}/>
                 <Route path="*" element={<p>Page not Found! Error 404</p>} />

@@ -1,6 +1,5 @@
 import { useParams } from "react-router-dom";
 import useMovie from "../hooks/useMovie.js";
-import {useState} from "react";
 
 function Movie() {
     const { id } = useParams();
@@ -98,6 +97,7 @@ const MovieDetailsCollapse = ({title, data}) => {
             <div className="collapse" id="collapseExample">
                 <div className="card card-body">
                     <h3>{title}: </h3>
+                    {/* eslint-disable-next-line react/prop-types */}
                     {data?.map((item) => (
                             item?.role ? `${item?.name}: ${item?.role}`.join(', ') : item
                     ))}
