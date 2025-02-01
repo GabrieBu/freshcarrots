@@ -27,7 +27,7 @@ export const getMessages = async (req, res) => {
             return res.status(400).json({ error: "Room ID is required" });
         }
 
-        const offsetNum = Number(offset);
+        const offsetNum = Number(offset)*50;
         const limitNum = Number(limit);
 
         const discussion = await Discussion.findOne({ id: id_room },{messages:{ $slice: [-offsetNum - limitNum, limitNum] }});
