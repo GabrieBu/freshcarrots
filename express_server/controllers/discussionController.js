@@ -22,17 +22,22 @@ export const getDiscussions = async (req, res) => {
 
 export const getMessages = async (req, res) => {
     try {
-        const { id_room } = req.query;
+        const { id_room,offset = 0, limit = 50 } = req.query;
         if (!id_room) {
             return res.status(400).json({ error: "Room ID is required" });
         }
-        const discussion = await Discussion.findOne({ id: id_room });
+
+        const offsetNum = Number(offset)*50;
+        const limitNum = Number(limit);
+
+        const discussion = await Discussion.findOne({ id: id_room },{messages:{ $slice: [-offsetNum - limitNum, limitNum] }});
+        const moreMessages = offsetNum + limitNum < (await Discussion.countDocuments({ id: id_room }));
         if (!discussion) {
             return res.status(404).json({ error: "Discussion not found" });
         }
 
         console.log("Discussion:", discussion);
-        res.json({ title: discussion.title, messages: discussion.messages });
+        res.json({ title: discussion.title, messages: discussion.messages, moreMessages});
     } catch (error) {
         res.json({ error_message: error.message });
     }
