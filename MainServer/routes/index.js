@@ -114,4 +114,15 @@ router.get('/getMovieByName', async function(req, res, next) {
   }
 });
 
+router.get('/ageMin', async function(req, res, next) {
+  try {
+    const response = await axios.get('http://localhost:3002/movies/ageMin', {
+      params: req.query
+    });
+    res.json(response.data);
+  } catch (error) {
+    res.status(500).send('Error occured: ageMin ' + error.message);
+  }
+});
+
 module.exports = router;
