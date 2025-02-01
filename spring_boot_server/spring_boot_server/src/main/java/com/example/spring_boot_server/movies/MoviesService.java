@@ -2,10 +2,7 @@ package com.example.spring_boot_server.movies;
 
 import com.example.spring_boot_server.actors.dtos.ActorDTO;
 import com.example.spring_boot_server.crew.dtos.CrewDTO;
-import com.example.spring_boot_server.movies.dtos.MovieByIdDTO;
-import com.example.spring_boot_server.movies.dtos.MovieByNameDTO;
-import com.example.spring_boot_server.movies.dtos.MovieTitlePosterDTO;
-import com.example.spring_boot_server.movies.dtos.MovieTitlePosterRatingDTO;
+import com.example.spring_boot_server.movies.dtos.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -58,5 +55,11 @@ public class MoviesService {
         return moviesRepository.findTop20MoviesByAgeMin(minAge);
     }
 
+    public List<MovieTitlePosterCountDTO> findWorldwideMovies(){
+        return moviesRepository.findWorldwideMovies();
+    }
 
+    public List<MovieTitlePosterDTO> findCultLanguageMovies(String language){
+        return moviesRepository.findCultLanguage(language);
+    }
 }

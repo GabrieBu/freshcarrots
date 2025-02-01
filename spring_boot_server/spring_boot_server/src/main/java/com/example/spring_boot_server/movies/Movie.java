@@ -47,16 +47,6 @@ public class Movie {
     @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Release> releases;
 
-    public List<Theme> getThemes() {
-        return themes;
-    }
-
-    public void setThemes(List<Theme> themes) {
-        this.themes = themes;
-    }
-
-
-
     public Movie() {}
 
     public Movie(Long id, String name, Float date, String tagline, String description, Float minute, Float rating, Poster poster, List<Genre> genres, List<Actor> actors, List<Crew> crew, List<Language> languages, List<Studios> studios) {
@@ -73,6 +63,14 @@ public class Movie {
         this.crew = crew;
         this.languages = languages;
         this.studios = studios;
+    }
+
+    public List<Theme> getThemes() {
+        return themes;
+    }
+
+    public void setThemes(List<Theme> themes) {
+        this.themes = themes;
     }
 
     public void setPoster(Poster poster) {
