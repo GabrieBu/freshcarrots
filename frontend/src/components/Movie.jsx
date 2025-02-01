@@ -43,13 +43,9 @@ function Movie() {
                                 ⭐ {movie?.rating} / 5
                             </h5>
                         </div>
-
-                        {/* Buttons in one row with some space between them */}
-                        <div className="d-flex gap-3 mb-3">
-                            <MovieDetailsBothCollapse title="cast" firstData={movie?.crew} secondData={movie?.actor} />
-                            <MovieDetailsCollapse title="Themes" data={movie?.themes} />
-                            <MovieDetailsCollapse title="Studios" data={movie?.studios} />
-                        </div>
+                        <MovieDetailsBothCollapse title="cast" firstData={movie?.crew} secondData={movie?.actor} />
+                        <MovieDetailsCollapse title="Themes" data={movie?.themes} />
+                        <MovieDetailsCollapse title="Studios" data={movie?.studios} />
                     </div>
                 </div>
             )}
@@ -60,7 +56,7 @@ function Movie() {
 // eslint-disable-next-line react/prop-types
 const MovieDetailsBothCollapse = ({ title, firstData, secondData }) => {
     return (
-        <>
+        <div className="d-flex gap-3 mb-3">
             <button
                 className="btn btn-primary"
                 type="button"
@@ -93,14 +89,14 @@ const MovieDetailsBothCollapse = ({ title, firstData, secondData }) => {
                     </div>
                 </div>
             </div>
-        </>
+        </div>
     );
 };
 
 // eslint-disable-next-line react/prop-types
 const MovieDetailsCollapse = ({ title, data }) => {
     return (
-        <>
+        <div className="d-flex gap-3 mb-3">
             <button
                 className="btn btn-primary"
                 type="button"
@@ -111,7 +107,7 @@ const MovieDetailsCollapse = ({ title, data }) => {
             >
                 Show {title}
             </button>
-            <div className="collapse mt-2" id={`collapse-${title}`} >
+            <div className="collapse mt-2" id={`collapse-${title}`}>
                 <div className="card card-body">
                     <h3>{title}: </h3>
                     {data?.map((item, index) => (
@@ -119,7 +115,7 @@ const MovieDetailsCollapse = ({ title, data }) => {
                     ))}
                 </div>
             </div>
-        </>
+        </div>
     );
 };
 

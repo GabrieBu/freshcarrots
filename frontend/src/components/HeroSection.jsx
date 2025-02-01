@@ -38,8 +38,28 @@ function HeroSection() {
                             className={`carousel-item h-100 ${index === currentIndex ? "active" : "blurred"}`}
                             onClick={() => handleClickCarousel(movie?.id)}
                         >
-                            <div className="row w-100 h-100">
-                                <div className="col-6 h-100 d-flex justify-content-center align-items-center">
+                            <div className="row w-100 h-100 justify-content-center align-items-center">
+                                {/* Left Adjacent Movie */}
+                                <div
+                                    className={`col-3 h-100 ${index === (currentIndex - 1 + movies.length) % movies.length ? "blurred" : ""}`}
+                                    style={{
+                                        filter: index === (currentIndex - 1 + movies.length) % movies.length ? "blur(5px)" : "none",
+                                        opacity: index === (currentIndex - 1 + movies.length) % movies.length ? 0.5 : 1,
+                                    }}
+                                >
+                                    {loading ? (
+                                        <div className="skeleton skeleton-image d-block w-100 h-100"></div>
+                                    ) : (
+                                        <img
+                                            src={movie?.link}
+                                            className="d-block w-100 h-auto object-fit-cover"
+                                            alt={`Slide ${index + 1}`}
+                                        />
+                                    )}
+                                </div>
+
+                                {/* Main Movie */}
+                                <div className="col-4 h-100 d-flex justify-content-center align-items-center">
                                     {loading ? (
                                         <div className="skeleton skeleton-image d-block w-75 h-100"></div>
                                     ) : (
@@ -50,10 +70,24 @@ function HeroSection() {
                                         />
                                     )}
                                 </div>
-                                <div className="col-6 d-flex flex-column justify-content-center align-items-start p-5">
-                                    <h3>{movie?.name}</h3>
-                                    <h5>⭐ {movie?.rating}/5</h5>
-                                    <p>{movie?.description}</p>
+
+                                {/* Right Adjacent Movie */}
+                                <div
+                                    className={`col-3 h-100 ${index === (currentIndex + 1) % movies.length ? "blurred" : ""}`}
+                                    style={{
+                                        filter: index === (currentIndex + 1) % movies.length ? "blur(5px)" : "none",
+                                        opacity: index === (currentIndex + 1) % movies.length ? 0.5 : 1,
+                                    }}
+                                >
+                                    {loading ? (
+                                        <div className="skeleton skeleton-image d-block w-100 h-100"></div>
+                                    ) : (
+                                        <img
+                                            src={movie?.link}
+                                            className="d-block w-100 h-auto object-fit-cover"
+                                            alt={`Slide ${index + 1}`}
+                                        />
+                                    )}
                                 </div>
                             </div>
                         </div>

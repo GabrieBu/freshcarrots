@@ -5,7 +5,7 @@ function Navbar() {
     return (
         <nav className="navbar navbar-expand-lg navbar-dark bg-dark w-100" aria-label="Main navigation">
             <div className="container-fluid">
-                <Link to="/home" ><img style={{ width: "300px", height: "auto"  }} src="\freshcarrots-high-resolution-logo-transparent.svg" className="img-fluid" aria-label="Logo" alt="Logo"/></Link>
+                <Link to="/home" ><img style={{ width: "90px", height: "auto"  }} src="\freshcarrots-high-resolution-logo-transparent.svg" className="img-fluid" aria-label="Logo" alt="Logo"/></Link>
                 <button className="navbar-toggler" type="button" data-bs-toggle="collapse"
                         data-bs-target="#navbarsExample05" aria-controls="navbarsExample05" aria-expanded="false"
                         aria-label="Toggle navigation">
