@@ -2,8 +2,7 @@ import { useState } from "react";
 import useHeroSection from "../hooks/useHeroSection.js";
 import { useNavigate } from "react-router-dom";
 
-// eslint-disable-next-line react/prop-types
-function HeroSection({ ref }) {
+function HeroSection() {
     const { movies, loading, error } = useHeroSection();
     const [currentIndex, setCurrentIndex] = useState(0);
     const navigate = useNavigate();
@@ -20,7 +19,6 @@ function HeroSection({ ref }) {
                 id="carouselExampleFade"
                 className="carousel slide carousel-fade w-100 vh-100 bg-white"
                 data-bs-ride="carousel"
-                ref={ref}
             >
                 <div className="carousel-indicators">
                     {movies?.map((_, index) => (
@@ -62,22 +60,27 @@ function HeroSection({ ref }) {
                     ))}
                 </div>
 
+                {/* Prev Button */}
                 <button
-                    className="carousel-control-prev"
+                    className="carousel-control-prev text-black"
                     type="button"
                     data-bs-target="#carouselExampleFade"
                     data-bs-slide="prev"
                     onClick={() => setCurrentIndex((prevIndex) => (prevIndex - 1 + movies.length) % movies.length)}
+                    style={{ backgroundColor: "rgba(0, 0, 0, 0.5)" }}
                 >
                     <span className="carousel-control-prev-icon" aria-hidden="true"></span>
                     <span className="visually-hidden">Previous</span>
                 </button>
+
+                {/* Next Button */}
                 <button
-                    className="carousel-control-next"
+                    className="carousel-control-next text-black"
                     type="button"
                     data-bs-target="#carouselExampleFade"
                     data-bs-slide="next"
                     onClick={() => setCurrentIndex((prevIndex) => (prevIndex + 1) % movies.length)}
+                    style={{ backgroundColor: "rgba(0, 0, 0, 0.5)" }}
                 >
                     <span className="carousel-control-next-icon" aria-hidden="true"></span>
                     <span className="visually-hidden">Next</span>
