@@ -45,16 +45,13 @@ public interface MoviesRepository extends JpaRepository<Movie, Long> {
             "LIMIT 20")
     List<MovieTitlePosterDTO> findTop20MoviesByGenre(String genreName);
 
-    @Query(value="SELECT new com.example.spring_boot_server.movies.dtos.MovieTitlePosterDTO(m.id, m.name,m.poster.link)"+
+    @Query(value="SELECT DISTINCT new com.example.spring_boot_server.movies.dtos.MovieTitlePosterRatingDTO(m.id, m.name,m.poster.link, m.rating)"+
             "FROM Movie m " +
             "JOIN Release r on r.movie.id =m.id "+
             "Where r.age_min>= :age_min AND m.rating IS NOT NULL " +
             "ORDER BY m.rating DESC " +
             "LIMIT 20")
-    List<MovieTitlePosterDTO> findTop20MoviesByAgeMin(int age_min);
-
-
-
+    List<MovieTitlePosterRatingDTO> findTop20MoviesByAgeMin(int age_min);
 
     Optional<Movie> findMovieById(Long id);
 }
