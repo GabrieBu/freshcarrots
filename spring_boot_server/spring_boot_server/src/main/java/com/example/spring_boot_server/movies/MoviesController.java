@@ -59,4 +59,21 @@ public class MoviesController {
             return new ResponseEntity<>(movies, HttpStatus.OK);
     }
 
+    @GetMapping("/getWorldwideMovies")
+    public ResponseEntity<List<MovieTitlePosterCountDTO>> findMovieByAgeMin() {
+        List<MovieTitlePosterCountDTO> movies=moviesService.findWorldwideMovies();
+        if (movies.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }else
+            return new ResponseEntity<>(movies, HttpStatus.OK);
+    }
+
+    @GetMapping("/getCultLanguage")
+    public ResponseEntity<List<MovieTitlePosterDTO>> findCultLanguage(@RequestParam String language) {
+        List<MovieTitlePosterDTO> movies=moviesService.findCultLanguageMovies(language);
+        if (movies.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }else
+            return new ResponseEntity<>(movies, HttpStatus.OK);
+    }
 }
