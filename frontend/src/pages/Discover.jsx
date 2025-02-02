@@ -10,6 +10,7 @@ import DropdownFilter from "../ui/DropdownFilter.jsx";
 import useGenres from "../hooks/useGenres.js";
 import {useInView} from "react-intersection-observer";
 import Loader from "../ui/Loader.jsx";
+import {Link} from "react-router-dom";
 
 
 function Discover() {
@@ -99,16 +100,38 @@ function Discover() {
                         </div>
                     </div>
                 </div>
-                <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
-                    {errorMovies && <h2 className="text-danger">Error loading movies</h2>}
-                    {loadingMovies ? <Loader/> : movies?.map((movie, index) => {
-                        return (
-                            <div key={movie.id} className="col" ref={index === movies.length - 1 ? ref : null}>
-                                <MovieCard movie={movie}/>
-                            </div>
-                        );
-                    })}
+                <div className="container px-5">
+                    <div className="row g-4 justify-content-center">
+                        {errorMovies && <h2 className="text-danger">Error loading movies</h2>}
+                        {loadingMovies
+                            ? [...Array(8)].map((_, index) => ( // Render 8 skeleton cards
+                                <div key={index} className="col">
+                                    <div className="movie-card-movies">
+                                        <div className="placeholder w-100" style={{
+                                            height: "180px",
+                                            borderRadius: "8px",
+                                            background: "#e0e0e0"
+                                        }}></div>
+                                        <div className="placeholder col-8 mt-2"></div>
+                                    </div>
+                                </div>
+                            ))
+                            : movies?.map((movie, index) => (
+                                <div key={movie.id} className="col"
+                                     ref={index === movies.length - 1 ? ref : null}
+                                     style={{flex: "1 1 auto"}}>
+                                    <Link to={`/movie/${movie?.id}`}>
+                                        <div className="movie-card-movies">
+                                            <img src={movie?.link} alt={movie?.name}/>
+                                            <p>{movie?.name}</p>
+                                        </div>
+                                    </Link>
+                                </div>
+                            ))
+                        }
+                    </div>
                 </div>
+
             </LayoutContent>
             <Footer/>
         </Layout>

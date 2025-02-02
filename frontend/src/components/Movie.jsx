@@ -12,7 +12,7 @@ function Movie() {
     if (error) return <h2 className="text-danger text-center mt-4">Error fetching movie</h2>;
 
     return (
-        <div className="container mt-5 my-4">
+        <div className="container mt-5 px-5">
             {loading ? (
                 <div className="row">
                     <div className="col-md-4">
@@ -47,7 +47,7 @@ function Movie() {
                                 ⭐ {movie?.rating} / 5
                             </h5>
                         </div>
-                        <div className="d-flex gap-3">
+                        <div className="d-flex gap-3 my-4">
                             <button className="btn btn-primary" onClick={() => setShowCast(!showCast)}>
                                 {showCast ? "Hide cast" : "Show cast"}
                             </button>
