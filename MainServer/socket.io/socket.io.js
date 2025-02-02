@@ -2,9 +2,7 @@ exports.init = function(io) {
     io.on('connection', function (socket) {
         try {
             socket.on('create or join', function (room, username) {
-                console.log(username + " connected to " + room);
                 socket.join(room);
-                socket.to(room).emit('joined', room, username);
             });
             socket.on('message', function(room, username, chatText, timestamp) {
                 socket.to(room).emit('message', room, username, chatText, timestamp);
