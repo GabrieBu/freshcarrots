@@ -57,7 +57,7 @@ function DiscussionRoom() {
                 const res = await axios.get("http://localhost:3000/getMessages", {
                     params: { id_room, page: pageNumber },
                 });
-                setMessages(res.data.messages);
+                setMessages(prevMessages => [...prevMessages, res.data.messages]);
                 setTitle(res.data.title);
                 setHasMore(res.data.hasMore);
                 setError(false);
