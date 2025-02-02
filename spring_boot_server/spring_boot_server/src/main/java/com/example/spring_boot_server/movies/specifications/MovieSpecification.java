@@ -2,8 +2,6 @@ package com.example.spring_boot_server.movies.specifications;
 
 import com.example.spring_boot_server.genres.Genre;
 import com.example.spring_boot_server.movies.Movie;
-import com.example.spring_boot_server.movies.dtos.MovieTitlePosterDTO;
-import com.example.spring_boot_server.posters.Poster;
 import org.springframework.data.jpa.domain.Specification;
 import jakarta.persistence.criteria.*;
 
