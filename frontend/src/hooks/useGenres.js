@@ -14,8 +14,11 @@ export default function useGenres() {
             url: `http://localhost:3000/getGenres`,
         })
             .then((res) => {
-                console.log(res.data);
-                setGenres(res.data);
+                const formatted = res.data.map(item => ({
+                    name: item.genreName,
+                    title: item.genreName
+                }));
+                setGenres(formatted);
                 setLoading(false);
             })
             .catch((err) => {

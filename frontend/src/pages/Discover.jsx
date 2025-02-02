@@ -13,25 +13,26 @@ import useGenres from "../hooks/useGenres.js";
 function Discover() {
     const [pageNumber, setPageNumber] = useState(0);
     const [selectedFilters, setSelectedFilters] = useState([]);
-    const {genres} = useGenres();
+    const {genres, error, loading} = useGenres();
+    const {movies, errorMovies, loadingMovies} = useMovies(selectedFilters);
 
     const filters = [{
         typeFilter: "title",
         options: [{
-            name: "asc",
+            name: "ascName",
             label: "From A to Z"
         }, {
-            name: "desc",
+            name: "descName",
             label: "From Z to A"
         }]
-    },
+        },
         {
             typeFilter: "date",
             options: [{
-                name: "desc",
+                name: "descDate",
                 label: "From newest to oldest"
             }, {
-                name: "asc",
+                name: "ascDate",
                 label: "From oldest to newest"
             }]
         },
@@ -59,11 +60,9 @@ function Discover() {
         },
         {
             typeFilter: "genre",
-            options: genres,
+            options: error ? [] : loading ? [{ name: "loading", label: "Loading..." }] : genres || [],
         }
     ]
-
-    //const {movies} = useMovies();
 
     function handleResetFilter() {
         setSelectedFilters([]);
@@ -88,11 +87,11 @@ function Discover() {
                 </div>
             </div>
             <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
-                {/*movies?.map((movie) => (
+                {movies?.map((movie) => (
                     <div key={movie.id} className="col">
                         <MovieCard movie={movie}/>
                     </div>
-                ))*/}
+                ))}
             </div>
         </LayoutContent>
         <Footer/>
