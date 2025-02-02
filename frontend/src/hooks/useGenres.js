@@ -16,7 +16,7 @@ export default function useGenres() {
             .then((res) => {
                 const formatted = res.data.map(item => ({
                     name: item.genreName,
-                    title: item.genreName
+                    label: item.genreName
                 }));
                 setGenres(formatted);
                 setLoading(false);

@@ -2,13 +2,13 @@ import axios from 'axios'
 import { useEffect, useState } from 'react'
 
 export default function useMovies(pageNumber, selectedFilters) {
-    const [movie, setMovie] = useState({});
+    const [movies, setMovies] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
 
     useEffect(() => {
         setLoading(true);
-        let  filter = {};
+        let filter = {};
 
         selectedFilters.forEach(value => {
             if (value === "ascName") filter.orderByName = "asc";
@@ -25,7 +25,6 @@ export default function useMovies(pageNumber, selectedFilters) {
             }
         });
         filter = {...filter, page: pageNumber};
-        console.log(filter)
         setError(false);
         axios({
             method: "GET",
@@ -33,7 +32,7 @@ export default function useMovies(pageNumber, selectedFilters) {
             params: filter
         })
             .then((res) => {
-                setMovie(res.data);
+                setMovies(res.data);
                 setLoading(false);
             })
             .catch((err) => {
@@ -43,5 +42,5 @@ export default function useMovies(pageNumber, selectedFilters) {
             });
     }, [pageNumber, selectedFilters]);
 
-    return { movie, loadingMovies: loading, errorMovies: error };
+    return { movies, loadingMovies: loading, errorMovies: error };
 }
