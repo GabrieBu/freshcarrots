@@ -5,14 +5,14 @@ import useDiscussions from "../hooks/useDiscussions.js";
 import Loader from "../ui/Loader.jsx";
 
 function DiscussionList() {
-    const [joinedDiscussions, setJoinedDiscussions] = useState([]);
+    const [followedDiscussions, setFollowedDiscussions] = useState([]);
     const [username, setUsername] = useState("");
     const [newTitle, setNewTitle] = useState("");
     const [showCreateDiscussion, setShowCreateDiscussion] = useState(false);
     const [errorCreate, setErrorCreate] = useState(false);
     const {discussions, setDiscussions, error, isLoading} = useDiscussions();
 
-    // load joined discussions from localstorage when the component for the first time rendered
+    // load liked discussions from localstorage when the component for the first time rendered
     useEffect(() => {
         const user = JSON.parse(localStorage.getItem("username")) || "";
         if(user !== "")
@@ -23,8 +23,8 @@ function DiscussionList() {
             modal.show();
             return;
         }
-        const storedDiscussions = JSON.parse(localStorage.getItem("joinedDiscussions")) || [];
-        setJoinedDiscussions(storedDiscussions); //update the state
+        const storedDiscussions = JSON.parse(localStorage.getItem("followedDiscussions")) || [];
+        setFollowedDiscussions(storedDiscussions); //update the state
     }, []);
 
     function handleCloseModal() {
@@ -37,25 +37,25 @@ function DiscussionList() {
 
     // handler when Join room clickes
     const handleJoin = (id) => {
-        if (!joinedDiscussions.includes(id)) {
-            const updatedDiscussions = [...joinedDiscussions, id]; //update array of joined discussions
-            setJoinedDiscussions(updatedDiscussions);
-            localStorage.setItem("joinedDiscussions", JSON.stringify(updatedDiscussions));
+        if (!followedDiscussions.includes(id)) {
+            const updatedDiscussions = [...followedDiscussions, id]; //update array of joined discussions
+            setFollowedDiscussions(updatedDiscussions);
+            localStorage.setItem("followedDiscussions", JSON.stringify(updatedDiscussions));
         }
     };
 
     // handler when leave room clicked
     const handleLeave = (id) => {
-        const updatedDiscussions = joinedDiscussions.filter(discussionId => discussionId !== id); //update array of joined discussions
-        setJoinedDiscussions(updatedDiscussions);
-        localStorage.setItem("joinedDiscussions", JSON.stringify(updatedDiscussions));
+        const updatedDiscussions = followedDiscussions.filter(discussionId => discussionId !== id); //update array of joined discussions
+        setFollowedDiscussions(updatedDiscussions);
+        localStorage.setItem("followedDiscussions", JSON.stringify(updatedDiscussions));
     };
 
     function handleCreateDiscussion() {
         if (newTitle.trim() === "") return; // prevent empty discussions
 
         const newDiscussion = {
-            id: Math.random().toString(36).substr(2, 9), // generate random id room
+            id: Math.random().toString(36).substr(2, 10) + Math.random().toString(36).substr(2, 10), //random id 20chars
             title: newTitle,
         };
 
@@ -127,6 +127,34 @@ function DiscussionList() {
             </div>
 
             <div className="container mt-4">
+                {followedDiscussions.length > 0 && (
+                    <div className="mb-4">
+                        <h2>❤️ Followed discussions: </h2>
+                        <ul className="list-group">
+                            {followedDiscussions.map((discussion) => (<li key={discussion.id} className="list-group-item d-flex justify-content-between align-items-center">
+                                <div>
+                                    <Link to={`/discussion/${discussion.id}`}
+                                          className="text-decoration-underline fw-medium">
+                                        {discussion.title}
+                                    </Link>
+                                    {followedDiscussions.includes(discussion.id) && (
+                                        <span className="badge bg-success ms-2">Joined</span>
+                                    )}
+                                </div>
+                                {followedDiscussions.includes(discussion.id) ? (
+                                    <button className="btn btn-danger" onClick={() => handleLeave(discussion.id)}>
+                                        Unfollow Room
+                                    </button>
+                                ) : (
+                                    <Link to={`/discussion/${discussion.id}`} className="btn btn-primary"
+                                          onClick={() => handleJoin(discussion.id)}>
+                                        Follow Room
+                                    </Link>
+                                )}
+                            </li>))}
+                        </ul>
+                    </div>
+                )}
                 {error && <h2 className="text-danger">Could not load past discussions.</h2>}
                 {!isLoading ? <>
                     <h2>Discussions</h2>
@@ -135,14 +163,15 @@ function DiscussionList() {
                             <li key={discussion.id}
                                 className="list-group-item d-flex justify-content-between align-items-center">
                                 <div>
-                                    <Link to={`/discussion/${discussion.id}`} className="text-decoration-underline fw-medium">
+                                    <Link to={`/discussion/${discussion.id}`}
+                                          className="text-decoration-underline fw-medium">
                                         {discussion.title}
                                     </Link>
-                                    {joinedDiscussions.includes(discussion.id) && (
+                                    {followedDiscussions.includes(discussion.id) && (
                                         <span className="badge bg-success ms-2">Joined</span>
                                     )}
                                 </div>
-                                {joinedDiscussions.includes(discussion.id) ? (
+                                {followedDiscussions.includes(discussion.id) ? (
                                     <button className="btn btn-danger" onClick={() => handleLeave(discussion.id)}>
                                         Leave Room
                                     </button>
