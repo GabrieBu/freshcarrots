@@ -50,3 +50,28 @@ html, body {
   opacity: 0.4;
   transition: filter 0.3s ease, opacity 0.3s ease;
 }
+
+.movie-card-movies {
+  flex: 0 0 120px;
+  gap: 10px;
+  max-width: 120px;
+  min-width: 120px;
+  text-align: left;
+  cursor: pointer;
+  transition: transform 0.3s ease-in-out;
+}
+.movie-card-movies a{
+  color:black;
+  text-decoration: none;
+}
+
+.movie-card-movies:hover {
+  transform: scale(1.1);
+}
+
+.movie-card-movies img {
+  width: 100%;
+  height: 180px;
+  border-radius: 8px;
+  object-fit: cover;
+}
