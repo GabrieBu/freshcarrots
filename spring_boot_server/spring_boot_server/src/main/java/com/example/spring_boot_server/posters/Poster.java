@@ -1,6 +1,8 @@
 package com.example.spring_boot_server.posters;
 
 import com.example.spring_boot_server.movies.Movie;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 @Entity
@@ -11,8 +13,9 @@ public class Poster {
     private Long id;
     @Column(name = "link", columnDefinition = "TEXT")
     private String link;
-    @OneToOne
-    @JoinColumn(name = "id_film", referencedColumnName = "id", nullable = false, columnDefinition = "BIGINT")
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "id_film", referencedColumnName = "id")
+    @JsonBackReference
     private Movie movie;
 
     public Poster(Long id, String link, Movie movie) {

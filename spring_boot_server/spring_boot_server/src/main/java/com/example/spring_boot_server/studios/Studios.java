@@ -1,5 +1,6 @@
 package com.example.spring_boot_server.studios;
 import com.example.spring_boot_server.movies.Movie;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 @Entity
@@ -10,8 +11,9 @@ public class Studios {
     private Long id;
     @Column(name = "studio", columnDefinition = "TEXT")
     private String studio;
-    @ManyToOne
-    @JoinColumn(name = "id_film", referencedColumnName = "id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_film", referencedColumnName = "id")
+    @JsonBackReference
     private Movie movie;
 
     public Studios() {}

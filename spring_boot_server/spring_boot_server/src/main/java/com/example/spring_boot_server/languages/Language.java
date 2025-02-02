@@ -1,6 +1,7 @@
 package com.example.spring_boot_server.languages;
 
 import com.example.spring_boot_server.movies.Movie;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 @Entity
@@ -13,8 +14,9 @@ public class Language {
     private String type;
     @Column(name = "language", columnDefinition = "TEXT")
     private String language;
-    @ManyToOne
-    @JoinColumn(name = "id_film", referencedColumnName = "id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_film", referencedColumnName = "id")
+    @JsonBackReference
     private Movie movie;
 
     public Language() {}

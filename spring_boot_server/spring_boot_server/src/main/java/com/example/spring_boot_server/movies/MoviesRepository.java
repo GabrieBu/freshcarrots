@@ -3,6 +3,9 @@ import com.example.spring_boot_server.movies.dtos.MovieByNameDTO;
 import com.example.spring_boot_server.movies.dtos.MovieTitlePosterCountDTO;
 import com.example.spring_boot_server.movies.dtos.MovieTitlePosterDTO;
 import com.example.spring_boot_server.movies.dtos.MovieTitlePosterRatingDTO;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
@@ -71,5 +74,7 @@ public interface MoviesRepository extends JpaRepository<Movie, Long>, JpaSpecifi
             "ORDER BY m.rating DESC, m.date DESC " +
             "LIMIT 20")
     List<MovieTitlePosterDTO> findCultLanguage(@Param("language") String language);
+
+
 }
 

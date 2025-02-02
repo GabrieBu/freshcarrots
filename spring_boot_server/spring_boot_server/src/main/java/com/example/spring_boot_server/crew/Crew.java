@@ -1,5 +1,6 @@
 package com.example.spring_boot_server.crew;
 import com.example.spring_boot_server.movies.Movie;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 
@@ -13,8 +14,9 @@ public class Crew {
     private String role;
     @Column(name = "name", columnDefinition = "TEXT")
     private String name;
-    @ManyToOne
-    @JoinColumn(name = "id_film", referencedColumnName = "id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_film", referencedColumnName = "id")
+    @JsonBackReference
     private Movie movie;
 
     public Crew() {

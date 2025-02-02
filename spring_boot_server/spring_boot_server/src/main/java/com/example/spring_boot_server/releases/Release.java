@@ -1,5 +1,6 @@
 package com.example.spring_boot_server.releases;
 import com.example.spring_boot_server.movies.Movie;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
@@ -19,7 +20,8 @@ public class Release {
     @Column(name = "age_min", columnDefinition = "INTEGER")
     private Integer age_min;
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_film", referencedColumnName = "id", nullable = false, columnDefinition = "BIGINT")
+    @JoinColumn(name = "id_film", referencedColumnName = "id", columnDefinition = "BIGINT")
+    @JsonBackReference
     private Movie movie;
 
     public Release() {}

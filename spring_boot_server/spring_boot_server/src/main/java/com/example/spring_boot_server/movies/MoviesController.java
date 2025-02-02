@@ -2,6 +2,9 @@ package com.example.spring_boot_server.movies;
 import com.example.spring_boot_server.movies.dtos.*;
 import com.example.spring_boot_server.movies.dtos.MovieTitlePosterDTO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -71,6 +74,16 @@ public class MoviesController {
     @GetMapping("/getCultLanguage")
     public ResponseEntity<List<MovieTitlePosterDTO>> findCultLanguage(@RequestParam String language) {
         List<MovieTitlePosterDTO> movies=moviesService.findCultLanguageMovies(language);
+        if (movies.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }else
+            return new ResponseEntity<>(movies, HttpStatus.OK);
+    }
+
+    @GetMapping("/getFilteredMovies")
+    public ResponseEntity<Page<MovieTitlePosterDTO>> findFiltered(@RequestParam String orderByName, @RequestParam String orderByDate,  @RequestParam String byRating, @RequestParam String genre, @RequestParam int page) {
+        Pageable pageable = PageRequest.of(page, 50);
+        Page<MovieTitlePosterDTO> movies = moviesService.findFilteredMovies(pageable, orderByName, orderByDate, byRating, genre);
         if (movies.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }else

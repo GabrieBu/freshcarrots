@@ -1,6 +1,7 @@
 package com.example.spring_boot_server.genres;
 
 import com.example.spring_boot_server.movies.Movie;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 @Entity
@@ -11,8 +12,9 @@ public class Genre {
     private Long id;
     @Column(name = "genre", columnDefinition = "TEXT")
     private String genre;
-    @ManyToOne
-    @JoinColumn(name = "id_film", referencedColumnName = "id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_film", referencedColumnName = "id")
+    @JsonBackReference
     private Movie movie;
 
     public Genre() {}
