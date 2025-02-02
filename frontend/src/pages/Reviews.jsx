@@ -12,12 +12,12 @@ const Review = lazy(() => import("../components/Review"));
 
 function Reviews() {
     const [pageNumber, setPageNumber] = useState(1); //on first render page = 0, time to time increase it by one
-    const { ref, inView } = useInView({});
     const [criticFilter, setCriticFilter] = useState("all_critics");
     const [typeFilter, setTypeFilter] = useState("all_types");
     const [minDateFilter, setMinDate] = useState("all_dates");
     const [maxDateFilter, setMaxDate] = useState("all_dates");
     const {loading, error, reviews, hasMore} = useReviews(pageNumber,criticFilter,typeFilter, minDateFilter, maxDateFilter);
+    const { ref, inView } = useInView({});
 
     useEffect(() => {
         if (inView && hasMore) {
