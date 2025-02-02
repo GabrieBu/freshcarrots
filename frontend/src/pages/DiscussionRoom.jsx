@@ -4,6 +4,7 @@ import axios from "axios";
 import io from "socket.io-client";
 import Loader from "../ui/Loader.jsx";
 import { format } from "date-fns";
+import {useInView} from "react-intersection-observer";
 
 const socket = io("http://localhost:3000"); //main server address
 const formatTimestamp = (timestamp) => {
@@ -33,23 +34,33 @@ function DiscussionRoom() {
     const [loading, setLoading] = useState(false);
     const [title, setTitle] = useState("");
     const [uploading, setUploading] = useState(false);
-    const [pageNumber, setPageNumber] = useState(1);
+    const [pageNumber, setPageNumber] = useState(0);
 
     const fileInputRef = useRef(null);
     const canvasRef = useRef(null);
     const selectedFileRef = useRef(null); //to avoid no necessary re-renders
-    const firstMessageRef = useRef(null);
-    const containerRef = useRef(null);
+    const { ref, inView } = useInView({});
+
+    /* @TODO add hasMore*/
+    useEffect(() => {
+        if (inView) {
+            console.log("In view") //test
+            setPageNumber(pageNumber => pageNumber + 1); //increase page
+        }
+    }, [inView]);
 
 
     useEffect(() => {
         async function fetchMessages() {
+            setLoading(true);
+            setError(false);
             try {
                 const res = await axios.get("http://localhost:3000/getMessages", {
-                    params: { id_room,page: 1  }
+                    params: { id_room, page: pageNumber },
                 });
                 setMessages(res.data.messages);
                 setTitle(res.data.title);
+                setError(false);
             } catch (err) {
                 console.error("Error fetching messages:", err);
                 setError(true);
@@ -58,7 +69,9 @@ function DiscussionRoom() {
             }
         }
         fetchMessages();
+    }, [pageNumber]);
 
+    useEffect(() => {
         socket.emit("create or join", id_room, username);
 
         socket.on("message", (room, senderUsername, chatText, time_stamp) => {
@@ -78,47 +91,6 @@ function DiscussionRoom() {
             socket.off("image");
         };
     }, [id_room, username]);
-
-    useEffect(() => {
-        async function loadOlderMessages() {
-            setLoading(true);
-            try {
-                const res = await axios.get("http://localhost:3000/getMessages", {
-                    params: { id_room, page: pageNumber }
-                });
-
-                if (res.data.messages.length > 0) {
-                    setMessages(prevMessages => [...res.data.messages, ...prevMessages]);
-                    setTimeout(() => {
-                        firstMessageRef.current?.scrollIntoView({ behavior: "smooth" });
-                    }, 100);
-                }
-            } catch (err) {
-                console.error("Error fetching older messages:", err);
-                setError(true);
-            } finally {
-                setLoading(false);
-            }
-        }
-
-        if (pageNumber > 1) {
-            loadOlderMessages();
-        }
-    }, [pageNumber]);
-
-    useEffect(() => {
-        const container = containerRef.current;
-
-        const handleScroll = () => {
-            if (container.scrollTop === 0 && !loading) {
-                setPageNumber(prev => prev + 1);
-            }
-        };
-
-        container.addEventListener("scroll", handleScroll);
-        return () => container.removeEventListener("scroll", handleScroll);
-    }, [loading]);
-
 
 
     const handleSend = async () => {
@@ -208,6 +180,7 @@ function DiscussionRoom() {
                 {messages.map((msg, index) => (
                     <div
                         key={index}
+                        ref={index === 0 ? ref : null}
                         className={`d-flex mb-2 ${msg.sender === username ? "justify-content-end" : "justify-content-start"}`}
                     >
                         <div className={`p-2 rounded ${msg.sender === username ? "bg-primary text-white" : "bg-light"}`}>
