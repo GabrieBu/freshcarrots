@@ -81,7 +81,7 @@ public class MoviesController {
     }
 
     @GetMapping("/getFilteredMovies")
-    public ResponseEntity<Page<MovieTitlePosterDTO>> findFiltered(@RequestParam String orderByName, @RequestParam String orderByDate,  @RequestParam String byRating, @RequestParam String genre, @RequestParam int page) {
+    public ResponseEntity<Page<MovieTitlePosterDTO>> findFiltered(@RequestParam(required = false) String orderByName, @RequestParam(required = false) String orderByDate,  @RequestParam(required = false) String byRating, @RequestParam(required = false) String genre, @RequestParam int page) {
         Pageable pageable = PageRequest.of(page, 50);
         Page<MovieTitlePosterDTO> movies = moviesService.findFilteredMovies(pageable, orderByName, orderByDate, byRating, genre);
         if (movies.isEmpty()) {
