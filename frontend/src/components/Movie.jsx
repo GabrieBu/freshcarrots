@@ -35,17 +35,18 @@ function Movie() {
                         />
                     </div>
                     <div className="col-md-8">
-                        <h1 className="display-4 fw-bold">{movie?.name}</h1>
-                        <p className="lead text-muted fst-italic">{movie?.tagline}</p>
-                        <p className="text-justify">{movie?.description}</p>
-
+                        {movie?.name ? <h1 className="display-4 fw-bold">{movie?.name}</h1>: <h1 className="display-4 fw-bold">Movie name found</h1>}
+                        {movie?.tagline ? <p className="lead text-muted fst-italic">{movie?.tagline}</p>: <p className="lead text-muted fst-italic">Tagline not found</p>}
+                        {movie?.description ? <p className="text-justify">{movie?.description}</p>: <p className="text-justify">Description not found</p>}
                         <div className="d-flex justify-content-between align-items-center border-bottom pb-2 mb-4">
                             <h5 className="text-primary">
-                                {movie?.minute} min | {movie?.date}
+                                {movie?.minute ? `${movie.minute} min` : "Duration not available"}
+                                {movie?.minute && movie?.date ? " | " : ""}
+                                {movie?.date ? movie.date : "Date not available"}
                             </h5>
-                            <h5 className="text-warning">
+                           {movie?.rating ? <h5 className="text-warning">
                                 ⭐ {movie?.rating} / 5
-                            </h5>
+                            </h5>: <h5 className="text-warning">Rating not found </h5>}
                         </div>
                         <div className="d-flex gap-3 my-4">
                             <button className="btn btn-primary" onClick={() => setShowCast(!showCast)}>

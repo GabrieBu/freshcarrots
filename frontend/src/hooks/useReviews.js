@@ -1,7 +1,7 @@
 import {useEffect, useState} from 'react'
 import axios from 'axios'
 
-export default function useReviews(pageNumber, criticFilter, typeFilter,minDateFilter, maxDateFilter) {
+export default function useReviews(pageNumber, criticFilter, typeFilter,minDateFilter, maxDateFilter,ReviewMovieFilter){
     const [hasMore, setHasMore] = useState(false);
     const [loading, setLoading] = useState(true); //first thing we do is loading
     const [error, setError] = useState(false);
@@ -23,7 +23,8 @@ export default function useReviews(pageNumber, criticFilter, typeFilter,minDateF
                 criticFilter: criticFilter,
                 typeFilter: typeFilter,
                 minDateFilter: minDateFilter,
-                maxDateFilter: maxDateFilter
+                maxDateFilter: maxDateFilter,
+                ReviewMovieFilter: ReviewMovieFilter
         }}
         ).then(res=>{
             setReviews(prevReviews => [...prevReviews, ...res.data]);
@@ -34,7 +35,7 @@ export default function useReviews(pageNumber, criticFilter, typeFilter,minDateF
             setError(true); //it will be returned so then we will take actions in the page
             setLoading(false);
         })
-    }, [pageNumber, criticFilter, typeFilter, minDateFilter, maxDateFilter]);
+    }, [pageNumber, criticFilter, typeFilter, minDateFilter, maxDateFilter, ReviewMovieFilter]);
 
     return {loading, error, reviews, hasMore}
 }
