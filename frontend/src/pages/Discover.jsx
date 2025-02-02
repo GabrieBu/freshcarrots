@@ -4,12 +4,10 @@ import Layout from "../ui/Layout.jsx";
 import LayoutNavbar from "../ui/LayoutNavbar.jsx";
 import Navbar from "../components/Navbar.jsx";
 import {useEffect, useState} from "react";
-import MovieCard from "../components/MovieCard.jsx";
 import useMovies from "../hooks/useMovies.js";
 import DropdownFilter from "../ui/DropdownFilter.jsx";
 import useGenres from "../hooks/useGenres.js";
 import {useInView} from "react-intersection-observer";
-import Loader from "../ui/Loader.jsx";
 import {Link} from "react-router-dom";
 
 
@@ -103,7 +101,7 @@ function Discover() {
                 <div className="container px-5">
                     <div className="row g-4 justify-content-center">
                         {errorMovies && <h2 className="text-danger">Error loading movies</h2>}
-                        {loadingMovies
+                        {loadingMovies && pageNumber == 0
                             ? [...Array(8)].map((_, index) => ( // Render 8 skeleton cards
                                 <div key={index} className="col">
                                     <div className="movie-card-movies">
@@ -117,9 +115,9 @@ function Discover() {
                                 </div>
                             ))
                             : movies?.map((movie, index) => (
-                                <div key={movie.id} className="col"
+                                <div key={index} className="col"
                                      ref={index === movies.length - 1 ? ref : null}
-                                     style={{flex: "1 1 auto"}}>
+                                >
                                     <Link to={`/movie/${movie?.id}`}>
                                         <div className="movie-card-movies">
                                             <img src={movie?.link} alt={movie?.name}/>
@@ -131,7 +129,6 @@ function Discover() {
                         }
                     </div>
                 </div>
-
             </LayoutContent>
             <Footer/>
         </Layout>

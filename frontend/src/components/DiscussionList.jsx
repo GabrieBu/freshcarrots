@@ -11,6 +11,7 @@ function DiscussionList() {
     const [showCreateDiscussion, setShowCreateDiscussion] = useState(false);
     const [errorCreate, setErrorCreate] = useState(false);
     const { discussions, setDiscussions, error, isLoading } = useDiscussions();
+    const [errorModal, setErrorModal] = useState(false);
 
     useEffect(() => {
         const user = JSON.parse(localStorage.getItem("username")) || "";
@@ -27,34 +28,35 @@ function DiscussionList() {
     }, []);
 
     function handleSubmitModal() {
-        localStorage.setItem("username", JSON.stringify(username));
-        const modalElement = document.getElementById("modalUsername");
-        const modal = window.bootstrap.Modal.getInstance(modalElement)
-        modal.hide();
-        
-        // Rimuove manualmente il backdrop per evitare che resti l'oscuramento
-        document.querySelectorAll(".modal-backdrop").forEach((el) => el.remove());
+        if(username!== "") {
+            localStorage.setItem("username", JSON.stringify(username));
+            const modalElement = document.getElementById("modalUsername");
+            const modal = window.bootstrap.Modal.getInstance(modalElement)
+            modal.hide();
+
+            document.querySelectorAll(".modal-backdrop").forEach((el) => el.remove());
+        }
+        else{
+            setErrorModal(true);
+        }
+
     }
 
-    // Add discussion to followedDiscussions and remove it from discussions
     const handleFollow = (id, title) => {
         if (!followedDiscussions.some((d) => d.id === id)) {
             const updatedFollowed = [...followedDiscussions, { id, title }];
             setFollowedDiscussions(updatedFollowed);
             localStorage.setItem("followedDiscussions", JSON.stringify(updatedFollowed));
 
-            // Remove followed discussion from discussions list
             setDiscussions((prevDiscussions) => prevDiscussions.filter((d) => d.id !== id));
         }
     };
 
-    // Remove discussion from followedDiscussions and add it back to discussions
     const handleUnfollow = (id, title) => {
         const updatedFollowed = followedDiscussions.filter((d) => d.id !== id);
         setFollowedDiscussions(updatedFollowed);
         localStorage.setItem("followedDiscussions", JSON.stringify(updatedFollowed));
 
-        // Re-add unfollowed discussion to discussions
         setDiscussions((prevDiscussions) => [...prevDiscussions, { id, title }]);
     };
 
@@ -75,7 +77,6 @@ function DiscussionList() {
             .catch(() => setErrorCreate(true));
     }
 
-    // Derived state: Remove followed discussions from the main discussions list
     const filteredDiscussions = discussions.filter(
         (d) => !followedDiscussions.some((fd) => fd.id === d.id)
     );
@@ -89,6 +90,7 @@ function DiscussionList() {
                             <h5 className="modal-title">Enter a username to discuss among members.</h5>
                         </div>
                         <div className="modal-body">
+                            {errorModal && <h6 className="text-danger">Username is required</h6>}
                             <input
                                 type="text"
                                 className="form-control"
