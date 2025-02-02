@@ -158,7 +158,7 @@ router.get('/getFilteredMovies', async function(req, res, next) {
 
 router.get('/getGenres', async function(req, res, next) {
   try {
-    const response = await axios.get('http://localhost:3002/movies/getGenres', {
+    const response = await axios.get('http://localhost:3002/genres/getGenres', {
       params: req.query
     });
     res.json(response.data);
