@@ -156,4 +156,15 @@ router.get('/getFilteredMovies', async function(req, res, next) {
   }
 });
 
+router.get('/getGenres', async function(req, res, next) {
+  try {
+    const response = await axios.get('http://localhost:3002/movies/getGenres', {
+      params: req.query
+    });
+    res.json(response.data);
+  } catch (error) {
+    res.status(500).send('Error occured: /getGenres ' + error.message);
+  }
+});
+
 module.exports = router;
