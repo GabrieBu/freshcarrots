@@ -76,14 +76,13 @@ function Discover() {
     //THIS CHANGED - Delete this one
     function handleFilterChange(type, selectedOption) {
         setSelectedFilters((prevFilters) => {
-            // Rimuove eventuali filtri esistenti della stessa categoria
             const updatedFilters = prevFilters.filter((filter) => !filter.startsWith(type + ":"));
-    
-            return [...updatedFilters, `${type}:${selectedOption}`]; // Aggiunge solo il nuovo valore
+                return selectedOption ? [...updatedFilters, `${type}:${selectedOption}`] : updatedFilters;
         });
     
-        setPageNumber(1); // Reset della paginazione
+        setPageNumber(1);
     }
+    
     
 
     function handleResetFilter() {
@@ -107,17 +106,16 @@ function Discover() {
                 <h1>All movies: </h1>
                 <div className="bg-light p-3 mb-4 shadow-sm rounded" style={{border: "1px solid #ccc"}}>
                     <div className="row gy-2">
-                        {filters.map((filter, index) => <DropdownFilter
-                                                            key={index}
-                                                            filterObj={filter}
-                                                            onSelectedFilters={             //THIS CHANGED - Delete this one
-                                                                selectedFilters
-                                                                    .filter((f) => f.startsWith(filter.typeFilter + ":")) // filtra solo quelli della stessa categoria
-                                                                    .map((f) => f.split(":")[1]) // prende solo il valore selezionato
-                                                            }
-                                                            onSetSelectedFilters={(selectedOption) =>handleFilterChange(filter.typeFilter, selectedOption) }
-                                                            onSetPageNumber={setPageNumber}
-                                                        />)}
+                            {filters.map((filter, index) => <DropdownFilter
+                                        key={index}
+                                        filterObj={filter}
+                                        onSelectedFilters={
+                                            selectedFilters
+                                                .filter((f) => f.startsWith(filter.typeFilter + ":"))
+                                                .map((f) => f.split(":")[1])
+                                        }
+                                        onSetSelectedFilters={(selectedOption) => handleFilterChange(filter.typeFilter, selectedOption)}
+                                        onSetPageNumber={setPageNumber}/>)}
                         <div className="col-md-2">
                             <button className="btn btn-outline-secondary" onClick={handleResetFilter}>
                                 Reset Filters

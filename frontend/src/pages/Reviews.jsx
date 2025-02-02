@@ -16,8 +16,8 @@ function Reviews() {
     const [typeFilter, setTypeFilter] = useState("all_types");
     const [minDateFilter, setMinDate] = useState("all_dates");
     const [maxDateFilter, setMaxDate] = useState("all_dates");
-    const [ReviewMovieFilter, setReviewMovieFilter] = useState("");
-    const {loading, error, reviews, hasMore} = useReviews(pageNumber,criticFilter,typeFilter, minDateFilter, maxDateFilter, ReviewMovieFilter);
+    const [reviewMovieFilter, setReviewMovieFilter] = useState("");
+    const {loading, error, reviews, hasMore} = useReviews(pageNumber,criticFilter,typeFilter, minDateFilter, maxDateFilter, reviewMovieFilter);
     const { ref, inView } = useInView({});
 
     useEffect(() => {
@@ -28,7 +28,7 @@ function Reviews() {
 
     useEffect(() => {
         setPageNumber(1); //restore to first page
-    }, [criticFilter, typeFilter, minDateFilter, maxDateFilter, ReviewMovieFilter]);
+    }, [criticFilter, typeFilter, minDateFilter, maxDateFilter, reviewMovieFilter]);
 
     const handleCriticFilterChange = (event) => {
         setCriticFilter(event.target.value);
@@ -97,7 +97,7 @@ function Reviews() {
                         </div>
                         <div className="col-md-2">
                             <label htmlFor="ReviewMovieFilter" className="form-label">Name movie:</label>
-                            <input id="ReviewMovieFilter" type="text" className="form-control" value={ReviewMovieFilter}
+                            <input id="ReviewMovieFilter" type="text" className="form-control" value={reviewMovieFilter}
                             placeholder="Search movie title"  onChange={handleSearch}/>
                         </div>
                         <div className="col-md-2"> 
