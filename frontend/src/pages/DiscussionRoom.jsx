@@ -35,16 +35,15 @@ function DiscussionRoom() {
     const [title, setTitle] = useState("");
     const [uploading, setUploading] = useState(false);
     const [pageNumber, setPageNumber] = useState(0);
+    const [hasMore, setHasMore] = useState(false);
 
     const fileInputRef = useRef(null);
     const canvasRef = useRef(null);
     const selectedFileRef = useRef(null); //to avoid no necessary re-renders
     const { ref, inView } = useInView({});
 
-    /* @TODO add hasMore*/
     useEffect(() => {
-        if (inView) {
-            console.log("In view") //test
+        if (inView && hasMore) {
             setPageNumber(pageNumber => pageNumber + 1); //increase page
         }
     }, [inView]);
@@ -60,6 +59,7 @@ function DiscussionRoom() {
                 });
                 setMessages(res.data.messages);
                 setTitle(res.data.title);
+                setHasMore(res.data.hasMore);
                 setError(false);
             } catch (err) {
                 console.error("Error fetching messages:", err);
@@ -77,6 +77,12 @@ function DiscussionRoom() {
         socket.on("message", (room, senderUsername, chatText, time_stamp) => {
             setMessages(prevMessages => [
                 ...prevMessages, { sender: senderUsername, message: chatText, time_stamp }
+            ]);
+        });
+
+        socket.on("create or join", (room, senderUsername) => {
+            setMessages(prevMessages => [
+                ...prevMessages, { username: senderUsername, type: "joined" }
             ]);
         });
 
@@ -181,21 +187,28 @@ function DiscussionRoom() {
                     <div
                         key={index}
                         ref={index === 0 ? ref : null}
-                        className={`d-flex mb-2 ${msg.sender === username ? "justify-content-end" : "justify-content-start"}`}
+                        className={`d-flex mb-2 ${msg?.type === "joined" ? "justify-content-center" : msg.sender === username ? "justify-content-end" : "justify-content-start"}`}
                     >
-                        <div className={`p-2 rounded ${msg.sender === username ? "bg-primary text-white" : "bg-light"}`}>
-                            {msg.sender !== username && <strong>{msg.sender}:</strong>}
-                            {msg?.message && (
-                                <div className="message-text" style={{ padding: "2px" }}>
-                                    {msg?.message}
-                                </div>
-                            )}
-                            {msg?.image && (
-                                <div className="image-container" style={{ padding: "0" }}>
-                                    <img src={msg?.image} alt="Attachment" className="img-fluid mt-2" style={{ maxWidth: "548px", minWidth: "308px" }} />
-                                </div>
-                            )}
-                            <div className="text-muted small text-end">{formatTimestamp(msg?.time_stamp)}</div>
+                        <div
+                            className={`p-2 rounded ${msg?.type === "joined" ? "bg-transparent text-muted small" : msg.sender === username ? "bg-primary text-white" : "bg-light"}`}
+                            style={msg?.type === "joined" ? {fontSize: "0.8rem", fontWeight: "bold"} : {}}
+                        >
+                            {msg?.type === "joined" ?
+                                <span>{msg?.username} connected to the chat!</span> : (<>
+                                    {msg.sender !== username && <strong>{msg.sender}:</strong>}
+                                        {msg?.message && (
+                                            <div className="message-text" style={{padding: "2px"}}>
+                                                {msg?.message}
+                                            </div>
+                                        )}
+                                        {msg?.image && (
+                                            <div className="image-container" style={{padding: "0"}}>
+                                                <img src={msg?.image} alt="Attachment" className="img-fluid mt-2"
+                                                     style={{maxWidth: "548px", minWidth: "308px"}}/>
+                                            </div>
+                                        )}
+                                        <div className="text-muted small text-end">{formatTimestamp(msg?.time_stamp)}</div>
+                                </>)}
                         </div>
                     </div>
                 ))}
