@@ -28,6 +28,12 @@ function DiscussionList() {
 
     function handleSubmitModal() {
         localStorage.setItem("username", JSON.stringify(username));
+        const modalElement = document.getElementById("modalUsername");
+        const modal = window.bootstrap.Modal.getInstance(modalElement)
+        modal.hide();
+        
+        // Rimuove manualmente il backdrop per evitare che resti l'oscuramento
+        document.querySelectorAll(".modal-backdrop").forEach((el) => el.remove());
     }
 
     // Add discussion to followedDiscussions and remove it from discussions

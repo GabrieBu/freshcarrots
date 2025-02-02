@@ -7,56 +7,63 @@ import {useState} from "react";
 import MovieCard from "../components/MovieCard.jsx";
 import useMovies from "../hooks/useMovies.js";
 import DropdownFilter from "../ui/DropdownFilter.jsx";
+import useGenres from "../hooks/useGenres.js";
 
-const filters = [{
+
+function Discover() {
+    const [pageNumber, setPageNumber] = useState(0);
+    const [selectedFilters, setSelectedFilters] = useState([]);
+    const {genres} = useGenres();
+
+    const filters = [{
         typeFilter: "title",
         options: [{
-            name: "aToZ",
+            name: "asc",
             label: "From A to Z"
         }, {
-            name: "zToA",
+            name: "desc",
             label: "From Z to A"
         }]
     },
-    {
-        typeFilter: "date",
-        options: [{
-            name: "newestToOldest",
-            label: "From newest to oldest"
-        }, {
-            name: "oldestToNewest",
-            label: "From oldest to newest"
-        }]
-    },
-    {
-        typeFilter: "rating",
-        options: [{
-            name: "zeroToOne",
-            label: "[0-1]"
-        }, {
-            name: "oneToTwo",
-            label: "[1-2]"
+        {
+            typeFilter: "date",
+            options: [{
+                name: "desc",
+                label: "From newest to oldest"
+            }, {
+                name: "asc",
+                label: "From oldest to newest"
+            }]
         },
         {
-            name: "twoToThree",
-            label: "[2-3]"
+            typeFilter: "rating",
+            options: [{
+                name: "zeroToOne",
+                label: "[0-1]"
+            }, {
+                name: "oneToTwo",
+                label: "[1-2]"
+            },
+                {
+                    name: "twoToThree",
+                    label: "[2-3]"
+                },
+                {
+                    name: "threeToFour",
+                    label: "[3-4]"
+                },
+                {
+                    name: "fourToFive",
+                    label: "[4-5]"
+                }]
         },
         {
-            name: "threeToFour",
-            label: "[3-4]"
-        },
-        {
-            name: "fourToFive",
-            label: "[4-5]"
-        }]
-    }
-]
+            typeFilter: "genre",
+            options: genres,
+        }
+    ]
 
-function Discover() {
-    const [pageNumber, setPageNumber] = useState(1);
-    const [selectedFilters, setSelectedFilters] = useState([]);
-
-    const {movies} = useMovies();
+    //const {movies} = useMovies();
 
     function handleResetFilter() {
         setSelectedFilters([]);
@@ -81,11 +88,11 @@ function Discover() {
                 </div>
             </div>
             <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
-                {movies?.map((movie) => (
+                {/*movies?.map((movie) => (
                     <div key={movie.id} className="col">
                         <MovieCard movie={movie}/>
                     </div>
-                ))}
+                ))*/}
             </div>
         </LayoutContent>
         <Footer/>
