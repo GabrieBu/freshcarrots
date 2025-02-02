@@ -1,4 +1,4 @@
-import { useState} from "react";
+import { useState,useEffect} from "react";
 import "./Carousel.css";
 import Skeleton from "../ui/Skeleton.jsx";
 import {Link} from "react-router-dom";
@@ -7,8 +7,24 @@ import MovieCard from "./MovieCard.jsx"; // Custom styles
 // eslint-disable-next-line react/prop-types
 function Carousel({title, movies, loading}){
     const [currentIndex, setCurrentIndex] = useState(0);
+    const [itemsVisible, setItemsVisible] = useState(1);
+
     /* @TODO modify with current width device (formula is correct) */
-    const itemsVisible = Math.floor((1570 + 20) / (120 + 20)); //should be correct
+    //itemsVisible = Math.floor((1570 + 20) / (120 + 20)); //should be correct
+    
+    useEffect(() => {
+        const calculateItemsVisible = () => {
+            const containerWidth = window.innerWidth;
+            const itemWidth = 120;
+            const itemMargin = 20;
+            const newItemsVisible = Math.floor(containerWidth / (itemWidth + itemMargin));
+            console.log("itemsVisible:", newItemsVisible);
+            setItemsVisible(newItemsVisible);
+        };
+        calculateItemsVisible();
+        window.addEventListener("resize", calculateItemsVisible);
+        return () => window.removeEventListener("resize", calculateItemsVisible);
+    }, []);
 
     // eslint-disable-next-line react/prop-types
     const moviesLength = movies?.length;
