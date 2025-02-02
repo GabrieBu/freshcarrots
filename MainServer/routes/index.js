@@ -150,7 +150,7 @@ router.get('/getFilteredMovies', async function(req, res, next) {
     const response = await axios.get('http://localhost:3002/movies/getFilteredMovies', {
       params: req.query
     });
-    res.json(response.data);
+    res.json(response.data.content);
   } catch (error) {
     res.status(500).send('Error occured: /getFiltered ' + error.message);
   }
