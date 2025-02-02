@@ -145,4 +145,15 @@ router.get('/getCultLanguage', async function(req, res, next) {
   }
 });
 
+router.get('/getFilteredMovies', async function(req, res, next) {
+  try {
+    const response = await axios.get('http://localhost:3002/movies/getFilteredMovies', {
+      params: req.query
+    });
+    res.json(response.data);
+  } catch (error) {
+    res.status(500).send('Error occured: /getFiltered ' + error.message);
+  }
+});
+
 module.exports = router;
