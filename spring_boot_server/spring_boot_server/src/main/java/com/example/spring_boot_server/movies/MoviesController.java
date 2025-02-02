@@ -2,6 +2,9 @@ package com.example.spring_boot_server.movies;
 import com.example.spring_boot_server.movies.dtos.*;
 import com.example.spring_boot_server.movies.dtos.MovieTitlePosterDTO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -76,4 +79,16 @@ public class MoviesController {
         }else
             return new ResponseEntity<>(movies, HttpStatus.OK);
     }
+
+
+    @GetMapping("/getFilteredMovies")
+    public ResponseEntity<Page<Movie>> findFiltered(@RequestParam String orderByName, @RequestParam String orderByDate,  @RequestParam String byRating) {
+        Pageable pageable = PageRequest.of(0, 10);
+        Page<Movie> movies = moviesService.findFilteredMovies(pageable, orderByName, orderByDate, byRating);
+        if (movies.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }else
+            return new ResponseEntity<>(movies, HttpStatus.OK);
+    }
+
 }

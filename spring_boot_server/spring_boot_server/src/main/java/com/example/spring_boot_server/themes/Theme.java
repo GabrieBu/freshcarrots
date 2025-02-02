@@ -1,5 +1,6 @@
 package com.example.spring_boot_server.themes;
 import com.example.spring_boot_server.movies.Movie;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 @Entity
@@ -10,8 +11,9 @@ public class Theme {
     private Long id;
     @Column(name = "theme", columnDefinition = "TEXT")
     private String theme;
-    @ManyToOne
-    @JoinColumn(name = "id_film", referencedColumnName = "id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_film", referencedColumnName = "id")
+    @JsonBackReference
     private Movie movie;
 
     public Theme() {}

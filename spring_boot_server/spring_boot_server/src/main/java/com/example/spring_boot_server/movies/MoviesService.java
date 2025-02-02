@@ -3,7 +3,10 @@ package com.example.spring_boot_server.movies;
 import com.example.spring_boot_server.actors.dtos.ActorDTO;
 import com.example.spring_boot_server.crew.dtos.CrewDTO;
 import com.example.spring_boot_server.movies.dtos.*;
+import com.example.spring_boot_server.movies.specifications.MovieSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -63,5 +66,10 @@ public class MoviesService {
 
     public List<MovieTitlePosterDTO> findCultLanguageMovies(String language){
         return moviesRepository.findCultLanguage(language);
+    }
+
+    public Page<Movie> findFilteredMovies(Pageable pageable, String orderByName, String orderByDate, String byRating, String genre) {
+        Specification<Movie> spec = MovieSpecification.filterBy(orderByName, orderByDate, byRating, genre);
+        return moviesRepository.findAll(spec, pageable);
     }
 }

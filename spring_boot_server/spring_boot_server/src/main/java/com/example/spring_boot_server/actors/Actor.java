@@ -1,6 +1,7 @@
 package com.example.spring_boot_server.actors;
 
 import com.example.spring_boot_server.movies.Movie;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 @Entity
@@ -13,8 +14,9 @@ public class Actor {
     private String name;
     @Column(name = "role", nullable = false, columnDefinition = "TEXT")
     private String role;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_film", referencedColumnName = "id", nullable = false)
+    @JsonBackReference
     private Movie movie;
 
     // Default constructor
