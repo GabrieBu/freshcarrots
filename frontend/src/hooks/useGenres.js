@@ -1,8 +1,8 @@
 import axios from 'axios'
 import { useEffect, useState } from 'react'
 
-export default function useMovies(pageNumber) {
-    const [movie, setMovie] = useState({});
+export default function useGenres() {
+    const [genres, setGenres] = useState({});
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
 
@@ -11,14 +11,11 @@ export default function useMovies(pageNumber) {
         setError(false);
         axios({
             method: "GET",
-            url: `http://localhost:3000/getFilteredMovies`,
-            params: {
-                page: pageNumber,
-                /*TODO add others params*/
-            }
+            url: `http://localhost:3000/getGenres`,
         })
             .then((res) => {
-                setMovie(res.data);
+                console.log(res.data);
+                setGenres(res.data);
                 setLoading(false);
             })
             .catch((err) => {
@@ -26,7 +23,7 @@ export default function useMovies(pageNumber) {
                 setError(true);
                 setLoading(false);
             });
-    }, [pageNumber]);
+    }, []);
 
-    return { movie, loading, error };
+    return { genres, loading, error };
 }
