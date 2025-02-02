@@ -80,15 +80,13 @@ public class MoviesController {
             return new ResponseEntity<>(movies, HttpStatus.OK);
     }
 
-
     @GetMapping("/getFilteredMovies")
-    public ResponseEntity<Page<Movie>> findFiltered(@RequestParam String orderByName, @RequestParam String orderByDate,  @RequestParam String byRating, @RequestParam String genre) {
-        Pageable pageable = PageRequest.of(0, 5);
-        Page<Movie> movies = moviesService.findFilteredMovies(pageable, orderByName, orderByDate, byRating, genre);
+    public ResponseEntity<Page<MovieTitlePosterDTO>> findFiltered(@RequestParam String orderByName, @RequestParam String orderByDate,  @RequestParam String byRating, @RequestParam String genre, @RequestParam int page) {
+        Pageable pageable = PageRequest.of(page, 50);
+        Page<MovieTitlePosterDTO> movies = moviesService.findFilteredMovies(pageable, orderByName, orderByDate, byRating, genre);
         if (movies.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }else
             return new ResponseEntity<>(movies, HttpStatus.OK);
     }
-
 }
