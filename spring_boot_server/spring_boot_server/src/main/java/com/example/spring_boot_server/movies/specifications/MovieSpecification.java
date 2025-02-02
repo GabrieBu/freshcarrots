@@ -49,6 +49,8 @@ public class MovieSpecification {
                 }
             }
 
+            query.orderBy(cb.desc(cb.coalesce(root.get("rating"), 0.0))); //order always by rating desc -> consistent query
+
             if(genre!= null && !genre.isEmpty()){
                 Join<Movie, Genre> genreJoin = root.join("genres", JoinType.LEFT);
                 predicates.add(cb.equal(genreJoin.get("genre"), genre));
