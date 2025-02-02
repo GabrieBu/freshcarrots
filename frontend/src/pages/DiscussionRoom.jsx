@@ -80,7 +80,7 @@ function DiscussionRoom() {
             ]);
         });
 
-        socket.on("create or join", (room, senderUsername) => {
+        socket.on("joined", (room, senderUsername) => {
             setMessages(prevMessages => [
                 ...prevMessages, { username: senderUsername, type: "joined" }
             ]);
