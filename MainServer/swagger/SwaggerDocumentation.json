@@ -649,38 +649,9 @@
                 }
               }
             }
-          },
-          "400": {
-            "description": "Missing parameter",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                },
-                "example": {
-                  "message": "Error occurred: getMessages Internal Server Error",
-                  "internal_code": "missing_parameter"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Discussion not found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                },
-                "example": {
-                  "message": "Error occurred: getMessages Internal Server Error",
-                  "internal_code": "Data_not_found"
-                }
-              }
-            }
           }
         }
       }
-
     },
     "/newMessage": {
       "post": {
@@ -718,34 +689,6 @@
                 "example": {
                   "message": "Error occurred: newMessage Internal Server Error",
                   "internal_code": "unexpectedErrors"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Missing parameter",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                },
-                "example": {
-                  "message": "Error occurred: newMessage Internal Server Error",
-                  "internal_code": "missing_parameter"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Discussion not found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                },
-                "example": {
-                  "message": "Error occurred: newMessage Internal Server Error",
-                  "internal_code": "data_not_found"
                 }
               }
             }
@@ -789,34 +732,6 @@
                 "example": {
                   "message": "Error occurred: newImage Internal Server Error",
                   "internal_code": "unexpectedErrors"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Missing parameter",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                },
-                "example": {
-                  "message": "Error occurred: newImage Internal Server Error",
-                  "internal_code": "missing_parameter"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Discussion not found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                },
-                "example": {
-                  "message": "Error occurred: newImage Internal Server Error",
-                  "internal_code": "data_not_found"
                 }
               }
             }

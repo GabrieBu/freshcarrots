@@ -6,10 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="09f61af7-d139-41f0-9180-01e3b14267b7" name="Changes" comment="feature: fixed socket.io &quot;message&quot;">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/app.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/.package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/.package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Swagger/SwaggerDocumentation.json" beforeDir="false" afterPath="$PROJECT_DIR$/swagger/SwaggerDocumentation.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -92,6 +89,7 @@
       <workItem from="1738573750592" duration="74000" />
       <workItem from="1738573831492" duration="11309000" />
       <workItem from="1738592973312" duration="2363000" />
+      <workItem from="1738597321024" duration="98000" />
     </task>
     <option name="localTasksCounter" value="3" />
     <servers />
