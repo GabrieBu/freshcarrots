@@ -4,11 +4,24 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="09f61af7-d139-41f0-9180-01e3b14267b7" name="Changes" comment="feature: fixed socket.io &quot;message&quot;" />
+    <list default="true" id="09f61af7-d139-41f0-9180-01e3b14267b7" name="Changes" comment="feature: fixed socket.io &quot;message&quot;">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/app.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/.package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/.package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Json OpenAPI version 3" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
@@ -40,13 +53,14 @@
   </component>
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
+    &quot;Json OpenAPI version 3&quot;: &quot;Json OpenAPI version 3&quot;,
     &quot;Node.js.bin/www.executor&quot;: &quot;Run&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
     &quot;dart.analysis.tool.window.visible&quot;: &quot;false&quot;,
     &quot;git-widget-placeholder&quot;: &quot;main__server&quot;,
-    &quot;javascript.nodejs.core.library.configured.version&quot;: &quot;23.6.1&quot;,
-    &quot;javascript.nodejs.core.library.typings.version&quot;: &quot;22.10.10&quot;,
+    &quot;javascript.nodejs.core.library.configured.version&quot;: &quot;22.12.0&quot;,
+    &quot;javascript.nodejs.core.library.typings.version&quot;: &quot;22.12.0&quot;,
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
     &quot;last_opened_file_path&quot;: &quot;C:/Users/andre/Desktop/ProgettoTweb/TWEB_2425/MainServer&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
@@ -55,6 +69,7 @@
     &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
     &quot;nodejs_interpreter_path&quot;: &quot;node&quot;,
     &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
     &quot;ts.external.directory.path&quot;: &quot;/Applications/WebStorm.app/Contents/plugins/javascript-plugin/jsLanguageServicesImpl/external&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
@@ -74,6 +89,9 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1733942123299</updated>
+      <workItem from="1738573750592" duration="74000" />
+      <workItem from="1738573831492" duration="11309000" />
+      <workItem from="1738592973312" duration="2363000" />
     </task>
     <option name="localTasksCounter" value="3" />
     <servers />

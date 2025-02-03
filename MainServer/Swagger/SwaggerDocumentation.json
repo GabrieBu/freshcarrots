@@ -1,0 +1,997 @@
+{
+  "openapi": "3.0.2",
+  "info": {
+    "title": "Main Server",
+    "version": "1.0",
+    "description": "Routing to SpringBoot and Express server",
+    "termsOfService": "http://api_url/terms/"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000/",
+      "description": "the Main routing server"
+    }
+  ],
+  "paths": {
+       "/getReviews": {
+       "get": {
+         "tags": [
+           "Retrieve all reviews with optional filters"
+         ],
+         "description": "Fetches available reviews, applying filters specified in the query parameters.",
+         "operationId": "getReviews",
+         "parameters": [
+           {
+             "in": "query",
+             "name": "criticFilter",
+             "schema": {
+               "type": "boolean"
+             },
+             "required": false,
+             "description": "Filter reviews by TopCritic."
+           },
+           {
+             "in": "query",
+             "name": "typeFilter",
+             "schema": {
+               "type": "string"
+             },
+             "required": false,
+             "description": "Filter reviews by type Filter(Rotten or Fresh)."
+           },
+           {
+             "in": "query",
+             "name": "minDateFilter",
+             "schema": {
+               "type": "string",
+               "format": "date"
+             },
+             "required": false,
+             "description": "Filter reviews by min Date."
+           },
+           {
+             "in": "query",
+             "name": "maxDateFilter",
+             "schema": {
+               "type": "string",
+               "format": "date"
+             },
+             "required": false,
+             "description": "Filter reviews by max Date."
+           },
+           {
+             "in": "query",
+             "name": "reviewMovieFilter",
+             "schema": {
+               "type": "string"
+             },
+             "required": false,
+             "description": "Filter reviews by Movie Title."
+           }
+         ],
+         "responses": {
+           "200": {
+             "description": "Successfully retrieved the list of reviews",
+             "content": {
+               "application/json": {
+                 "schema": {
+                   "type": "array",
+                   "items": {
+                     "$ref": "#/components/schemas/Review"
+                   }
+                 }
+               }
+             }
+           },
+            "500": {
+              "description": "Internal Server Error - Unexpected error occurred",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error"
+                  },
+                  "example": {
+                    "message": "Error occurred: getReviews Internal Server Error",
+                    "internal_code": "internal_server_error"
+                  }
+                }
+              }
+           }
+         }
+       }
+       },
+    "/getTopFiveMovies":{
+      "get": {
+        "tags": [
+          "Retrieve 5 top Rated Movies"
+        ],
+        "description": "Fetches 5 top Rated Movies ",
+        "operationId": "getTopFiveMovies",
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved the list of 5 Movies",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TopRatedMovie"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error - Unexpected error occurred",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "message": "Error occurred: getTopFiveMovies Internal Server Error",
+                  "internal_code": "internal_server_error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/topRated!!!!!": {
+      "get": {
+        "tags": [
+          "Retrieve Top 20 Movies By Genre ordered by rating"
+        ],
+        "description": "Retrieve Top 20 Movies By Genre ordered by rating",
+        "operationId": "topRated",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "genre",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Genre of movies"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved the list of movies",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/topMovieByGenre"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error - Unexpected error occurred",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "message": "Error occurred: topRated Internal Server Error",
+                  "internal_code": "internal_server_error"
+                }
+              }
+            }
+          }
+        }
+      }
+
+    },
+    "/getMovieById":{
+      "get": {
+        "tags": [
+          "Retrieve single movie by ID"
+        ],
+        "description": "Retrieve single movie by ID",
+        "operationId": "getMovieById",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "id",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "id of the movie"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved the movie",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/topMovieByGenre"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error - Unexpected error occurred",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "message": "Error occurred: getMovieById Internal Server Error",
+                  "internal_code": "internal_server_error"
+                }
+              }
+            }
+          }
+        }
+      }
+
+    },
+    "/getMovieByName":{
+      "get": {
+        "tags": [
+          "Retrieve single movie by name"
+        ],
+        "description": "Retrieve single movie by name",
+        "operationId": "getMovieByName",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "name",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "string of the movie"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved the movie",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/topMovieByName"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error - Unexpected error occurred",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "message": "Error occurred: getMovieByName Internal Server Error",
+                  "internal_code": "internal_server_error"
+                }
+              }
+            }
+          }
+        }
+      }
+
+    },
+    "/ageMin!!!!!!":{
+      "get": {
+        "tags": [
+          "Retrieve 20 movies with PG >18"
+        ],
+        "description": "Retrieve 20 movies with PG >18",
+        "operationId": "ageMin",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "age_min",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "minimum age to watch the movies"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved the movies",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TopRatedMovie"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error - Unexpected error occurred",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "message": "Error occurred: ageMin Internal Server Error",
+                  "internal_code": "internal_server_error"
+                }
+              }
+            }
+          }
+        }
+      }
+
+    },
+    "/getWorldwideMovies!!!!!":{
+      "get": {
+        "tags": [
+          "Retrieve global popular movies"
+        ],
+        "description": "Retrieve global popular movies",
+        "operationId": "getWorldwideMovies",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "age_min",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "minimum age to watch the movies"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved the movies",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/topMovieByGenre"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error - Unexpected error occurred",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "message": "Error occurred: ageMin Internal Server Error",
+                  "internal_code": "internal_server_error"
+                }
+              }
+            }
+          }
+        }
+      }
+
+    },
+    "/getCultLanguage!!!!":{
+      "get": {
+        "tags": [
+          "Retrieve movies with.........."
+        ],
+        "description": "Retrieve movies with............",
+        "operationId": "getCultLanguage",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "age_min",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "minimum age to watch the movies"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved the movies",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/topMovieByGenre"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error - Unexpected error occurred",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "message": "Error occurred: ageMin Internal Server Error",
+                  "internal_code": "internal_server_error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/getFilteredMovies !!!!!!": {
+      "get": {
+        "tags": [
+          "Retrieve all movies filtered with params"
+        ],
+        "description": "Retrieve all movies filtered with params",
+        "operationId": "getFilteredMovies",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "age_min",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "minimum age to watch the movies"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved the movies",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/topMovieByGenre"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error - Unexpected error occurred",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "message": "Error occurred: ageMin Internal Server Error",
+                  "internal_code": "internal_server_error"
+                }
+              }
+            }
+          }
+        }
+      }
+
+    },
+    "/getGenres": {
+      "get": {
+        "tags": [
+          "Retrieve all genres"
+        ],
+        "description": "Retrieve all genres",
+        "operationId": "getGenres",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved the genres names",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/genreName"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error - Unexpected error occurred",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "message": "Error occurred: getGenres Internal Server Error",
+                  "internal_code": "internal_server_error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/newDiscussion":{
+      "post": {
+        "tags": [
+          "Create new Discussion"
+        ],
+        "description": "Create a new discussion for the chatrooms",
+        "operationId": "newDiscussion",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/newDiscussion"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Correct input of new Discussion",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error - Unexpected error occurred",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "message": "Error occurred: getGenres Internal Server Error",
+                  "internal_code": "unexpected_error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/getDiscussions": {
+      "get": {
+        "tags": [
+          "Retrieve all discussions "
+        ],
+        "description": "Retrieve all discussions",
+        "operationId": "getDiscussions",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved all the discussions",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/discussionSchema"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error - Unexpected error occurred",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "message": "Error occurred: getGenres Internal Server Error",
+                  "internal_code": "internal_server_error"
+                }
+              }
+            }
+          }
+        }
+      }
+
+    },
+    "/getMessages": {
+      "get": {
+        "tags": [
+          "Retrieve 50 messages "
+        ],
+        "description": "Retrieve 50 messages",
+        "operationId": "getMessages",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "id_room",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "id of the message room"
+          },
+          {
+            "in": "query",
+            "name": "pageNumber",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "number of the page to load"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved all the discussions",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/messagesSchema"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Missing parameter",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "message": "Error occurred: getMessages Internal Server Error",
+                  "internal_code": "missing_parameter"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Discussion not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "message": "Error occurred: getMessages Internal Server Error",
+                  "internal_code": "Data_not_found"
+                }
+              }
+            }
+          }
+        }
+      }
+
+    },
+    "/newMessage": {
+      "post": {
+        "tags": [
+          "Send new message"
+        ],
+        "description": "Create new message",
+        "operationId": "newMessage",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/messagesSchema"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Correct input of new Discussion",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error - Unexpected error occurred",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "message": "Error occurred: newMessage Internal Server Error",
+                  "internal_code": "unexpectedErrors"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Missing parameter",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "message": "Error occurred: newMessage Internal Server Error",
+                  "internal_code": "missing_parameter"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Discussion not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "message": "Error occurred: newMessage Internal Server Error",
+                  "internal_code": "data_not_found"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/newImage":{
+      "post": {
+        "tags": [
+          "send new image"
+        ],
+        "description": "Send new message",
+        "operationId": "newImage",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/messagesSchema"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Correct input of new Discussion",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error - Unexpected error occurred",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "message": "Error occurred: newImage Internal Server Error",
+                  "internal_code": "unexpectedErrors"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Missing parameter",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "message": "Error occurred: newImage Internal Server Error",
+                  "internal_code": "missing_parameter"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Discussion not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "message": "Error occurred: newImage Internal Server Error",
+                  "internal_code": "data_not_found"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Review": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Unique ID of the review"
+          },
+          "title": {
+            "type": "string",
+            "description": "Title of the review"
+          },
+          "content": {
+            "type": "string",
+            "description": "Review content"
+          },
+          "rating": {
+            "type": "number",
+            "format": "float",
+            "description": "Rating score of the review"
+          },
+          "category": {
+            "type": "string",
+            "description": "Category of the review"
+          },
+          "author": {
+            "type": "string",
+            "description": "Name of the review author"
+          },
+          "date": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Date when the review was published"
+          }
+        }
+      },
+      "Error": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "internal_code": {
+            "type": "string"
+          }
+        }
+      },
+      "TopRatedMovie": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Unique ID of the movie"
+          },
+          "name": {
+            "type": "string",
+            "description": "Title of the movie"
+          },
+          "link": {
+            "type": "string",
+            "description": "Link of the proper Poster"
+          },
+          "rating": {
+            "type": "number",
+            "format": "float",
+            "description": "Rating score of the movie"
+          }
+        }
+      },
+      "topMovieByGenre": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Unique ID of the movie"
+          },
+          "name": {
+            "type": "string",
+            "description": "Title of the movie"
+          },
+          "link": {
+            "type": "string",
+            "description": "Link of the proper Poster"
+          }
+        }
+      },
+      "topMovieByName": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Unique ID of the movie"
+          },
+          "name": {
+            "type": "string",
+            "description": "Title of the movie"
+          },
+          "date": {
+            "type": "string",
+            "format": "date",
+            "description": "date of the movie"
+          },
+          "link": {
+            "type": "string",
+            "description": "Link of the proper Poster"
+          }
+        }
+      },
+      "genreName": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Name of the genre"
+          }
+        }
+      },
+      "newDiscussion": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Random id of Chatroom"
+          },
+          "name": {
+            "type": "string",
+            "description": "name of chatroom"
+          }
+        }
+      },
+      "discussionSchema":{
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "messages": {
+            "$ref": "#/components/schemas/messagesSchema"
+          }
+        }
+      },
+      "messagesSchema":{
+        "properties": {
+          "sender": {
+            "type": "string",
+            "description": "sender of message"
+          },
+          "message": {
+            "type": "string",
+            "description": "body of message"
+          },
+          "image": {
+            "type": "string",
+            "description": "image if sent"
+          },
+          "time_stamp": {
+            "type": "string",
+            "format": "date-time",
+            "description": "time when message was sent"
+          }
+        }
+
+      }
+    }
+  }
+}
