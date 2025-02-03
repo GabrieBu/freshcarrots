@@ -16,7 +16,8 @@ function Reviews() {
     const [typeFilter, setTypeFilter] = useState("all_types");
     const [minDateFilter, setMinDate] = useState("all_dates");
     const [maxDateFilter, setMaxDate] = useState("all_dates");
-    const {loading, error, reviews, hasMore} = useReviews(pageNumber,criticFilter,typeFilter, minDateFilter, maxDateFilter);
+    const [reviewMovieFilter, setReviewMovieFilter] = useState("");
+    const {loading, error, reviews, hasMore} = useReviews(pageNumber,criticFilter,typeFilter, minDateFilter, maxDateFilter, reviewMovieFilter);
     const { ref, inView } = useInView({});
 
     useEffect(() => {
@@ -27,7 +28,7 @@ function Reviews() {
 
     useEffect(() => {
         setPageNumber(1); //restore to first page
-    }, [criticFilter, typeFilter, minDateFilter, maxDateFilter]);
+    }, [criticFilter, typeFilter, minDateFilter, maxDateFilter, reviewMovieFilter]);
 
     const handleCriticFilterChange = (event) => {
         setCriticFilter(event.target.value);
@@ -44,13 +45,16 @@ function Reviews() {
     const handleMaxDate = (event) => {
         setMaxDate(event.target.value);
     };
-
+    const handleSearch = (event) => {
+        setReviewMovieFilter(event.target.value);
+    };
 
     const handleResetFilters = () => {
         setCriticFilter("all_critics");
         setTypeFilter("all_types");
         setMinDate("all_dates");
         setMaxDate("all_dates");
+        setReviewMovieFilter("");
     };
 
     return (
@@ -92,9 +96,11 @@ function Reviews() {
                                    onChange={handleMaxDate}/>
                         </div>
                         <div className="col-md-2">
-                            <label htmlFor="maxDateFilter" className="form-label">Name movie:</label>
+                            <label htmlFor="ReviewMovieFilter" className="form-label">Name movie:</label>
+                            <input id="ReviewMovieFilter" type="text" className="form-control" value={reviewMovieFilter}
+                            placeholder="Search movie title"  onChange={handleSearch}/>
                         </div>
-                        <div className="col-md-2">
+                        <div className="col-md-2"> 
                         <button className="btn btn-outline-secondary" onClick={handleResetFilters}>
                                 Reset Filters
                             </button>

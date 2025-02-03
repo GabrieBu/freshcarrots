@@ -7,6 +7,10 @@ export default function useMovies(pageNumber, selectedFilters) {
     const [error, setError] = useState(false);
 
     useEffect(() => {
+        setMovies([]);
+    }, [selectedFilters]);
+
+    useEffect(() => {
         setLoading(true);
         let filter = {};
 
@@ -32,7 +36,7 @@ export default function useMovies(pageNumber, selectedFilters) {
             params: filter
         })
             .then((res) => {
-                setMovies(res.data);
+                setMovies(prevMovies => [...prevMovies, ...res.data]);
                 setLoading(false);
             })
             .catch((err) => {
