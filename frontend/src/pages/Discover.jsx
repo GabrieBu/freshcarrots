@@ -73,30 +73,11 @@ function Discover() {
         }
     ]
 
-    //THIS CHANGED - Delete this one
-    function handleFilterChange(type, selectedOption) {
-        setSelectedFilters((prevFilters) => {
-            const updatedFilters = prevFilters.filter((filter) => !filter.startsWith(type + ":"));
-                return selectedOption ? [...updatedFilters, `${type}:${selectedOption}`] : updatedFilters;
-        });
-    
-        setPageNumber(1);
-    }
-    
-    
-
     function handleResetFilter() {
         setSelectedFilters([]);
         setPageNumber(1);
     }
 
-    
-    /* nel caso serva il dropdown base
-    <DropdownFilter key={index} filterObj={filter}
-                    onSelectedFilters={selectedFilters}
-                    onSetSelectedFilters={setSelectedFilters}
-                    onSetPageNumber={setPageNumber}/>)}
-    */ 
     return (
         <Layout>
             <LayoutNavbar>
@@ -106,16 +87,10 @@ function Discover() {
                 <h1>All movies: </h1>
                 <div className="bg-light p-3 mb-4 shadow-sm rounded" style={{border: "1px solid #ccc"}}>
                     <div className="row gy-2">
-                            {filters.map((filter, index) => <DropdownFilter
-                                        key={index}
-                                        filterObj={filter}
-                                        onSelectedFilters={
-                                            selectedFilters
-                                                .filter((f) => f.startsWith(filter.typeFilter + ":"))
-                                                .map((f) => f.split(":")[1])
-                                        }
-                                        onSetSelectedFilters={(selectedOption) => handleFilterChange(filter.typeFilter, selectedOption)}
-                                        onSetPageNumber={setPageNumber}/>)}
+                            {filters.map((filter, index) => <DropdownFilter key={index} filterObj={filter}
+                                                                            onSelectedFilters={selectedFilters}
+                                                                            onSetSelectedFilters={setSelectedFilters}
+                                                                            onSetPageNumber={setPageNumber}/>)})
                         <div className="col-md-2">
                             <button className="btn btn-outline-secondary" onClick={handleResetFilter}>
                                 Reset Filters
@@ -144,7 +119,7 @@ function Discover() {
                                      ref={index === movies.length - 1 ? ref : null}
                                 >
                                     <Link to={`/movie/${movie?.id}`}>
-                                        <div className="movie-card-movies">
+                                        <div className="movie-card-movies" style={{textDecoration: "none"}}>
                                             <img src={movie?.link} alt={movie?.name}/>
                                             <p>{movie?.name}</p>
                                         </div>

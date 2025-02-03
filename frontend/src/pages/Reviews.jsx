@@ -39,10 +39,22 @@ function Reviews() {
     };
 
     const handleMinDate = (event) => {
+        if(maxDateFilter && maxDateFilter !== "all_dates" && maxDateFilter < minDateFilter) {
+            const temp = maxDateFilter;
+            setMaxDate(event.target.value);
+            setMinDate(temp);
+            return;
+        }
         setMinDate(event.target.value);
-    };
+    }
 
     const handleMaxDate = (event) => {
+        if(minDateFilter && minDateFilter !== "all_dates" && maxDateFilter < minDateFilter) {
+            const temp = minDateFilter;
+            setMinDate(event.target.value);
+            setMaxDate(temp);
+            return;
+        }
         setMaxDate(event.target.value);
     };
     const handleSearch = (event) => {
@@ -98,16 +110,24 @@ function Reviews() {
                         <div className="col-md-2">
                             <label htmlFor="ReviewMovieFilter" className="form-label">Name movie:</label>
                             <input id="ReviewMovieFilter" type="text" className="form-control" value={reviewMovieFilter}
-                            placeholder="Search movie title"  onChange={handleSearch}/>
+                                   placeholder="Search movie title"  onChange={handleSearch}/>
                         </div>
-                        <div className="col-md-2"> 
-                        <button className="btn btn-outline-secondary" onClick={handleResetFilters}>
+                        <div className="col-md-2">
+                            <button className="btn btn-outline-secondary" onClick={handleResetFilters}>
                                 Reset Filters
                             </button>
                         </div>
                     </div>
                 </div>
-                {reviews?.map((review, index) => <Review review={review} key={index}/>)}
+                {reviews?.map((review, index) => {
+                    return (
+                        <Review
+                            ref={index === reviews.length - 1 ? ref : null}
+                            review={review}
+                            key={index}
+                        />
+                    );
+                })}
             </LayoutContent>
             {
                 loading && <Loader/>
