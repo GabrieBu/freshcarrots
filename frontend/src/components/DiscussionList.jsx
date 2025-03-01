@@ -1,8 +1,10 @@
-import { Link } from "react-router-dom";
-import { useEffect, useState } from "react";
+
 import axios from "axios";
+import { Link } from "react-router-dom";
+import {lazy, useEffect, useState} from "react";
 import useDiscussions from "../hooks/useDiscussions.js";
-import Loader from "../ui/Loader.jsx";
+
+const Loader = lazy(() => import("../ui/Loader"));
 
 function DiscussionList() {
     const [followedDiscussions, setFollowedDiscussions] = useState([]);

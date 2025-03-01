@@ -1,5 +1,7 @@
 import {Link} from "react-router-dom";
-import Searchbar from "./Searchbar.jsx";
+import {lazy} from "react";
+
+const Searchbar = lazy(() => import("./Searchbar"));
 
 function Navbar() {
     return (

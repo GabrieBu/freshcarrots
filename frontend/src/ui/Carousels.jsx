@@ -1,5 +1,6 @@
-import Carousel from "../components/Carousel.jsx";
 import useMoviesByCategory from "../hooks/useMoviesByCategory.js";
+import {lazy} from "react";
+const Carousel = lazy(() => import("../components/Carousel"));
 
 const hotGenres = [
     {

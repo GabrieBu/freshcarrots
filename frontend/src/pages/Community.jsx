@@ -1,6 +1,6 @@
 import { lazy} from "react";
-import DiscussionList from "../components/DiscussionList.jsx";
 
+const DiscussionList = lazy(() => import("../components/DiscussionList"));
 const LayoutContent = lazy(() => import("../ui/LayoutContent"));
 const Navbar = lazy(() => import("../components/Navbar"));
 

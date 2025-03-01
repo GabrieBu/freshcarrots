@@ -1,13 +1,12 @@
 import { useEffect, useState, lazy } from "react";
 import { useInView } from "react-intersection-observer";
 import { Link } from "react-router-dom";
+import useMovies from "../hooks/useMovies.js";
+import useGenres from "../hooks/useGenres.js";
 
 const Footer = lazy(() => import("../components/Footer"));
 const LayoutContent = lazy(() => import("../ui/LayoutContent"));
 const Navbar = lazy(() => import("../components/Navbar"));
-
-import useMovies from "../hooks/useMovies.js";
-import useGenres from "../hooks/useGenres.js";
 
 function Discover() {
   const [pageNumber, setPageNumber] = useState(0);
@@ -27,10 +26,33 @@ function Discover() {
     }
   }, [inView]);
 
+  useEffect(() => {console.log(selectedFilters)}, [selectedFilters])
+
+  function handleFilterChange(type, value) {
+    setSelectedFilters((prevFilters) => {
+      if (value === "") {
+        return prevFilters.filter((filter) => filter.type !== type); // Remove if empty
+      }
+      const existingFilter = prevFilters.find((filter) => filter.type === type);
+      if (existingFilter) {
+        return prevFilters.map((filter) =>
+            filter.type === type ? { type, value } : filter
+        );
+      }
+      return [...prevFilters,{ type, value } ];
+    });
+
+    setPageNumber(1); // Reset pagination
+  }
+
   const filters = [
     {
       typeFilter: "title",
       options: [
+        {
+          name: "",
+          label: "All names",
+        },
         {
           name: "ascName",
           label: "From A to Z",
@@ -45,6 +67,10 @@ function Discover() {
       typeFilter: "date",
       options: [
         {
+          name: "",
+          label: "All dates",
+        },
+        {
           name: "descDate",
           label: "From newest to oldest",
         },
@@ -57,6 +83,10 @@ function Discover() {
     {
       typeFilter: "rating",
       options: [
+        {
+          name: "",
+          label: "All ratings",
+        },
         {
           name: "zeroToOne",
           label: "[0-1]",
@@ -81,11 +111,8 @@ function Discover() {
     },
     {
       typeFilter: "genre",
-      options: error
-        ? []
-        : loading
-        ? [{ name: "loading", label: "Loading..." }]
-        : genres || [],
+      options: error || loading
+        ? [] : genres || [],
     },
   ];
 
@@ -110,6 +137,7 @@ function Discover() {
                     key={index}
                     id={tFilter?.typeFilter}
                     className="form-select"
+                    onChange={(e) => handleFilterChange(tFilter.typeFilter, e.target.value)}
                   >
                     {tFilter.options.map((filter, index_) => (
                       <option key={index_} value={filter?.name}>
