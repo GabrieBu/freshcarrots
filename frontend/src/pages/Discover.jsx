@@ -4,8 +4,6 @@ import { Link } from "react-router-dom";
 
 const Footer = lazy(() => import("../components/Footer"));
 const LayoutContent = lazy(() => import("../ui/LayoutContent"));
-const Layout = lazy(() => import("../ui/Layout"));
-const LayoutNavbar = lazy(() => import("../ui/LayoutNavbar"));
 const Navbar = lazy(() => import("../components/Navbar"));
 
 import useMovies from "../hooks/useMovies.js";
@@ -97,90 +95,88 @@ function Discover() {
   }
 
   return (
-    <Layout>
-      <LayoutNavbar>
+      <>
         <Navbar />
-      </LayoutNavbar>
-      <LayoutContent>
-        <h1>All movies: </h1>
-        <div
-          className="bg-light p-3 mb-4 shadow-sm rounded"
-          style={{ border: "1px solid #ccc" }}
-        >
-          <div className="row gy-2">
-            {filters.map((tFilter, index) => (
-              <div className="col-md-3" key={index}>
-                <select
-                  key={index}
-                  id={tFilter?.typeFilter}
-                  className="form-select"
+        <LayoutContent>
+          <h1>All movies: </h1>
+          <div
+            className="bg-light p-3 mb-4 shadow-sm rounded"
+            style={{ border: "1px solid #ccc" }}
+          >
+            <div className="row gy-2">
+              {filters.map((tFilter, index) => (
+                <div className="col-md-3" key={index}>
+                  <select
+                    key={index}
+                    id={tFilter?.typeFilter}
+                    className="form-select"
+                  >
+                    {tFilter.options.map((filter, index_) => (
+                      <option key={index_} value={filter?.name}>
+                        {filter?.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              ))}
+              <div className="col-md-2">
+                <button
+                  className="btn btn-outline-secondary"
+                  onClick={handleResetFilter}
                 >
-                  {tFilter.options.map((filter, index_) => (
-                    <option key={index_} value={filter?.name}>
-                      {filter?.label}
-                    </option>
-                  ))}
-                </select>
+                  Reset Filters
+                </button>
               </div>
-            ))}
-            <div className="col-md-2">
-              <button
-                className="btn btn-outline-secondary"
-                onClick={handleResetFilter}
-              >
-                Reset Filters
-              </button>
             </div>
           </div>
-        </div>
-        <div className="container px-5">
-          <div className="row g-4 justify-content-center">
-            {errorMovies && (
-              <h2 className="text-danger">Error loading movies</h2>
-            )}
-            {loadingMovies && pageNumber == 0
-              ? [...Array(8)].map(
-                  (
-                    _,
-                    index // Render 8 skeleton cards
-                  ) => (
-                    <div key={index} className="col">
-                      <div className="movie-card-movies">
-                        <div
-                          className="placeholder w-100"
-                          style={{
-                            height: "180px",
-                            borderRadius: "8px",
-                            background: "#e0e0e0",
-                          }}
-                        ></div>
-                        <div className="placeholder col-8 mt-2"></div>
+          <div className="container px-5">
+            <div className="row g-4 justify-content-center">
+              {errorMovies && (
+                <h2 className="text-danger">Error loading movies</h2>
+              )}
+              {loadingMovies && pageNumber == 0
+                ? [...Array(8)].map(
+                    (
+                      _,
+                      index // Render 8 skeleton cards
+                    ) => (
+                      <div key={index} className="col">
+                        <div className="movie-card-movies">
+                          <div
+                            className="placeholder w-100"
+                            style={{
+                              height: "180px",
+                              borderRadius: "8px",
+                              background: "#e0e0e0",
+                            }}
+                          ></div>
+                          <div className="placeholder col-8 mt-2"></div>
+                        </div>
                       </div>
-                    </div>
+                    )
                   )
-                )
-              : movies?.map((movie, index) => (
-                  <div
-                    key={index}
-                    className="col"
-                    ref={index === movies.length - 1 ? ref : null}
-                  >
-                    <Link to={`/movie/${movie?.id}`}>
-                      <div
-                        className="movie-card-movies"
-                        style={{ textDecoration: "none" }}
-                      >
-                        <img src={movie?.link} alt={movie?.name} />
-                        <p>{movie?.name}</p>
-                      </div>
-                    </Link>
-                  </div>
-                ))}
+                : movies?.map((movie, index) => (
+                    <div
+                      key={index}
+                      className="col"
+                      ref={index === movies.length - 1 ? ref : null}
+                    >
+                      <Link to={`/movie/${movie?.id}`}>
+                        <div
+                          className="movie-card-movies"
+                          style={{ textDecoration: "none" }}
+                        >
+                          <img src={movie?.link} alt={movie?.name} />
+                          <p>{movie?.name}</p>
+                        </div>
+                      </Link>
+                    </div>
+                  ))}
+            </div>
           </div>
-        </div>
-      </LayoutContent>
-      <Footer />
-    </Layout>
+        </LayoutContent>
+        <Footer />
+      </>
   );
 }
 

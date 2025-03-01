@@ -2,9 +2,7 @@ import {lazy, useState, useEffect} from "react";
 import {useInView} from "react-intersection-observer";
 import useReviews from "../hooks/useReviews.js";
 
-const Layout = lazy(() => import("../ui/Layout"));
 const Loader = lazy(() => import("../ui/Loader"));
-const LayoutNavbar = lazy(() => import("../ui/LayoutNavbar"));
 const LayoutContent = lazy(() => import("../ui/LayoutContent"));
 const Footer = lazy(() => import("../components/Footer"));
 const Navbar = lazy(() => import("../components/Navbar"));
@@ -70,10 +68,8 @@ function Reviews() {
     };
 
     return (
-        <Layout>
-            <LayoutNavbar>
-                <Navbar/>
-            </LayoutNavbar>
+       <>
+            <Navbar/>
             {error && <h2 className="text-danger">Server is not responding 404. Try again later...</h2>}
             <LayoutContent>
                 <h1>Reviews: </h1>
@@ -134,7 +130,7 @@ function Reviews() {
             }
             <div ref={ref}></div>
             <Footer/>
-        </Layout>
+       </>
     )
 }
 

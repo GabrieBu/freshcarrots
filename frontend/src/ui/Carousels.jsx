@@ -37,12 +37,15 @@ const languageMap = {
 };
 
 function Carousels() {
-    const { moviesByCategory, loading } = useMoviesByCategory(hotGenres);
+    const { moviesByCategory, loading, error } = useMoviesByCategory(hotGenres);
     const {moviesByGenre, moviesForAdult, worldwideMovies,cultLanguageMovies} = moviesByCategory;
     const userLanguage = languageMap[navigator.language.substring(0, 2)]; //getting dynamically the language of the user, to query db
 
-    /* TODO HANDLING ERROR*/
     return (
+        error ?
+            <div>
+                <h4 className="text-danger">Could not be possible to load one or more carousel. Please try again later.</h4>
+            </div> :
         <div className="container mt-4">
             <div className="row g-4">
                 {hotGenres.map((item) => (
