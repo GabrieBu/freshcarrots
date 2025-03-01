@@ -1,10 +1,12 @@
-import {useEffect, useRef, useState} from "react";
-import { useParams } from "react-router-dom";
 import axios from "axios";
 import io from "socket.io-client";
-import Loader from "../ui/Loader.jsx";
 import { format } from "date-fns";
+
+import {useEffect, useRef, useState} from "react";
+import { useParams } from "react-router-dom";
 import {useInView} from "react-intersection-observer";
+
+import Loader from "../ui/Loader.jsx";
 
 const socket = io("http://localhost:3000"); //main server address
 const formatTimestamp = (timestamp) => {
