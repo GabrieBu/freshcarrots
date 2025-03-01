@@ -7,6 +7,7 @@ const formatDate = (dateString) => {
     });
 };
 
+
 // eslint-disable-next-line react/prop-types
 function Review({review}) {
     // eslint-disable-next-line react/prop-types
@@ -15,20 +16,16 @@ function Review({review}) {
     return (
         <div className="p-5 mb-4 bg-body-tertiary rounded-3">
             <div className="container-fluid py-5">
-                <h1 className="display-5 fw-bold">{movie_title}</h1>
+                <h1 className="display-5 fw-bold">{movie_title} <span className={`badge ${review_type === "Fresh" ? "bg-success" : "bg-danger"}`}>{review_type}</span></h1>
                 <h4 className="">
-                    Critic name: {critic_name}
-                    <span className="badge bg-secondary">{publisher_name}</span>
+                    Critic name: {critic_name + " "} <span className="badge bg-secondary">{publisher_name}</span>
                 </h4>
                 <p className="col-md-12 fs-4">{review_content}</p>
-                {rating ? (
+                {rating &&
                     <h4 className="col-md-8">
-                        Rating: {rating}/5
-                        <span className="badge bg-secondary">{review_type}</span>
+                        Rating: {rating}/5 ⭐
                     </h4>
-                ) : (
-                    <span className="badge bg-secondary">{review_type}</span>
-                )}
+                }
                 <div className="my-4">
                     <p>{formatDate(review_date)}</p>
                 </div>

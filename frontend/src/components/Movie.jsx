@@ -8,6 +8,8 @@ function Movie() {
     const [showCast, setShowCast] = useState(false);
     const [showThemes, setShowThemes] = useState(false);
     const [showStudios, setShowStudios] = useState(false);
+    const [showGenres, setShowGenres] = useState(false);
+    const [showActors, setShowActors] = useState(false);
 
     if (error) return <h2 className="text-danger text-center mt-4">Error fetching movie</h2>;
 
@@ -40,30 +42,35 @@ function Movie() {
                         {movie?.description ? <p className="text-justify">{movie?.description}</p>: <p className="text-justify">Description not found</p>}
                         <div className="d-flex justify-content-between align-items-center border-bottom pb-2 mb-4">
                             <h5 className="text-primary">
-                                {movie?.minute ? `${movie.minute} min` : "Duration not available"}
-                                {movie?.minute && movie?.date ? " | " : ""}
+                                {movie?.minute ? `${movie.minute} min` : "Duration not available"} {" | "}
                                 {movie?.date ? movie.date : "Date not available"}
                             </h5>
-                           {movie?.rating ? <h5 className="text-warning">
+                            {movie?.rating ? <h5 className="text-warning">
                                 ⭐ {movie?.rating} / 5
                             </h5>: <h5 className="text-warning">Rating not found </h5>}
                         </div>
                         <div className="d-flex gap-3 my-4">
-                            <button className="btn btn-primary" onClick={() => setShowCast(!showCast)}>
-                                {showCast ? "Hide cast" : "Show cast"}
+                            <button className={`btn ${!showGenres ? "btn-primary" : "btn-danger"}`} onClick={() => setShowGenres(!showGenres)}>
+                                {showGenres ? "Hide Genres" : "Show Genres"}
                             </button>
-                            <button className="btn btn-primary" onClick={() => setShowThemes(!showThemes)}>
+                            <button className={`btn ${!showThemes ? "btn-primary" : "btn-danger"}`} onClick={() => setShowThemes(!showThemes)}>
                                 {showThemes ? "Hide themes" : "Show themes"}
                             </button>
-                            <button className="btn btn-primary" onClick={() => setShowStudios(!showStudios)}>
+                            <button className={`btn ${!showActors ? "btn-primary" : "btn-danger"}`} onClick={() => setShowActors(!showActors)}>
+                                {showActors ? "Hide Actors" : "Show Actors"}
+                            </button>
+                            <button className={`btn ${!showCast ? "btn-primary" : "btn-danger"}`} onClick={() => setShowCast(!showCast)}>
+                                {showCast ? "Hide cast" : "Show cast"}
+                            </button>
+                            <button className={`btn ${!showStudios ? "btn-primary" : "btn-danger"}`} onClick={() => setShowStudios(!showStudios)}>
                                 {showStudios ? "Hide studios" : "Show studios"}
                             </button>
                         </div>
-                        {showCast && (
+                        {showGenres && (
                             <div className="row align-items-start mb-3">
                                 <div className="col border p-3">
-                                    <h3>Actors: </h3>
-                                    <p>{movie?.crew.map((member) => `${member?.name}: ${member?.role}`).join(', ')}</p>
+                                    <h3>Genres: </h3>
+                                    <p>{movie?.genres?.join(', ')}</p>
                                 </div>
                             </div>
                         )}
@@ -72,6 +79,22 @@ function Movie() {
                                 <div className="col border p-3">
                                     <h3>Themes: </h3>
                                     <p>{movie?.themes?.join(', ')}</p>
+                                </div>
+                            </div>
+                        )}
+                        {showActors && (
+                            <div className="row align-items-start mb-3">
+                                <div className="col border p-3">
+                                    <h3>Actors: </h3>
+                                    <p>{movie?.actors.map((member) => `${member?.name}: ${member?.role}`).join(', ')}</p>
+                                </div>
+                            </div>
+                        )}
+                        {showCast && (
+                            <div className="row align-items-start mb-3">
+                                <div className="col border p-3">
+                                    <h3>Cast: </h3>
+                                    <p>{movie?.crew.map((member) => `${member?.name}: ${member?.role}`).join(', ')}</p>
                                 </div>
                             </div>
                         )}
