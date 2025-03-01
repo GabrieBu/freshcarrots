@@ -6,10 +6,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
 @RequestMapping("/actors")
+@Tag(name = "Actors", description = "Operations related to Actors")
 public class ActorsController {
     private final ActorsService actorsService;
 
@@ -19,7 +23,8 @@ public class ActorsController {
     }
 
     @GetMapping("/getByName")
-    public ResponseEntity<List<ActorNameDTO>> findActorsByName(@RequestParam String name) {
+    @Operation(summary = "find actors by name", description = "Get all actors by his name")
+    public ResponseEntity<List<ActorNameDTO>> findActorsByName(@Parameter(description = "Search by name") @RequestParam String name) {
         List<ActorNameDTO> actors = actorsService.findActorsByName(name);
         if (actors.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
@@ -28,6 +33,7 @@ public class ActorsController {
     }
 
     @GetMapping("/get")
+    @Operation(summary = "get all actors", description = "Get all actors inside the database table")
     public ResponseEntity<List<ActorNameDTO>> findActors() {
         List<ActorNameDTO> actors = actorsService.findtest();
         if (actors.isEmpty()) {
