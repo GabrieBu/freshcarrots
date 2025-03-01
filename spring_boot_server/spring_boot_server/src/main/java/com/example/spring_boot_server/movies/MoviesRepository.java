@@ -30,7 +30,7 @@ public interface MoviesRepository extends JpaRepository<Movie, Long>, JpaSpecifi
     @Query(value = "SELECT m.id, m.name, m.date, p.link " +
             "FROM movies m " +
             "JOIN posters p ON m.id = p.id_film " +
-            "WHERE to_tsvector('english', m.name) @@ to_tsquery('english', :name) " +
+            "WHERE to_tsvector('english', m.name) @@ plainto_tsquery('english', REPLACE(:name, ' ', '&')) " +
             "ORDER BY " +
             "   CASE " +
             "       WHEN m.name ILIKE :name THEN 1 " +
