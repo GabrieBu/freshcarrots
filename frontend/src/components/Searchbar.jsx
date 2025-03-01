@@ -1,7 +1,8 @@
-import { useState } from "react";
+import {lazy, useState} from "react";
 import useSearch from "../hooks/useSearch.js";
-import Loader from "../ui/Loader.jsx";
 import { Link } from "react-router-dom";
+
+const Loader = lazy(() => import("./../ui/Loader"));
 
 function Searchbar() {
     const [query, setQuery] = useState('');

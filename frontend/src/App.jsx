@@ -1,13 +1,12 @@
 import {BrowserRouter, Routes, Route} from "react-router-dom";
+import {lazy} from "react";
 
-/* @TODO add lazy import*/
-
-import Homepage from "./pages/Homepage";
-import Community from "./pages/Community";
-import Reviews from "./pages/Reviews";
-import DiscussionRoom from "./pages/DiscussionRoom.jsx";
-import Movie from "./components/Movie.jsx";
-import Discover from "./pages/Discover.jsx";
+const Homepage = lazy(() => import("./pages/Homepage"));
+const Community = lazy(() => import("./pages/Community"));
+const Reviews = lazy(() => import("./pages/Reviews"));
+const DiscussionRoom = lazy(() => import("./pages/DiscussionRoom"));
+const Movie = lazy(() => import("./pages/Movie"));
+const Discover = lazy(() => import("./pages/Discover"));
 
 
 function App() {

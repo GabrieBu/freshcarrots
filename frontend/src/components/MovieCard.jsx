@@ -1,16 +1,15 @@
 import {Link} from "react-router-dom";
 
+
 // eslint-disable-next-line react/prop-types
-function MovieCard({movie}){
+function MovieCard({movie: {id, link, name}}){
     // eslint-disable-next-line react/prop-types
-    return <Link to={`/movie/${movie?.id}`}>
+    return <Link to={`/movie/${id}`}>
         <div
             className="movie-card"
         >
-            {/* eslint-disable-next-line react/prop-types */}
-            <img src={movie?.link} alt={movie?.name}/>
-            {/* eslint-disable-next-line react/prop-types */}
-            <p>{movie?.name}</p>
+            <img src={link} alt={name}/>
+            <p>{name}</p>
         </div>
     </Link>
 }

@@ -14,18 +14,18 @@ export default function useMovies(pageNumber, selectedFilters) {
         setLoading(true);
         let filter = {};
 
-        selectedFilters.forEach(value => {
-            if (value === "ascName") filter.orderByName = "asc";
-            if (value === "descName") filter.orderByName = "desc";
+        selectedFilters.forEach(item => {
+            if (item?.value === "ascName") filter.orderByName = "asc";
+            if (item?.value === "descName") filter.orderByName = "desc";
 
-            if (value === "ascDate") filter.orderByDate = "asc";
-            if (value === "descDate") filter.orderByDate = "desc";
+            if (item?.value === "ascDate") filter.orderByDate = "asc";
+            if (item?.value === "descDate") filter.orderByDate = "desc";
 
-            if (["zeroToOne", "oneToTwo", "twoToThree", "threeToFour", "fourToFive"].includes(value)) {
-                filter.byRating = value;
+            if (["zeroToOne", "oneToTwo", "twoToThree", "threeToFour", "fourToFive"].includes(item?.value)) {
+                filter.byRating = item?.value;
             }
             if (!filter.byRating && !filter.orderByName && !filter.orderByDate) {
-                filter.genre = value;
+                filter.genre = item?.value;
             }
         });
         filter = {...filter, page: pageNumber};

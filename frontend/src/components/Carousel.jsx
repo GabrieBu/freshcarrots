@@ -1,16 +1,12 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, lazy } from "react";
 import { Link } from "react-router-dom";
 import "./Carousel.css";
-
-import MovieCard from "./MovieCard.jsx"; // Custom styles
+const MovieCard = lazy(() => import("./MovieCard"));
 
 // eslint-disable-next-line react/prop-types
 function Carousel({ title, movies, loading }) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [itemsVisible, setItemsVisible] = useState(1);
-
-  /* @TODO modify with current width device (formula is correct) */
-  //itemsVisible = Math.floor((1570 + 20) / (120 + 20)); //should be correct
 
   useEffect(() => {
     const calculateItemsVisible = () => {
