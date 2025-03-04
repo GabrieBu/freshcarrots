@@ -6,10 +6,10 @@ export default function useMovies(pageNumber, selectedFilters) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
 
-  /*useEffect(() => {
+  useEffect(() => {
     console.log(selectedFilters);
-    //setMovies([]);
-  }, [selectedFilters]);*/
+    setMovies([]);
+  }, [selectedFilters]);
 
   useEffect(() => {
     console.log(selectedFilters);

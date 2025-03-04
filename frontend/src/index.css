@@ -63,6 +63,7 @@ body {
   text-decoration: none;
   color: black;
 }
+
 .movie-card-movies a {
   color: black;
   text-decoration: none;
@@ -70,6 +71,11 @@ body {
 
 .movie-card-movies:hover {
   transform: scale(1.1);
+}
+
+.movie-card-movies p {
+  color: black;
+  text-decoration: none;
 }
 
 .movie-card-movies img {

@@ -17,8 +17,8 @@ function Discover() {
 
   const { genres, error, loading } = useGenres();
   const { movies, errorMovies, loadingMovies } = useMovies(
-    pageNumber,
-    selectedFilters
+      pageNumber,
+      selectedFilters
   );
 
   const { ref, inView } = useInView({});
@@ -36,11 +36,11 @@ function Discover() {
         newFilters = prevFilters.filter((filter) => filter.type !== type);
       } else {
         const existingFilter = prevFilters.find(
-          (filter) => filter.type === type
+            (filter) => filter.type === type
         );
         if (existingFilter) {
           newFilters = prevFilters.map((filter) =>
-            filter.type === type ? { type, value } : filter
+              filter.type === type ? { type, value } : filter
           );
         } else {
           newFilters = [...prevFilters, { type, value }];
@@ -121,7 +121,7 @@ function Discover() {
     {
       typeFilter: "genre",
       options:
-        error || loading ? [] : [{ name: "", label: "All genres" }, ...genres],
+          error || loading ? [] : [{ name: "", label: "All genres" }, ...genres],
     },
   ];
 
@@ -132,89 +132,90 @@ function Discover() {
   }
 
   return (
-    <>
-      <Navbar />
-      <LayoutContent>
-        <h1>All movies: </h1>
-        <div
-          className="bg-light p-3 mb-4 shadow-sm rounded"
-          style={{ border: "1px solid #ccc" }}
-        >
-          <div className="row gy-2">
-            {filters.map((tFilter, index) => {
-              const selectedValue =
-                selectedFilters.find((f) => f.type === tFilter.typeFilter)
-                  ?.value || "";
+      <>
+        <Navbar />
+        <LayoutContent>
+          <h1>All movies: </h1>
+          <div
+              className="bg-light p-3 mb-4 shadow-sm rounded"
+              style={{ border: "1px solid #ccc" }}
+          >
+            <div className="row gy-2">
+              {filters.map((tFilter, index) => {
+                const selectedValue =
+                    selectedFilters.find((f) => f.type === tFilter.typeFilter)
+                        ?.value || "";
 
-              return (
-                <div className="col-md-3" key={index}>
-                  <select
-                    id={tFilter.typeFilter}
-                    className="form-select"
-                    value={selectedValue}
-                    onChange={(e) =>
-                      handleFilterChange(tFilter.typeFilter, e.target.value)
-                    }
-                  >
-                    {tFilter.options.map((filter, index_) => (
-                      <option key={index_} value={filter.name}>
-                        {filter.label}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              );
-            })}
-            <div className="col-md-2">
-              <button
-                className="btn btn-outline-secondary"
-                onClick={handleResetFilter}
-              >
-                Reset Filters
-              </button>
+                return (
+                    <div className="col-md-3" key={index}>
+                      <select
+                          id={tFilter.typeFilter}
+                          className="form-select"
+                          value={selectedValue}
+                          onChange={(e) =>
+                              handleFilterChange(tFilter.typeFilter, e.target.value)
+                          }
+                      >
+                        {tFilter.options.map((filter, index_) => (
+                            <option key={index_} value={filter.name}>
+                              {filter.label}
+                            </option>
+                        ))}
+                      </select>
+                    </div>
+                );
+              })}
+              <div className="col-md-2">
+                <button
+                    className="btn btn-outline-secondary"
+                    onClick={handleResetFilter}
+                >
+                  Reset Filters
+                </button>
+              </div>
             </div>
           </div>
-        </div>
-        <div className="container px-5">
-          <div className="row g-4 justify-content-center">
-            {errorMovies && (
-              <h2 className="text-danger">Error loading movies</h2>
-            )}
-            {movies?.map((movie, index) => (
-              <div
-                key={index}
-                className="col"
-                ref={index === movies.length - 1 ? ref : null}
-              >
-                <Link to={`/movie/${movie?.id}`}>
-                  <div className="movie-card-movies">
-                    <img src={movie?.link} alt={movie?.name} />
-                    <p>{movie?.name}</p>
+          <div className="container px-5">
+            <div className="row g-4 justify-content-center">
+              {errorMovies && (
+                  <h2 className="text-danger">Error loading movies</h2>
+              )}
+              {(movies?.length === 0 && !loadingMovies) && <div><h4 className="text-secondary">No movies found!</h4></div>}
+              {movies?.map((movie, index) => (
+                  <div
+                      key={index}
+                      className="col"
+                      ref={index === movies.length - 1 ? ref : null}
+                  >
+                    <Link to={`/movie/${movie?.id}`}>
+                      <div className="movie-card-movies">
+                        <img src={movie?.link} alt={movie?.name} />
+                        <p>{movie?.name}</p>
+                      </div>
+                    </Link>
                   </div>
-                </Link>
-              </div>
-            ))}
-            {loadingMovies &&
-              [...Array(12)].map((_, index) => (
-                <div key={index} className="col">
-                  <div className="movie-card-movies">
-                    <div
-                      className="placeholder w-100"
-                      style={{
-                        height: "270px",
-                        borderRadius: "8px",
-                        background: "#e0e0e0",
-                      }}
-                    ></div>
-                    <div className="placeholder col-8 mt-2"></div>
-                  </div>
-                </div>
               ))}
+              {loadingMovies &&
+                  [...Array(12)].map((_, index) => (
+                      <div key={index} className="col">
+                        <div className="movie-card-movies">
+                          <div
+                              className="placeholder w-100"
+                              style={{
+                                height: "270px",
+                                borderRadius: "8px",
+                                background: "#e0e0e0",
+                              }}
+                          ></div>
+                          <div className="placeholder col-8 mt-2"></div>
+                        </div>
+                      </div>
+                  ))}
+            </div>
           </div>
-        </div>
-      </LayoutContent>
-      <Footer />
-    </>
+        </LayoutContent>
+        <Footer />
+      </>
   );
 }
 
