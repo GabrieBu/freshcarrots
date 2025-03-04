@@ -1,8 +1,8 @@
 import { useEffect, useState, lazy } from "react";
 import { useInView } from "react-intersection-observer";
+import { Link } from "react-router-dom";
 import useMovies from "../hooks/useMovies.js";
 import useGenres from "../hooks/useGenres.js";
-const MovieCard = lazy(() => import("../components/MovieCard"));
 
 const Footer = lazy(() => import("../components/Footer"));
 const LayoutContent = lazy(() => import("../ui/LayoutContent"));
@@ -31,20 +31,24 @@ function Discover() {
 
   function handleFilterChange(type, value) {
     setSelectedFilters((prevFilters) => {
+      let newFilters;
       if (value === "") {
-        return prevFilters.filter((filter) => filter.type !== type); // Remove if empty
-      }
-      const existingFilter = prevFilters.find((filter) => filter.type === type);
-      if (existingFilter) {
-        return prevFilters.map((filter) =>
-          filter.type === type ? { type, value } : filter
+        newFilters = prevFilters.filter((filter) => filter.type !== type);
+      } else {
+        const existingFilter = prevFilters.find(
+          (filter) => filter.type === type
         );
+        if (existingFilter) {
+          newFilters = prevFilters.map((filter) =>
+            filter.type === type ? { type, value } : filter
+          );
+        } else {
+          newFilters = [...prevFilters, { type, value }];
+        }
       }
-      localStorage.setItem(
-        "selectedFilters",
-        JSON.stringify([...prevFilters, { type, value }])
-      );
-      return [...prevFilters, { type, value }];
+      // Save updated filters to localStorage
+      localStorage.setItem("selectedFilters", JSON.stringify(newFilters));
+      return newFilters;
     });
 
     setPageNumber(1); // Reset pagination
@@ -123,6 +127,7 @@ function Discover() {
 
   function handleResetFilter() {
     setSelectedFilters([]);
+    localStorage.removeItem("selectedFilters");
     setPageNumber(1);
   }
 
@@ -136,24 +141,30 @@ function Discover() {
           style={{ border: "1px solid #ccc" }}
         >
           <div className="row gy-2">
-            {filters.map((tFilter, index) => (
-              <div className="col-md-3" key={index}>
-                <select
-                  key={index}
-                  id={tFilter?.typeFilter}
-                  className="form-select"
-                  onChange={(e) =>
-                    handleFilterChange(tFilter.typeFilter, e.target.value)
-                  }
-                >
-                  {tFilter.options.map((filter, index_) => (
-                    <option key={index_} value={filter?.name}>
-                      {filter?.label}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            ))}
+            {filters.map((tFilter, index) => {
+              const selectedValue =
+                selectedFilters.find((f) => f.type === tFilter.typeFilter)
+                  ?.value || "";
+
+              return (
+                <div className="col-md-3" key={index}>
+                  <select
+                    id={tFilter.typeFilter}
+                    className="form-select"
+                    value={selectedValue}
+                    onChange={(e) =>
+                      handleFilterChange(tFilter.typeFilter, e.target.value)
+                    }
+                  >
+                    {tFilter.options.map((filter, index_) => (
+                      <option key={index_} value={filter.name}>
+                        {filter.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              );
+            })}
             <div className="col-md-2">
               <button
                 className="btn btn-outline-secondary"
@@ -175,34 +186,30 @@ function Discover() {
                 className="col"
                 ref={index === movies.length - 1 ? ref : null}
               >
-                <MovieCard
-                  id={movie?.id}
-                  link={movie?.link}
-                  name={movie?.name}
-                />
+                <Link to={`/movie/${movie?.id}`}>
+                  <div className="movie-card-movies">
+                    <img src={movie?.link} alt={movie?.name} />
+                    <p>{movie?.name}</p>
+                  </div>
+                </Link>
               </div>
             ))}
             {loadingMovies &&
-              [...Array(45)].map(
-                (
-                  _,
-                  index // render 45 skeleton cards
-                ) => (
-                  <div key={index} className="col">
-                    <div className="movie-card-movies">
-                      <div
-                        className="placeholder w-100"
-                        style={{
-                          height: "180px",
-                          borderRadius: "8px",
-                          background: "#e0e0e0",
-                        }}
-                      ></div>
-                      <div className="placeholder col-8 mt-2"></div>
-                    </div>
+              [...Array(12)].map((_, index) => (
+                <div key={index} className="col">
+                  <div className="movie-card-movies">
+                    <div
+                      className="placeholder w-100"
+                      style={{
+                        height: "270px",
+                        borderRadius: "8px",
+                        background: "#e0e0e0",
+                      }}
+                    ></div>
+                    <div className="placeholder col-8 mt-2"></div>
                   </div>
-                )
-              )}
+                </div>
+              ))}
           </div>
         </div>
       </LayoutContent>

@@ -93,7 +93,7 @@ function Reviews() {
       <Navbar />
       {error && (
         <h2 className="text-danger">
-          Server is not responding 404. Try again later...
+          Server is not responding. Try again later...
         </h2>
       )}
       <LayoutContent>
