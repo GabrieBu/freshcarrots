@@ -1,8 +1,8 @@
 import { useEffect, useState, lazy } from "react";
 import { useInView } from "react-intersection-observer";
-import { Link } from "react-router-dom";
 import useMovies from "../hooks/useMovies.js";
 import useGenres from "../hooks/useGenres.js";
+const MovieCard = lazy(() => import("../components/MovieCard"));
 
 const Footer = lazy(() => import("../components/Footer"));
 const LayoutContent = lazy(() => import("../ui/LayoutContent"));
@@ -10,7 +10,10 @@ const Navbar = lazy(() => import("../components/Navbar"));
 
 function Discover() {
   const [pageNumber, setPageNumber] = useState(0);
-  const [selectedFilters, setSelectedFilters] = useState([]);
+  const [selectedFilters, setSelectedFilters] = useState(() => {
+    const savedFilters = localStorage.getItem("selectedFilters");
+    return savedFilters ? JSON.parse(savedFilters) : [];
+  });
 
   const { genres, error, loading } = useGenres();
   const { movies, errorMovies, loadingMovies } = useMovies(
@@ -37,6 +40,10 @@ function Discover() {
           filter.type === type ? { type, value } : filter
         );
       }
+      localStorage.setItem(
+        "selectedFilters",
+        JSON.stringify([...prevFilters, { type, value }])
+      );
       return [...prevFilters, { type, value }];
     });
 
@@ -109,7 +116,8 @@ function Discover() {
     },
     {
       typeFilter: "genre",
-      options: error || loading ? [] : genres || [],
+      options:
+        error || loading ? [] : [{ name: "", label: "All genres" }, ...genres],
     },
   ];
 
@@ -167,22 +175,18 @@ function Discover() {
                 className="col"
                 ref={index === movies.length - 1 ? ref : null}
               >
-                <Link to={`/movie/${movie?.id}`}>
-                  <div
-                    className="movie-card-movies"
-                    style={{ textDecoration: "none" }}
-                  >
-                    <img src={movie?.link} alt={movie?.name} />
-                    <p>{movie?.name}</p>
-                  </div>
-                </Link>
+                <MovieCard
+                  id={movie?.id}
+                  link={movie?.link}
+                  name={movie?.name}
+                />
               </div>
             ))}
             {loadingMovies &&
-              [...Array(8)].map(
+              [...Array(45)].map(
                 (
                   _,
-                  index // render 8 skeleton cards
+                  index // render 45 skeleton cards
                 ) => (
                   <div key={index} className="col">
                     <div className="movie-card-movies">
