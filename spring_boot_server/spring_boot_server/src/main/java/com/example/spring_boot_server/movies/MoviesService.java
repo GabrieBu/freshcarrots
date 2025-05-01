@@ -20,7 +20,7 @@ public class MoviesService {
     @Autowired
     private MoviesRepository moviesRepository;
 
-    public List<MovieTitlePosterRatingDTO> findTopFiveMovies() {
+    public List<MovieTitlePosterDescDTO> findTopFiveMovies() {
         return moviesRepository.findTop5ByRating();
     }
 

@@ -21,8 +21,8 @@ public class MoviesController {
     private MoviesService moviesService;
     @Operation(summary = "Get top 5 movies", description = "Get the top 5 movies inside the database ordered by rating")
     @GetMapping("/getTopFiveMovies")
-    public ResponseEntity<List<MovieTitlePosterRatingDTO>> findTopFiveMovies() {
-        List<MovieTitlePosterRatingDTO> movies = moviesService.findTopFiveMovies();
+    public ResponseEntity<List<MovieTitlePosterDescDTO>> findTopFiveMovies() {
+        List<MovieTitlePosterDescDTO> movies = moviesService.findTopFiveMovies();
 
         if (movies.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -95,7 +95,7 @@ public class MoviesController {
     @GetMapping("/getFilteredMovies")
     @Operation(summary = "Get filtered movies ", description = "Get all movies, but filtered by Order Name/ordered date/rating/genre")
     public ResponseEntity<Page<MovieTitlePosterDTO>> findFiltered(@Parameter(description = "Order by name")@RequestParam(required = false) String orderByName,@Parameter(description = "Order by date") @RequestParam(required = false) String orderByDate,@Parameter(description = "Order by rating")  @RequestParam(required = false) String byRating,@Parameter(description = "Filter by genre") @RequestParam(required = false) String genre, @RequestParam int page) {
-        Pageable pageable = PageRequest.of(page, 50);
+        Pageable pageable = PageRequest.of(page, 45);
         Page<MovieTitlePosterDTO> movies = moviesService.findFilteredMovies(pageable, orderByName, orderByDate, byRating, genre);
         if (movies.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
