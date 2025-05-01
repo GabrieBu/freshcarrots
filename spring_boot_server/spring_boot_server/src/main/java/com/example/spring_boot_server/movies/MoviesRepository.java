@@ -1,11 +1,5 @@
 package com.example.spring_boot_server.movies;
-import com.example.spring_boot_server.movies.dtos.MovieByNameDTO;
-import com.example.spring_boot_server.movies.dtos.MovieTitlePosterCountDTO;
-import com.example.spring_boot_server.movies.dtos.MovieTitlePosterDTO;
-import com.example.spring_boot_server.movies.dtos.MovieTitlePosterRatingDTO;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
+import com.example.spring_boot_server.movies.dtos.*;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
@@ -19,13 +13,13 @@ import java.util.Optional;
 @Repository
 public interface MoviesRepository extends JpaRepository<Movie, Long>, JpaSpecificationExecutor<Movie> {
 
-    @Query(value="SELECT new com.example.spring_boot_server.movies.dtos.MovieTitlePosterRatingDTO(m.id, m.name, m.poster.link, m.rating)" +
+    @Query(value="SELECT new com.example.spring_boot_server.movies.dtos.MovieTitlePosterDescDTO(m.id, m.name, m.description, m.rating,  m.poster.link)" +
             "FROM Movie m " +
             "JOIN Poster p ON m.id = p.movie.id " +
             "WHERE m.rating IS NOT NULL AND m.date IS NOT NULL " +
             "ORDER BY m.rating DESC, m.date DESC " +
             "LIMIT 5")
-    List<MovieTitlePosterRatingDTO> findTop5ByRating();
+    List<MovieTitlePosterDescDTO> findTop5ByRating();
 
     @Query(value = "SELECT m.id, m.name, m.date, p.link " +
             "FROM movies m " +

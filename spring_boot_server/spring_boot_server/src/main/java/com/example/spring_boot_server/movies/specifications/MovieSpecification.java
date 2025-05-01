@@ -14,19 +14,22 @@ public class MovieSpecification {
             List<Predicate> predicates = new ArrayList<>();
             List<Order> orderList = new ArrayList<>(); //multiple order by
 
+
+            Order orderDate = null;
             if (orderByDate != null && !orderByDate.isEmpty()) {
                 if (orderByDate.equalsIgnoreCase("desc")) {
-                    orderList.add(cb.desc(cb.coalesce(root.get("date"), 0)));
+                    orderDate = cb.desc(cb.coalesce(root.get("date"), 0));
                 } else if (orderByDate.equalsIgnoreCase("asc")) {
-                    orderList.add(cb.asc(cb.coalesce(root.get("date"), Double.MAX_VALUE)));
+                    orderDate = cb.asc(cb.coalesce(root.get("date"), Double.MAX_VALUE));
                 }
             }
 
+            Order orderName = null;
             if (orderByName != null && !orderByName.isEmpty()) {
                 if (orderByName.equalsIgnoreCase("desc")) {
-                    orderList.add(cb.desc(root.get("name")));
+                    orderName = cb.desc(root.get("name"));
                 } else if (orderByName.equalsIgnoreCase("asc")) {
-                    orderList.add(cb.asc(root.get("name")));
+                    orderName = cb.asc(root.get("name"));
                 }
             }
 
@@ -57,6 +60,13 @@ public class MovieSpecification {
 
             if (!predicates.isEmpty()) {
                 query.where(cb.and(predicates.toArray(new Predicate[0])));
+            }
+
+            if(orderDate != null){
+                orderList.add(orderDate);
+            }
+            if(orderName != null){
+                orderList.add(orderName);
             }
 
             orderList.add(cb.desc(cb.coalesce(root.get("rating"), 0.0))); //order always by rating desc -> consistent query
