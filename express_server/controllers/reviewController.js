@@ -24,7 +24,14 @@ export const getReviews = async (req, res) => {
         }
         if(reviewMovieFilter && reviewMovieFilter !== "")
         {
-            filters.movie_title=reviewMovieFilter;
+            if(reviewMovieFilter && reviewMovieFilter !== "")
+            {
+                filters.$or = [
+                    { movie_title: reviewMovieFilter }, // 1:1 match
+                    { movie_title: { $regex: `^${reviewMovieFilter}`, $options: 'i' } }, // Starts with (case-insensitive)
+                    { movie_title: { $regex: reviewMovieFilter, $options: 'i' } } // Contained within (case-insensitive)
+                ];
+            }
         }
         console.log("filter: " + filters);
         const review = await Review.find(filters)

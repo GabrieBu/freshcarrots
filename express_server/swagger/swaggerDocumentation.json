@@ -1,0 +1,501 @@
+{
+	"openapi": "3.0.2",
+	"info": {
+		"title": "Express_Server",
+		"version": "1.0",
+		"description": "Server connected to a mongoDb database. It gets all dynamic data like the Reviews and Chatrooms",
+		"termsOfService": "http://api_url/terms/"
+	},
+	"servers": [
+		{
+			"url": "http://localhost:3001/",
+			"description": "Express_ServerToMongoDb"
+		}
+	],
+	"paths": {
+		"/getReviews": {
+			"get": {
+				"tags": [
+					"Retrieve all reviews with optional filters"
+				],
+				"description": "Fetches available reviews, applying filters specified in the query parameters.",
+				"operationId": "getReviews",
+				"parameters": [
+					{
+						"in": "query",
+						"name": "criticFilter",
+						"schema": {
+							"type": "boolean"
+						},
+						"required": false,
+						"description": "Filter reviews by TopCritic."
+					},
+					{
+						"in": "query",
+						"name": "typeFilter",
+						"schema": {
+							"type": "string"
+						},
+						"required": false,
+						"description": "Filter reviews by type Filter(Rotten or Fresh)."
+					},
+					{
+						"in": "query",
+						"name": "minDateFilter",
+						"schema": {
+							"type": "string",
+							"format": "date"
+						},
+						"required": false,
+						"description": "Filter reviews by min Date."
+					},
+					{
+						"in": "query",
+						"name": "maxDateFilter",
+						"schema": {
+							"type": "string",
+							"format": "date"
+						},
+						"required": false,
+						"description": "Filter reviews by max Date."
+					},
+					{
+						"in": "query",
+						"name": "reviewMovieFilter",
+						"schema": {
+							"type": "string"
+						},
+						"required": false,
+						"description": "Filter reviews by Movie Title."
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Successfully retrieved the list of reviews",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"$ref": "#/components/schemas/Review"
+									}
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal Server Error - Unexpected error occurred",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Error"
+								},
+								"example": {
+									"message": "Error occurred: getReviews Internal Server Error",
+									"internal_code": "internal_server_error"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/newDiscussion":{
+			"post": {
+				"tags": [
+					"Create new Discussion"
+				],
+				"description": "Create a new discussion for the chatrooms",
+				"operationId": "newDiscussion",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/newDiscussion"
+							}
+						}
+					},
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"description": "Correct input of new Discussion",
+						"content": {
+							"application/json": {
+								"schema": {}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal Server Error - Unexpected error occurred",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Error"
+								},
+								"example": {
+									"message": "Error occurred: getGenres Internal Server Error",
+									"internal_code": "unexpected_error"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/getDiscussions": {
+			"get": {
+				"tags": [
+					"Retrieve all discussions "
+				],
+				"description": "Retrieve all discussions",
+				"operationId": "getDiscussions",
+				"parameters": [],
+				"responses": {
+					"200": {
+						"description": "Successfully retrieved all the discussions",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"$ref": "#/components/schemas/discussionSchema"
+									}
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal Server Error - Unexpected error occurred",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Error"
+								},
+								"example": {
+									"message": "Error occurred: getGenres Internal Server Error",
+									"internal_code": "internal_server_error"
+								}
+							}
+						}
+					}
+				}
+			}
+
+		},
+		"/getMessages": {
+			"get": {
+				"tags": [
+					"Retrieve 50 messages "
+				],
+				"description": "Retrieve 50 messages",
+				"operationId": "getMessages",
+				"parameters": [
+					{
+						"in": "query",
+						"name": "id_room",
+						"schema": {
+							"type": "integer"
+						},
+						"required": true,
+						"description": "id of the message room"
+					},
+					{
+						"in": "query",
+						"name": "pageNumber",
+						"schema": {
+							"type": "integer"
+						},
+						"required": true,
+						"description": "number of the page to load"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Successfully retrieved all the discussions",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"$ref": "#/components/schemas/messagesSchema"
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Missing parameter",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Error"
+								},
+								"example": {
+									"message": "Error occurred: getMessages Internal Server Error",
+									"internal_code": "missing_parameter"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Discussion not found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Error"
+								},
+								"example": {
+									"message": "Error occurred: getMessages Internal Server Error",
+									"internal_code": "Data_not_found"
+								}
+							}
+						}
+					}
+				}
+			}
+
+		},
+		"/newMessage": {
+			"post": {
+				"tags": [
+					"Send new message"
+				],
+				"description": "Create new message",
+				"operationId": "newMessage",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/messagesSchema"
+							}
+						}
+					},
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"description": "Correct input of new Discussion",
+						"content": {
+							"application/json": {
+								"schema": {}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal Server Error - Unexpected error occurred",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Error"
+								},
+								"example": {
+									"message": "Error occurred: newMessage Internal Server Error",
+									"internal_code": "unexpectedErrors"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Missing parameter",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Error"
+								},
+								"example": {
+									"message": "Error occurred: newMessage Internal Server Error",
+									"internal_code": "missing_parameter"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Discussion not found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Error"
+								},
+								"example": {
+									"message": "Error occurred: newMessage Internal Server Error",
+									"internal_code": "data_not_found"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/newImage":{
+			"post": {
+				"tags": [
+					"send new image"
+				],
+				"description": "Send new message",
+				"operationId": "newImage",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/messagesSchema"
+							}
+						}
+					},
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"description": "Correct input of new Discussion",
+						"content": {
+							"application/json": {
+								"schema": {}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal Server Error - Unexpected error occurred",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Error"
+								},
+								"example": {
+									"message": "Error occurred: newImage Internal Server Error",
+									"internal_code": "unexpectedErrors"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Missing parameter",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Error"
+								},
+								"example": {
+									"message": "Error occurred: newImage Internal Server Error",
+									"internal_code": "missing_parameter"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Discussion not found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Error"
+								},
+								"example": {
+									"message": "Error occurred: newImage Internal Server Error",
+									"internal_code": "data_not_found"
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	},
+	"components": {
+		"schemas": {
+			"Review": {
+				"type": "object",
+				"properties": {
+					"id": {
+						"type": "integer",
+						"description": "Unique ID of the review"
+					},
+					"title": {
+						"type": "string",
+						"description": "Title of the review"
+					},
+					"content": {
+						"type": "string",
+						"description": "Review content"
+					},
+					"rating": {
+						"type": "number",
+						"format": "float",
+						"description": "Rating score of the review"
+					},
+					"category": {
+						"type": "string",
+						"description": "Category of the review"
+					},
+					"author": {
+						"type": "string",
+						"description": "Name of the review author"
+					},
+					"date": {
+						"type": "string",
+						"format": "date-time",
+						"description": "Date when the review was published"
+					}
+				}
+			},
+			"Error": {
+				"type": "object",
+				"properties": {
+					"message": {
+						"type": "string"
+					},
+					"internal_code": {
+						"type": "string"
+					}
+				}
+			},
+			"newDiscussion": {
+				"type": "object",
+				"properties": {
+					"id": {
+						"type": "integer",
+						"description": "Random id of Chatroom"
+					},
+					"name": {
+						"type": "string",
+						"description": "name of chatroom"
+					}
+				}
+			},
+			"discussionSchema":{
+				"type": "object",
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"title": {
+						"type": "string"
+					},
+					"messages": {
+						"$ref": "#/components/schemas/messagesSchema"
+					}
+				}
+			},
+			"messagesSchema":{
+				"properties": {
+					"sender": {
+						"type": "string",
+						"description": "sender of message"
+					},
+					"message": {
+						"type": "string",
+						"description": "body of message"
+					},
+					"image": {
+						"type": "string",
+						"description": "image if sent"
+					},
+					"time_stamp": {
+						"type": "string",
+						"format": "date-time",
+						"description": "time when message was sent"
+					}
+				}
+
+			}
+		}
+	}
+}
