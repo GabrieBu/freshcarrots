@@ -1,81 +1,191 @@
-import {useState} from "react";
+import { useState } from "react";
 import useHeroSection from "../hooks/useHeroSection.js";
-import {useNavigate} from "react-router-dom";
-
+import { useNavigate } from "react-router-dom";
 
 // eslint-disable-next-line react/prop-types
-function HeroSection({ref}) {
-    const {movies, loading, error} = useHeroSection();
+function HeroSection({ ref }) {
+    const { movies, loading, error } = useHeroSection();
+    console.log(movies)
     const [currentIndex, setCurrentIndex] = useState(0);
     const navigate = useNavigate();
 
-    function handleClickCarousel(id_film) {
+    const handleClickCarousel = (id_film) => {
         navigate(`/movie/${id_film}`);
-    }
+    };
 
-    return (
-        error ? <h1 className="text-danger">Error loading Top 5 movies. Try again later...</h1>
-            :
-            <div id="carouselExampleFade" className="carousel slide carousel-fade w-100 vh-100" data-bs-ride="carousel" ref={ref}>
-                <div className="carousel-indicators">
-                    {movies?.map((_, index) => (
-                        <li
-                            key={index}
-                            data-bs-target="#carouselExampleIndicators"
-                            data-bs-slide-to={index}
-                            className={index === currentIndex ? "active" : ""}
-                        ></li>
-                    ))}
-                </div>
-
-                <div className="carousel-inner h-100">
-                    {movies?.map((movie, index) => (
+    return error ? (
+        <h1 className="text-danger text-center mt-5">
+            Error loading Top 5 movies. Try again later...
+        </h1>
+    ) : (
+        <div
+            id="carouselExampleFade"
+            className="carousel slide w-100 vh-100 d-flex align-items-center"
+            style={{ backgroundColor: "#1b1e21" }}
+            data-bs-ride="carousel"
+            ref={ref}
+        >
+            <div className="carousel-inner w-100 px-4">
+                {movies?.map((movie, index) => (
+                    <div
+                        key={index}
+                        className={`carousel-item ${index === currentIndex ? "active" : ""}`}
+                    >
                         <div
-                            key={index}
-                            className={`carousel-item h-100 ${index === currentIndex ? "active" : ""}`}
-                            onClick={() => handleClickCarousel(movie?.id)}
+                            className="d-flex justify-content-center align-items-center position-relative"
+                            style={{ height: "80vh" }}
                         >
-                            {loading ? (
-                                <div className="skeleton skeleton-image d-block w-100 h-100"></div>
-                            ) : (
-                                <img
-                                    src={movie?.link}
-                                    className="d-block w-100 h-100 object-fit-cover"
-                                    alt={`Slide${index + 1}`}
-                                />
-                            )}
+                            <div
+                                className="position-absolute top-0 start-0 text-white"
+                                style={{
+                                    fontSize: "200px",
+                                    fontWeight: "900",
+                                    opacity: 0.1,
+                                    zIndex: 0,
+                                    lineHeight: "1",
+                                    padding: "20px",
+                                }}
+                            >
+                                {index + 1}
+                            </div>
+                            <div
+                                className="card shadow-lg rounded-4 overflow-hidden d-flex flex-row position-relative"
+                                style={{
+                                    maxWidth: "1100px",
+                                    width: "100%",
+                                    zIndex: 1,
+                                    backgroundColor: "#fff",
+                                    border: "1px solid #ccc",
 
-                            <div className="carousel-caption d-none d-md-block">
-                                {loading ? (
-                                    <>
-                                        <div className="skeleton skeleton-title"
-                                             style={{width: "60%", height: "40px"}}></div>
-                                        <div className="skeleton skeleton-text"
-                                             style={{width: "40%", height: "20px", marginTop: "10px"}}></div>
-                                    </>
-                                ) : (
-                                    <>
-                                        <h3>{movie?.name}</h3>
-                                        <h5>⭐ {movie?.rating}/5</h5>
-                                    </>
-                                )}
+                                }}
+                            >
+                                <div
+                                    className="bg-black d-flex justify-content-center align-items-center"
+                                    style={{width: "65%", backgroundColor: "#000"}}
+                                >
+                                    {loading ? (
+                                        <div
+                                            className="skeleton skeleton-image w-100"
+                                            style={{aspectRatio: "4 / 3"}}
+                                        ></div>
+                                    ) : (
+                                        <img
+                                            src={movie?.link}
+                                            alt={`Poster of ${movie?.name}`}
+                                            className="img-fluid"
+                                            onClick={() => handleClickCarousel(movie?.id)}
+                                            style={{
+                                                width: "100%",
+                                                height: "100%",
+                                                display: "block",
+                                                borderRadius: "10",
+                                            }}
+                                        />
+                                    )}
+                                </div>
+
+                                <div
+                                    className="p-4 d-flex flex-column justify-content-center"
+                                    style={{ width: "65%" }}
+                                >
+                                    {loading ? (
+                                        <>
+                                            <div
+                                                className="skeleton skeleton-title mb-3"
+                                                style={{ width: "60%", height: "30px" }}
+                                            ></div>
+                                            <div
+                                                className="skeleton skeleton-text"
+                                                style={{ width: "40%", height: "20px" }}
+                                            ></div>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <div
+                                                className="d-flex flex-column justify-content-center h-100"
+                                                style={{
+                                                    padding: "20px",
+                                                    gap: "10px",
+                                                }}
+                                            >
+                                                <h2
+                                                    className="fw-bold"
+                                                    style={{
+                                                        fontSize: "2rem",
+                                                        marginBottom: "0.5rem",
+                                                        lineHeight: "1.2",
+                                                    }}
+                                                >
+                                                    {movie?.name}
+                                                </h2>
+
+                                                <h5
+                                                    className="text-warning"
+                                                    style={{
+                                                        fontWeight: "500",
+                                                        fontSize: "1.1rem",
+                                                    }}
+                                                >
+                                                    ⭐ {movie?.rating}/5
+                                                </h5>
+
+                                                <h6
+                                                    className="text-muted"
+                                                    style={{
+                                                        fontSize: "1rem",
+                                                        lineHeight: "1.5",
+                                                        maxHeight: "5.6em",
+                                                        overflow: "hidden",
+                                                        textOverflow: "ellipsis",
+                                                        display: "-webkit-box",
+                                                        WebkitLineClamp: 4,
+                                                        WebkitBoxOrient: "vertical",
+                                                    }}
+                                                >
+                                                    {movie?.description}
+                                                </h6>
+                                                <button
+                                                    className="btn btn-outline-secondary align-self-start mt-2"
+                                                    style={{
+                                                        fontSize: "0.9rem",
+                                                        padding: "6px 12px",
+                                                        borderRadius: "6px",
+                                                    }}
+                                                    onClick={() => handleClickCarousel(movie?.id)}
+                                                >
+                                                    Read More
+                                                </button>
+                                            </div>
+                                        </>
+                                    )}
+                                </div>
                             </div>
                         </div>
-                    ))}
-                </div>
-                <button className="carousel-control-prev" type="button" data-bs-target="#carouselExampleFade"
-                        data-bs-slide="prev"
-                        onClick={() => setCurrentIndex((prevIndex) => (prevIndex - 1) % movies.length)}>
-                    <span className="carousel-control-prev-icon" aria-hidden="true"></span>
-                    <span className="visually-hidden">Previous</span>
-                </button>
-                <button className="carousel-control-next" type="button" data-bs-target="#carouselExampleFade"
-                        data-bs-slide="next"
-                        onClick={() => setCurrentIndex((prevIndex) => (prevIndex + 1) % movies.length)}>
-                    <span className="carousel-control-next-icon" aria-hidden="true"></span>
-                    <span className="visually-hidden">Next</span>
-                </button>
+                    </div>
+                ))}
             </div>
+
+            <button
+                className="carousel-control-prev"
+                type="button"
+                data-bs-target="#carouselExampleFade"
+                data-bs-slide="prev"
+                onClick={() => setCurrentIndex((prevIndex) => (prevIndex - 1 + movies.length) % movies.length)}
+            >
+                <span className="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span className="visually-hidden">Previous</span>
+            </button>
+            <button
+                className="carousel-control-next"
+                type="button"
+                data-bs-target="#carouselExampleFade"
+                data-bs-slide="next"
+                onClick={() => setCurrentIndex((prevIndex) => (prevIndex + 1) % movies.length)}
+            >
+                <span className="carousel-control-next-icon" aria-hidden="true"></span>
+                <span className="visually-hidden">Next</span>
+            </button>
+        </div>
     );
 }
 
