@@ -191,7 +191,7 @@ function Reviews() {
         })}
       </LayoutContent>
       {loading && <Loader />}
-      {/*<div ref={ref}></div>*/}
+      <div ref={ref}></div>
       <Footer />
     </>
   );
