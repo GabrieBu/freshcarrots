@@ -45,18 +45,23 @@ function Carousel({ title, movies, loading }) {
           <span className={`placeholder col-4`}></span>
         </p>
       ) : (
-        <h2 className="carousel-title mb-3">{title}</h2>
+          <div className="d-flex justify-content-between align-items-center mb-3">
+              <h2 className="carousel-title mb-0">{title}</h2>
+              <Link className="btn btn-primary ms-3" to="/discover">
+                  Show All
+              </Link>
+          </div>
       )}
-      <button
-        className="carousel-control prev"
-        onClick={prevPage}
-        disabled={currentIndex === 0}
-        style={{ zIndex: 1 }}
-      >
-        ❮
-      </button>
+        <button
+            className="carousel-control prev"
+            onClick={prevPage}
+            disabled={currentIndex === 0}
+            style={{zIndex: 1}}
+        >
+            ❮
+        </button>
 
-      <div className="carousel-wrapper">
+        <div className="carousel-wrapper">
         <div
           className="carousel-inner-custom"
           style={{ transform: `translateX(-${currentIndex * 12.5}%)` }}
@@ -83,13 +88,6 @@ function Carousel({ title, movies, loading }) {
         ❯
       </button>
 
-      <Link
-        className="btn btn-primary"
-        to="discover"
-        style={{ marginTop: "10px", cursor: "pointer" }}
-      >
-        Show All
-      </Link>
     </div>
   );
 }

@@ -50,21 +50,25 @@ function Movie() {
                             </h5>: <h5 className="text-warning">Rating not found </h5>}
                         </div>
                         <div className="d-flex gap-3 my-4">
-                            <button className={`btn ${!showGenres ? "btn-primary" : "btn-danger"}`} onClick={() => setShowGenres(!showGenres)}>
+                            {movie?.genres?.length > 0 && <button className={`btn ${!showGenres ? "btn-primary" : "btn-danger"}`} onClick={() => setShowGenres(!showGenres)}>
                                 {showGenres ? "Hide Genres" : "Show Genres"}
-                            </button>
-                            <button className={`btn ${!showThemes ? "btn-primary" : "btn-danger"}`} onClick={() => setShowThemes(!showThemes)}>
+                            </button>}
+                            {movie?.themes?.length > 0 && <button className={`btn ${!showThemes ? "btn-primary" : "btn-danger"}`}
+                                     onClick={() => setShowThemes(!showThemes)}>
                                 {showThemes ? "Hide themes" : "Show themes"}
-                            </button>
-                            <button className={`btn ${!showActors ? "btn-primary" : "btn-danger"}`} onClick={() => setShowActors(!showActors)}>
+                            </button>}
+                            {movie?.actors?.length > 0 && <button className={`btn ${!showActors ? "btn-primary" : "btn-danger"}`}
+                                     onClick={() => setShowActors(!showActors)}>
                                 {showActors ? "Hide Actors" : "Show Actors"}
-                            </button>
-                            <button className={`btn ${!showCast ? "btn-primary" : "btn-danger"}`} onClick={() => setShowCast(!showCast)}>
+                            </button>}
+                            {movie?.crew?.length > 0 && <button className={`btn ${!showCast ? "btn-primary" : "btn-danger"}`}
+                                     onClick={() => setShowCast(!showCast)}>
                                 {showCast ? "Hide cast" : "Show cast"}
-                            </button>
-                            <button className={`btn ${!showStudios ? "btn-primary" : "btn-danger"}`} onClick={() => setShowStudios(!showStudios)}>
+                            </button>}
+                            {movie?.studios?.length > 0 && <button className={`btn ${!showStudios ? "btn-primary" : "btn-danger"}`}
+                                     onClick={() => setShowStudios(!showStudios)}>
                                 {showStudios ? "Hide studios" : "Show studios"}
-                            </button>
+                            </button>}
                         </div>
                         {showGenres && (
                             <div className="row align-items-start mb-3">
