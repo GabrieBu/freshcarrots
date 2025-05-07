@@ -64,7 +64,7 @@ function Carousel({ title, movies, loading }) {
         <div className="carousel-wrapper">
         <div
           className="carousel-inner-custom"
-          style={{ transform: `translateX(-${currentIndex * 12.5}%)` }}
+          style={{ transform: `translateX(-${currentIndex * 145}px)`}}
         >
           {loading
             ? Array.from({ length: itemsVisible }).map((_, index) => (

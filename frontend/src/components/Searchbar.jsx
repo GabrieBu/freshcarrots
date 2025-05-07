@@ -1,4 +1,4 @@
-import {lazy, useState} from "react";
+import { lazy, useState } from "react";
 import useSearch from "../hooks/useSearch.js";
 import { Link } from "react-router-dom";
 
@@ -12,6 +12,8 @@ function Searchbar() {
         setQuery(event.target.value);
     };
 
+    const showDropdown = query.trim().length > 0;
+
     return (
         <div className="input-group position-relative">
             <input
@@ -22,9 +24,10 @@ function Searchbar() {
                 onChange={handleSearch}
             />
             <button className="btn btn-outline-secondary" type="button">Search</button>
-            {error && <h2 className="text-danger">Error searching movies</h2>}
-            {moviesSearched?.length > 0 && (
-                <ul className="list-group position-absolute w-100 overflow-auto"
+
+            {showDropdown && (
+                <ul
+                    className="list-group position-absolute w-100"
                     style={{
                         zIndex: 1000,
                         top: '100%',
@@ -33,29 +36,44 @@ function Searchbar() {
                         background: 'white',
                         border: '1px solid #ddd',
                         borderRadius: '5px'
-                    }}>
-                    {!loading ? (
-                        moviesSearched?.map((movie) => (
-                            <Link to={`/movie/${movie?.id}`} key={movie.id} style={{ textDecoration: 'none' }}>
-                                <li key={movie?.id} className="list-group-item d-flex align-items-center">
+                    }}
+                >
+                    {loading ? (
+                        <li className="list-group-item text-center py-3">
+                            <Loader />
+                        </li>
+                    ) : error ? (
+                        <li className="list-group-item text-danger text-center py-2">
+                            Error searching movies
+                        </li>
+                    ) : moviesSearched.length === 0 ? (
+                        <li className="list-group-item text-center py-2 text-muted">
+                            No results found
+                        </li>
+                    ) : (
+                        moviesSearched.map((movie) => (
+                            <li
+                                key={movie?.id}
+                                className="list-group-item d-flex align-items-center"
+                            >
+                                <Link
+                                    to={`/movie/${movie?.id}`}
+                                    className="d-flex align-items-center w-100 text-decoration-none text-dark"
+                                >
                                     <img
                                         src={movie?.poster}
                                         className="rounded-2 me-3"
-                                        style={{ width: '50px', height: '75px' }}
+                                        style={{ width: '50px', height: '75px', objectFit: 'cover' }}
                                         alt={movie?.name}
                                     />
-                                    <div className="d-flex flex-column justify-content-between">
-                                        <div>
-                                            <h4 className="text-bold mb-0">{movie?.name}</h4>
-                                        </div>
-                                        <div>
-                                            <p className="text-secondary mb-0"> {movie?.year}</p>
-                                        </div>
+                                    <div>
+                                        <h6 className="mb-0">{movie?.name}</h6>
+                                        <small className="text-secondary">{movie?.year}</small>
                                     </div>
-                                </li>
-                            </Link>
+                                </Link>
+                            </li>
                         ))
-                    ) : <Loader/>}
+                    )}
                 </ul>
             )}
         </div>
