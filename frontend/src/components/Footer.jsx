@@ -5,10 +5,10 @@ function Footer() {
           <div className="row">
             <div className="col-md-4">
               <h5>About Us</h5>
-              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a ante.</p>
+              <p>FreshCarrots is a collaborative chat platform built to connect students and streamline academic discussions in real time.</p>
             </div>
             <div className="col-md-4">
-              <h5>Follow Us</h5>
+              <h5>Contact us </h5>
               <div>
                 <a className="text-white text-decoration-none me-3">gabriele.buoso@edu.unito.it</a>
                 <a className="text-white text-decoration-none">andrea.driza@edu.unito.it</a>

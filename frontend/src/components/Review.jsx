@@ -8,6 +8,10 @@ const formatDate = (dateString) => {
 };
 
 
+/*
+* Reusable component to show a single review in reviews page
+* */
+
 // eslint-disable-next-line react/prop-types
 function Review({review}) {
     // eslint-disable-next-line react/prop-types

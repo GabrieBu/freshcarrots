@@ -10,6 +10,7 @@ function Carousel({ title, movies, loading }) {
 
   useEffect(() => {
     const calculateItemsVisible = () => {
+        /* Dynamically loading depending on the screen number of cards visible per carousel */
       const containerWidth = window.innerWidth;
       const itemWidth = 120;
       const itemMargin = 20;
@@ -66,6 +67,7 @@ function Carousel({ title, movies, loading }) {
           className="carousel-inner-custom"
           style={{ transform: `translateX(-${currentIndex * 145}px)`}}
         >
+            {/* skeleton render when loading, instead display movies cards */}
           {loading
             ? Array.from({ length: itemsVisible }).map((_, index) => (
                 <div key={index} className="movie-card skeleton">

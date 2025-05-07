@@ -1,6 +1,12 @@
 import axios from 'axios'
 import { useEffect, useState } from 'react'
 
+/*
+* Hook used to get unique genres of community from Postgres
+* Genres are used for filtering movies in Discover page (component)
+* */
+
+
 export default function useGenres() {
     const [genres, setGenres] = useState({});
     const [loading, setLoading] = useState(true);

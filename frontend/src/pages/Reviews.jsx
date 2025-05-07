@@ -10,6 +10,9 @@ const Review = lazy(() => import("../components/Review"));
 
 function Reviews() {
   const [pageNumber, setPageNumber] = useState(1); //on first render page = 0, time to time increase it by one
+  /*
+  * Default values at the mount of component
+  * */
   const [criticFilter, setCriticFilter] = useState("all_critics");
   const [typeFilter, setTypeFilter] = useState("all_types");
   const [minDateFilter, setMinDate] = useState("all_dates");
@@ -23,8 +26,10 @@ function Reviews() {
     maxDateFilter,
     reviewMovieFilter
   );
+  // ref for infinite-scroll
   const { ref, inView } = useInView({});
 
+  // when more reviews are available, retrigger the query with the next page of reviews (50 revs)
   useEffect(() => {
     if (inView && hasMore) {
       setPageNumber((pageNumber) => pageNumber + 1); //increase page
@@ -32,7 +37,7 @@ function Reviews() {
   }, [inView, hasMore]);
 
   useEffect(() => {
-    setPageNumber(1); //restore to first page
+    setPageNumber(1); //whenever a filter changes, restore pagination from the start
   }, [
     criticFilter,
     typeFilter,
@@ -50,6 +55,7 @@ function Reviews() {
   };
 
   const handleMinDate = (event) => {
+    // invert order of filtering if start date < of end date
     if (
       maxDateFilter &&
       maxDateFilter !== "all_dates" &&
@@ -64,6 +70,7 @@ function Reviews() {
   };
 
   const handleMaxDate = (event) => {
+    // invert order of dates if start date < of end date
     if (
       minDateFilter &&
       minDateFilter !== "all_dates" &&
@@ -190,6 +197,7 @@ function Reviews() {
           );
         })}
       </LayoutContent>
+      {/* Loader when infinite-scoll is triggered, finishing to fetch and render */}
       {loading && <Loader />}
       <div ref={ref}></div>
       <Footer />

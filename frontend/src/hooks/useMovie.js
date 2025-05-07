@@ -1,6 +1,11 @@
 import axios from 'axios'
 import { useEffect, useState } from 'react'
 
+/*
+* Hook used to get movie information from its id
+* Used in Movie page
+* */
+
 export default function useMovie(id) {
     const [movie, setMovie] = useState({});
     const [loading, setLoading] = useState(true);

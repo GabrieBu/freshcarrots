@@ -1,6 +1,11 @@
 import {useEffect, useState} from 'react'
 import axios from 'axios'
 
+/*
+* Hook used to get the list reviews (paginated query, mongodb)
+* Used in Reviews page
+* */
+
 export default function useReviews(pageNumber, criticFilter, typeFilter,minDateFilter, maxDateFilter,reviewMovieFilter){
     const [hasMore, setHasMore] = useState(false);
     const [loading, setLoading] = useState(true); //first thing we do is loading
@@ -11,6 +16,7 @@ export default function useReviews(pageNumber, criticFilter, typeFilter,minDateF
         setLoading(true);
         setError(false);
 
+        //remove all reviews already fetched
         if(pageNumber === 1){
             setReviews([]);
         }
@@ -18,7 +24,7 @@ export default function useReviews(pageNumber, criticFilter, typeFilter,minDateF
         axios({
             method: "GET",
             url: `http://localhost:3000/getReviews`,
-            params: {
+            params: { //params handled by backend express_server
                 page: pageNumber,
                 criticFilter: criticFilter,
                 typeFilter: typeFilter,
@@ -27,7 +33,7 @@ export default function useReviews(pageNumber, criticFilter, typeFilter,minDateF
                 reviewMovieFilter: reviewMovieFilter
         }}
         ).then(res=>{
-            setReviews(prevReviews => [...prevReviews, ...res.data]);
+            setReviews(prevReviews => [...prevReviews, ...res.data]); //update new reviews
             setHasMore(res.data.length > 0); // if data is returned, there are more pages
             setLoading(false);
         }).catch(err=>{

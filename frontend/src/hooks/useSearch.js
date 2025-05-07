@@ -1,6 +1,11 @@
 import axios from 'axios'
 import { useEffect, useState } from 'react'
 
+/*
+* Hook used to get movie (max 20) in the searchbar, from the user's query title
+* Used in all page (Navbar reused component)
+* */
+
 export default function useSearch(query) {
     const [moviesSearched, setMoviesSearched] = useState([]);
     const [loading, setLoading] = useState(false);
