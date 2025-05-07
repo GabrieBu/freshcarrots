@@ -135,7 +135,7 @@ function DiscussionList() {
             <div className="container mt-4">
                 {followedDiscussions.length > 0 && (
                     <div className="mb-4">
-                        <h2>❤️ Followed discussions: </h2>
+                        <h2>❤️ Followed discussions [{followedDiscussions?.length}]</h2>
                         <ul className="list-group">
                             {followedDiscussions.map(({ id, title }) => (
                                 <li key={id} className="list-group-item d-flex justify-content-between">
@@ -156,7 +156,7 @@ function DiscussionList() {
                 {error && <h2 className="text-danger">Could not load past discussions.</h2>}
                 {!isLoading ? (
                     <>
-                        <h2>Discussions</h2>
+                        <h2>Discussions [{discussions?.length}]</h2>
                         <ul className="list-group">
                             {filteredDiscussions.map(({ id, title }) => (
                                 <li key={id} className="list-group-item d-flex justify-content-between">

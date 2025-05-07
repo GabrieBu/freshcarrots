@@ -55,7 +55,7 @@ function Searchbar() {
                                 </li>
                             </Link>
                         ))
-                    ) : <Loader />}
+                    ) : <Loader/>}
                 </ul>
             )}
         </div>

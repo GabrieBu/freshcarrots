@@ -3,6 +3,7 @@ import { useInView } from "react-intersection-observer";
 import { Link } from "react-router-dom";
 import useMovies from "../hooks/useMovies.js";
 import useGenres from "../hooks/useGenres.js";
+import Loader from "../ui/Loader.jsx";
 
 const Footer = lazy(() => import("../components/Footer"));
 const LayoutContent = lazy(() => import("../ui/LayoutContent"));
@@ -50,8 +51,8 @@ function Discover() {
       localStorage.setItem("selectedFilters", JSON.stringify(newFilters));
       return newFilters;
     });
-
-    setPageNumber(1); // Reset pagination
+    
+    setPageNumber(0); // Reset pagination
   }
 
   const filters = [
@@ -128,7 +129,7 @@ function Discover() {
   function handleResetFilter() {
     setSelectedFilters([]);
     localStorage.removeItem("selectedFilters");
-    setPageNumber(1);
+    setPageNumber(0);
   }
 
   return (
@@ -180,7 +181,7 @@ function Discover() {
             {errorMovies && (
               <h2 className="text-danger">Error loading movies</h2>
             )}
-            {movies?.map((movie, index) => (
+            {Array.isArray(movies) && movies.map((movie, index) => (
               <div
                 key={index}
                 className="col"
@@ -194,22 +195,11 @@ function Discover() {
                 </Link>
               </div>
             ))}
-            {loadingMovies &&
-              [...Array(12)].map((_, index) => (
-                <div key={index} className="col">
-                  <div className="movie-card-movies">
-                    <div
-                      className="placeholder w-100"
-                      style={{
-                        height: "270px",
-                        borderRadius: "8px",
-                        background: "#e0e0e0",
-                      }}
-                    ></div>
-                    <div className="placeholder col-8 mt-2"></div>
-                  </div>
+            {loadingMovies && (
+                <div className="col-12 my-5">
+                  <Loader />
                 </div>
-              ))}
+            )}
           </div>
         </div>
       </LayoutContent>

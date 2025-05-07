@@ -2,10 +2,29 @@ import { useState } from "react";
 import useHeroSection from "../hooks/useHeroSection.js";
 import { useNavigate } from "react-router-dom";
 
+function printNumberCardinal(index) {
+    console.log("index" + index);
+    switch (index) {
+        case 0:
+            return "st"
+        case 1:
+            return "nd"
+        case 2:
+            return "rd"
+        case 3:
+            return "th"
+        case 4:
+            return "th"
+        case 5:
+            return "th"
+        default:
+            return "st"
+    }
+}
+
 // eslint-disable-next-line react/prop-types
 function HeroSection({ ref }) {
     const { movies, loading, error } = useHeroSection();
-    console.log(movies)
     const [currentIndex, setCurrentIndex] = useState(0);
     const navigate = useNavigate();
 
@@ -30,44 +49,39 @@ function HeroSection({ ref }) {
                     <div
                         key={index}
                         className={`carousel-item ${index === currentIndex ? "active" : ""}`}
+                        style={{ height: "60vh", transition: "transform 0.5s ease" }}
                     >
                         <div
-                            className="d-flex justify-content-center align-items-center position-relative"
-                            style={{ height: "80vh" }}
+                            className="d-flex justify-content-center align-items-center position-relative h-100"
                         >
                             <div
                                 className="position-absolute top-0 start-0 text-white"
                                 style={{
                                     fontSize: "200px",
                                     fontWeight: "900",
-                                    opacity: 0.1,
+                                    opacity: 0.2,
                                     zIndex: 0,
                                     lineHeight: "1",
                                     padding: "20px",
                                 }}
                             >
-                                {index + 1}
+                                {index + 1 + printNumberCardinal(index).toString()}
                             </div>
                             <div
-                                className="card shadow-lg rounded-4 overflow-hidden d-flex flex-row position-relative"
+                                className="card shadow-lg rounded-4 overflow-hidden d-flex flex-row position-relative h-100"
                                 style={{
                                     maxWidth: "1100px",
                                     width: "100%",
-                                    zIndex: 1,
                                     backgroundColor: "#fff",
                                     border: "1px solid #ccc",
-
                                 }}
                             >
                                 <div
                                     className="bg-black d-flex justify-content-center align-items-center"
-                                    style={{width: "65%", backgroundColor: "#000"}}
+                                    style={{ width: "50%", backgroundColor: "#000", height: "100%" }}
                                 >
                                     {loading ? (
-                                        <div
-                                            className="skeleton skeleton-image w-100"
-                                            style={{aspectRatio: "4 / 3"}}
-                                        ></div>
+                                        <div className="skeleton skeleton-image w-100"></div>
                                     ) : (
                                         <img
                                             src={movie?.link}
@@ -76,7 +90,6 @@ function HeroSection({ ref }) {
                                             onClick={() => handleClickCarousel(movie?.id)}
                                             style={{
                                                 width: "100%",
-                                                height: "100%",
                                                 display: "block",
                                                 borderRadius: "10",
                                             }}
@@ -86,17 +99,17 @@ function HeroSection({ ref }) {
 
                                 <div
                                     className="p-4 d-flex flex-column justify-content-center"
-                                    style={{ width: "65%" }}
+                                    style={{width: "65%", height: "95%", margin: "auto"}}
                                 >
                                     {loading ? (
                                         <>
                                             <div
                                                 className="skeleton skeleton-title mb-3"
-                                                style={{ width: "60%", height: "30px" }}
+                                                style={{width: "60%", height: "30px"}}
                                             ></div>
                                             <div
                                                 className="skeleton skeleton-text"
-                                                style={{ width: "40%", height: "20px" }}
+                                                style={{width: "40%", height: "20px"}}
                                             ></div>
                                         </>
                                     ) : (
@@ -111,7 +124,7 @@ function HeroSection({ ref }) {
                                                 <h2
                                                     className="fw-bold"
                                                     style={{
-                                                        fontSize: "2rem",
+                                                        fontSize: "3rem", // Bigger title
                                                         marginBottom: "0.5rem",
                                                         lineHeight: "1.2",
                                                     }}
@@ -134,16 +147,13 @@ function HeroSection({ ref }) {
                                                     style={{
                                                         fontSize: "1rem",
                                                         lineHeight: "1.5",
-                                                        maxHeight: "5.6em",
-                                                        overflow: "hidden",
-                                                        textOverflow: "ellipsis",
-                                                        display: "-webkit-box",
-                                                        WebkitLineClamp: 4,
-                                                        WebkitBoxOrient: "vertical",
+                                                        maxHeight: "100%", // no cut-off
+                                                        overflowY: "auto", // scroll if needed
                                                     }}
                                                 >
                                                     {movie?.description}
                                                 </h6>
+
                                                 <button
                                                     className="btn btn-outline-secondary align-self-start mt-2"
                                                     style={{
@@ -171,6 +181,7 @@ function HeroSection({ ref }) {
                 data-bs-target="#carouselExampleFade"
                 data-bs-slide="prev"
                 onClick={() => setCurrentIndex((prevIndex) => (prevIndex - 1 + movies.length) % movies.length)}
+                aria-label="Previous Slide"
             >
                 <span className="carousel-control-prev-icon" aria-hidden="true"></span>
                 <span className="visually-hidden">Previous</span>
@@ -181,6 +192,7 @@ function HeroSection({ ref }) {
                 data-bs-target="#carouselExampleFade"
                 data-bs-slide="next"
                 onClick={() => setCurrentIndex((prevIndex) => (prevIndex + 1) % movies.length)}
+                aria-label="Next Slide"
             >
                 <span className="carousel-control-next-icon" aria-hidden="true"></span>
                 <span className="visually-hidden">Next</span>

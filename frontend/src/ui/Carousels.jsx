@@ -24,6 +24,7 @@ const hotGenres = [
         title: "🎭 Captivating Dramas",
     }
 ];
+
 const languageMap = {
     'en': 'English',
     'fr': 'French',
@@ -48,7 +49,7 @@ function Carousels() {
                 <h4 className="text-danger">Could not be possible to load one or more carousel. Please try again later.</h4>
             </div> :
         <div className="container mt-4">
-            <div className="row g-4">
+            <div className="row g-2">
                 {hotGenres.map((item) => (
                     <div key={item.genre} className="col-12 mb-2">
                         <Carousel title={item.title} movies={moviesByGenre[item.genre] || []} loading={loading}/>
