@@ -222,48 +222,63 @@ function DiscussionRoom() {
     };
 
     return (
-        <div className="container-fluid vh-100 d-flex flex-column">
-            <h2 className="p-3">{title}</h2>
+        <div className="container-fluid vh-100 d-flex flex-column bg-light">
+            <div className="d-flex justify-content-between align-items-center p-3 bg-white border-bottom shadow-sm">
+                <button
+                    className="btn btn-outline-secondary me-3"
+                    onClick={() => window.history.back()}
+                >
+                    ← Back
+                </button>
+                <h4 className="m-0 text-primary">{title}</h4>
+                <div style={{ width: "42px" }}></div> {/* Spacer */}
+            </div>
+
             {error && (
-                <h3 className="text-danger">Error loading messages from database!</h3>
+                <div className="alert alert-danger text-center">
+                    Error loading messages from database!
+                </div>
             )}
+
             <div
-                className="border p-3 flex-grow-1 overflow-auto"
+                className="flex-grow-1 overflow-auto px-3 py-2"
                 ref={chatContainerRef}
+                style={{ backgroundColor: "#f8f9fa", borderTop: "1px solid #dee2e6" }}
             >
                 {loading && <Loader />}
                 {messages.map((msg, index) => (
                     <div
                         key={index}
                         ref={index === 0 ? ref : null}
-                        className={`d-flex mb-2 ${
-                            msg.sender === username
-                                ? "justify-content-end"
-                                : "justify-content-start"
+                        className={`d-flex mb-3 ${
+                            msg.sender === username ? "justify-content-end" : "justify-content-start"
                         }`}
                     >
                         <div
-                            className={`p-2 rounded ${
-                                msg.sender === username ? "bg-primary text-white" : "bg-light"
+                            className={`p-3 shadow-sm rounded-4 ${
+                                msg.sender === username ? "bg-primary text-white" : "bg-white"
                             }`}
+                            style={{ maxWidth: "75%", position: "relative" }}
                         >
-                            {msg.sender !== username && <strong>{msg.sender}:</strong>}
+                            {msg.sender !== username && (
+                                <div className="fw-bold mb-1">{msg.sender}</div>
+                            )}
                             {msg?.image && (
-                                <div className="image-container" style={{ padding: "0" }}>
-                                    <img
-                                        src={msg?.image}
-                                        alt="Attachment"
-                                        className="img-fluid mt-2"
-                                        style={{ maxWidth: "548px", minWidth: "308px" }}
-                                    />
-                                </div>
+                                <img
+                                    src={msg?.image}
+                                    alt="Attachment"
+                                    className="img-fluid rounded mb-2"
+                                    style={{ maxWidth: "100%", borderRadius: "12px" }}
+                                />
                             )}
                             {msg?.message && (
-                                <div className="message-text" style={{ padding: "2px" }}>
-                                    {msg?.message}
-                                </div>
+                                <div className="mb-1">{msg?.message}</div>
                             )}
-                            <div className="text-muted small text-end">
+                            <div
+                                className={`small text-end ${
+                                    msg.sender === username ? "text-light" : "text-muted"
+                                }`}
+                            >
                                 {formatTimestamp(msg?.time_stamp)}
                             </div>
                         </div>
@@ -271,29 +286,65 @@ function DiscussionRoom() {
                 ))}
             </div>
 
-            <div className="input-group p-2 border-top">
+            <div className="input-group p-3 border-top bg-white shadow-sm">
                 <input
                     type="text"
-                    className="form-control"
-                    placeholder="Give your opinion..."
+                    className="form-control rounded-start-pill"
+                    placeholder="Type your message..."
                     value={newMessage}
                     onChange={(e) => setNewMessage(e.target.value)}
                     onKeyDown={handleKeyPress}
+                    style={{ marginRight: "0.5rem" }}
                 />
                 <input
                     type="file"
-                    className="form-control"
+                    id="fileUpload"
                     ref={fileInputRef}
                     onChange={handleFileSelect}
                     accept="image/*"
+                    style={{display: "none"}}
                 />
-                <button className="btn btn-primary" onClick={handleSend}>
+                <label
+                    htmlFor="fileUpload"
+                    className="image-upload-button me-2"
+                    title="Attach an image"
+                    style={{
+                        border: selectedFileRef.current ? "3px solid #28a745" : "3px solid transparent",
+                        borderRadius: "50%",
+                        width: "64px",
+                        height: "64px",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        overflow: "hidden",
+                        transition: "border 0.3s ease",
+                        cursor: "pointer",
+                        backgroundColor: "#f8f9fa",
+                    }}
+                >
+                    <img
+                        src="./../../public/icons8-image-64.png"
+                        alt="Upload"
+                        style={{
+                            width: "40px",
+                            height: "40px",
+                            opacity: selectedFileRef.current ? 0.6 : 1,
+                            transition: "opacity 0.3s ease",
+                        }}
+                    />
+                </label>
+                <button
+                    className={`btn btn-${uploading ? "secondary" : "primary"} rounded-end-pill`}
+                    onClick={handleSend}
+                    disabled={uploading}
+                >
                     {uploading ? "Uploading..." : "Send"}
                 </button>
-                <canvas ref={canvasRef} style={{ display: "none" }}></canvas>
+                <canvas ref={canvasRef} style={{display: "none"}}></canvas>
             </div>
         </div>
     );
+
 }
 
 export default DiscussionRoom;
