@@ -5,13 +5,17 @@ import { Link } from "react-router-dom";
 const Loader = lazy(() => import("./../ui/Loader"));
 
 function Searchbar() {
-    const [query, setQuery] = useState('');
-    const { moviesSearched, loading, error } = useSearch(query);
+    const [query, setQuery] = useState(''); // state for movie title query of the user
+    const { moviesSearched, loading, error } = useSearch(query); //hook returns top 20 result searching by title
 
     const handleSearch = (event) => {
-        setQuery(event.target.value);
+        setQuery(event.target.value); // update movie title query
+        /*
+        * each time query changes, the hook is re-triggered and results returned again
+        * */
     };
 
+    //display results box if query is not blank
     const showDropdown = query.trim().length > 0;
 
     return (

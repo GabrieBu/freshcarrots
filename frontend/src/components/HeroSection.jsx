@@ -24,12 +24,12 @@ function printNumberCardinal(index) {
 
 // eslint-disable-next-line react/prop-types
 function HeroSection({ ref }) {
-    const { movies, loading, error } = useHeroSection();
+    const { movies, loading, error } = useHeroSection(); //retrieve top5 movies by rating trough the hook
     const [currentIndex, setCurrentIndex] = useState(0);
     const navigate = useNavigate();
 
     const handleClickCarousel = (id_film) => {
-        navigate(`/movie/${id_film}`);
+        navigate(`/movie/${id_film}`); //navigate to the page Movie of the movie in top 5
     };
 
     return error ? (

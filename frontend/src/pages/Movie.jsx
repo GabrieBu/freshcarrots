@@ -3,7 +3,9 @@ import useMovie from "../hooks/useMovie.js";
 import { useState } from "react";
 
 function Movie() {
+    // retrieve movie's id stored in the url
     const { id } = useParams();
+    // query the db for retrieving movie clicked by its id
     const { movie, loading, error } = useMovie(id);
     const [showCast, setShowCast] = useState(false);
     const [showThemes, setShowThemes] = useState(false);

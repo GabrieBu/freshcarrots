@@ -16,19 +16,23 @@ function DiscussionList() {
     const [errorModal, setErrorModal] = useState(false);
 
     useEffect(() => {
+        /* initialize username retrieving from local storage */
         const user = JSON.parse(localStorage.getItem("username")) || "";
         if (user) {
             setUsername(user);
         } else {
+            //if not present ask the user to insert it
             const modalElement = document.getElementById("modalUsername");
             const modal = new window.bootstrap.Modal(modalElement);
-            modal.show();
+            modal.show(); //show the bootstrap modal
             return;
         }
+        //retrieve past followed discussion from the localstorage, if present
         const storedDiscussions = JSON.parse(localStorage.getItem("followedDiscussions")) || [];
         setFollowedDiscussions(storedDiscussions);
     }, []);
 
+    // submiut username in the modal, store in useState
     function handleSubmitModal() {
         if(username!== "") {
             localStorage.setItem("username", JSON.stringify(username));
@@ -44,43 +48,46 @@ function DiscussionList() {
 
     }
 
+    //it updates followed discussion, useState and localStorage (for future retrieves)
     const handleFollow = (id, title) => {
         if (!followedDiscussions.some((d) => d.id === id)) {
             const updatedFollowed = [...followedDiscussions, { id, title }];
             setFollowedDiscussions(updatedFollowed);
-            localStorage.setItem("followedDiscussions", JSON.stringify(updatedFollowed));
+            localStorage.setItem("followedDiscussions", JSON.stringify(updatedFollowed)); //set to local storage
 
             setDiscussions((prevDiscussions) => prevDiscussions.filter((d) => d.id !== id));
         }
     };
 
     const handleUnfollow = (id, title) => {
-        const updatedFollowed = followedDiscussions.filter((d) => d.id !== id);
+        const updatedFollowed = followedDiscussions.filter((d) => d.id !== id); //save all discussion instead of the new unfollowed
         setFollowedDiscussions(updatedFollowed);
-        localStorage.setItem("followedDiscussions", JSON.stringify(updatedFollowed));
+        localStorage.setItem("followedDiscussions", JSON.stringify(updatedFollowed)); //update (remove) followed discussion
 
-        setDiscussions((prevDiscussions) => [...prevDiscussions, { id, title }]);
+        setDiscussions((prevDiscussions) => [...prevDiscussions, { id, title }]); //update local state
     };
 
     function handleCreateDiscussion() {
         if (newTitle.trim() === "") return;
 
         const newDiscussion = {
-            id: Math.random().toString(36).substr(2, 10) + Math.random().toString(36).substr(2, 10),
-            title: newTitle,
+            id: Math.random().toString(36).substr(2, 10) + Math.random().toString(36).substr(2, 10), //randomize id to be stored in the db
+            title: newTitle, //title of the discussion
         };
 
+        //call the endpoint newDiscussion, see swagger to documentation
         axios
             .post("http://localhost:3000/newDiscussion", newDiscussion)
             .then(() => {
-                setDiscussions((prevDiscussions) => [...prevDiscussions, newDiscussion]);
+                //discussion stored, update local state
+                setDiscussions((prevDiscussions) => [...prevDiscussions, newDiscussion]); //update local state
                 setNewTitle("");
             })
             .catch(() => setErrorCreate(true));
     }
 
     const filteredDiscussions = discussions.filter(
-        (d) => !followedDiscussions.some((fd) => fd.id === d.id)
+        (d) => !followedDiscussions.some((fd) => fd.id === d.id) //split followed discussion from not followed
     );
 
     return (

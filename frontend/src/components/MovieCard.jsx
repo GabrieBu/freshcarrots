@@ -1,6 +1,10 @@
 import {Link} from "react-router-dom";
 
 
+/*
+* Reusable component for movie card
+* */
+
 // eslint-disable-next-line react/prop-types
 function MovieCard({movie: {id, link, name}}){
     // eslint-disable-next-line react/prop-types

@@ -11,17 +11,20 @@ const Navbar = lazy(() => import("../components/Navbar"));
 
 function Discover() {
   const [pageNumber, setPageNumber] = useState(0);
+  // initializing filters stored in localstorage
   const [selectedFilters, setSelectedFilters] = useState(() => {
     const savedFilters = localStorage.getItem("selectedFilters");
     return savedFilters ? JSON.parse(savedFilters) : [];
   });
-
+  //retrieve genres from related hook
   const { genres, error, loading } = useGenres();
+  //retrieve movies from related hook
   const { movies, errorMovies, loadingMovies } = useMovies(
     pageNumber,
     selectedFilters
   );
 
+  //set ref for infinite scroll
   const { ref, inView } = useInView({});
 
   useEffect(() => {
@@ -31,6 +34,9 @@ function Discover() {
   }, [inView]);
 
   function handleFilterChange(type, value) {
+    /*
+    * This function is called whenever a filter change. We bring back pagenum = 0 to retrigger the query to the db trough Springboot
+    * */
     setSelectedFilters((prevFilters) => {
       let newFilters;
       if (value === "") {
@@ -129,7 +135,7 @@ function Discover() {
   function handleResetFilter() {
     setSelectedFilters([]);
     localStorage.removeItem("selectedFilters");
-    setPageNumber(0);
+    setPageNumber(0); //bring back to 0 to re-trigger query to db
   }
 
   return (

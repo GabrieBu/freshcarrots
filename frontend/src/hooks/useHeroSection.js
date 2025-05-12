@@ -1,6 +1,10 @@
 import axios from 'axios'
 import { useEffect, useState } from 'react'
 
+/*
+* Hook used to get top 5 movies filtered by rating DESC
+* */
+
 export default function useHeroSection() {
   const [movies, setMovies] = useState([]);
   const [loading, setLoading] = useState(true);

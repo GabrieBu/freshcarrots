@@ -1,6 +1,10 @@
 import axios from "axios";
 import { useEffect, useState, useRef } from "react";
 
+/*
+* Hook used to get movies for Discover page, returns movies filtered (query Springboot paginated with specifications)
+* */
+
 export default function useMovies(pageNumber, selectedFilters) {
   const [movies, setMovies] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -8,7 +12,7 @@ export default function useMovies(pageNumber, selectedFilters) {
   const prevFiltersRef = useRef([]);
 
   useEffect(() => {
-    // Convert filters to a string key for comparison
+    // convert filters to a string key for comparison
     const currentFiltersKey = JSON.stringify(selectedFilters);
     const prevFiltersKey = JSON.stringify(prevFiltersRef.current);
 
@@ -18,6 +22,7 @@ export default function useMovies(pageNumber, selectedFilters) {
     setLoading(true);
     let filter = {};
 
+    //update filters to send it to the express server
     selectedFilters.forEach((item) => {
       if (item?.value === "ascName") filter.orderByName = "asc";
       if (item?.value === "descName") filter.orderByName = "desc";
@@ -51,7 +56,7 @@ export default function useMovies(pageNumber, selectedFilters) {
           if (isFilterChanged || pageNumber === 0) {
             setMovies(res.data); // reset list
           } else {
-            setMovies((prevMovies) => [...prevMovies, ...res.data]);
+            setMovies((prevMovies) => [...prevMovies, ...res.data]); //update list just page number changed -> infinite scroll triggered case
           }
           setLoading(false);
         })
