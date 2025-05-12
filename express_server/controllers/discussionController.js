@@ -2,8 +2,9 @@ import Discussion from "../models/Discussion.js";
 
 export const newDiscussion = async (req, res) => {
     try {
-        const { title, id } = req.body;
-        const newDiscussion = new Discussion({ title, id });
+        console.log(req.body);
+        const { title, id, movie } = req.body;
+        const newDiscussion = new Discussion({ title, id, movie });
         await newDiscussion.save();
         res.status(200).json();
     } catch (error) {

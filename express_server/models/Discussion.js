@@ -19,10 +19,28 @@ const messageSchema = new mongoose.Schema({
     },
 });
 
+const movieSchema = new mongoose.Schema({
+    id: {
+        type: String,
+        required: true,
+    },
+    name: {
+        type: String,
+        default: "",
+    },
+    year: {
+        type: Number
+    },
+    poster: {
+        type: String
+    },
+});
+
 var DiscussionSchema = new Schema(
     {
         id: {type: String, required: true},
         title: {type: String, required: true},
+        movie: {type: movieSchema, required: true},
         messages: {type: [messageSchema], required: true, default: []}, //array of messages
     }
 );
