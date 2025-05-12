@@ -3,6 +3,9 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import {lazy, useEffect, useState} from "react";
 import useDiscussions from "../hooks/useDiscussions.js";
+import Searchbar from "./Searchbar.jsx";
+import SearchCardCommunity from "./SearchCardCommunity.jsx";
+import DiscussionItem from "./DiscussionItem.jsx";
 
 const Loader = lazy(() => import("../ui/Loader"));
 
@@ -14,6 +17,9 @@ function DiscussionList() {
     const [errorCreate, setErrorCreate] = useState(false);
     const { discussions, setDiscussions, error, isLoading } = useDiscussions();
     const [errorModal, setErrorModal] = useState(false);
+    const [selectedMovie, setSelectedMovie] = useState();
+
+    console.log(discussions);
 
     useEffect(() => {
         /* initialize username retrieving from local storage */
@@ -45,26 +51,44 @@ function DiscussionList() {
         else{
             setErrorModal(true);
         }
-
     }
 
     //it updates followed discussion, useState and localStorage (for future retrieves)
     const handleFollow = (id, title) => {
         if (!followedDiscussions.some((d) => d.id === id)) {
-            const updatedFollowed = [...followedDiscussions, { id, title }];
+            const fullDiscussion = discussions.find((d) => d.id === id);
+
+            const updatedFollowed = [  //set to local storage
+                ...followedDiscussions,
+                {
+                    id,
+                    title,
+                    movie: fullDiscussion?.movie || null  // store movie info if available
+                }
+            ];
+
             setFollowedDiscussions(updatedFollowed);
-            localStorage.setItem("followedDiscussions", JSON.stringify(updatedFollowed)); //set to local storage
+            localStorage.setItem("followedDiscussions", JSON.stringify(updatedFollowed)); // persist in local storage
 
             setDiscussions((prevDiscussions) => prevDiscussions.filter((d) => d.id !== id));
         }
     };
 
     const handleUnfollow = (id, title) => {
-        const updatedFollowed = followedDiscussions.filter((d) => d.id !== id); //save all discussion instead of the new unfollowed
+        const unfollowed = followedDiscussions.find((d) => d.id === id); //save all discussion instead of the new unfollowed
+        const updatedFollowed = followedDiscussions.filter((d) => d.id !== id);
+
         setFollowedDiscussions(updatedFollowed);
         localStorage.setItem("followedDiscussions", JSON.stringify(updatedFollowed)); //update (remove) followed discussion
 
-        setDiscussions((prevDiscussions) => [...prevDiscussions, { id, title }]); //update local state
+        setDiscussions((prevDiscussions) => [
+            ...prevDiscussions.filter((d) => d.id !== id), // remove if already present
+            {
+                id,
+                title,
+                movie: unfollowed?.movie || null  //update local state
+            }
+        ]);
     };
 
     function handleCreateDiscussion() {
@@ -73,6 +97,7 @@ function DiscussionList() {
         const newDiscussion = {
             id: Math.random().toString(36).substr(2, 10) + Math.random().toString(36).substr(2, 10), //randomize id to be stored in the db
             title: newTitle, //title of the discussion
+            movie: selectedMovie //movie related
         };
 
         //call the endpoint newDiscussion, see swagger to documentation
@@ -82,6 +107,7 @@ function DiscussionList() {
                 //discussion stored, update local state
                 setDiscussions((prevDiscussions) => [...prevDiscussions, newDiscussion]); //update local state
                 setNewTitle("");
+                setSelectedMovie(null);
             })
             .catch(() => setErrorCreate(true));
     }
@@ -118,15 +144,79 @@ function DiscussionList() {
             {showCreateDiscussion && (
                 <div className="container mt-4">
                     <h2>Create a New Discussion</h2>
-                    <div className="input-group mb-3">
-                        <input
-                            type="text"
-                            className="form-control"
-                            placeholder="Enter discussion title..."
-                            value={newTitle}
-                            onChange={(e) => setNewTitle(e.target.value)}
-                        />
-                        <button className="btn btn-success" onClick={handleCreateDiscussion}>Create</button>
+
+                    <div className="row">
+                        {selectedMovie && (
+                            <div className="col-md-4 mb-3">
+                                <div className="card">
+                                    <img
+                                        src={selectedMovie?.poster}
+                                        className="card-img-top"
+                                        alt={selectedMovie?.name}
+                                        style={{ height: '300px', objectFit: 'cover' }}
+                                    />
+                                    <div className="card-body">
+                                        <h5 className="card-title">{selectedMovie?.name}</h5>
+                                        <p className="card-text text-muted">{selectedMovie?.year}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+
+                        <div className={selectedMovie ? "col-md-8" : "col-md-12"}>
+                            <div className="row g-3 align-items-end">
+                                <div className="col-md-8">
+                                    <label className="form-label">Search Movie</label>
+
+                                    {!selectedMovie ? (
+                                        <Searchbar onSelectMovie={setSelectedMovie}>
+                                            {(movie) => (
+                                                <SearchCardCommunity key={movie.id} movie={movie} onSelectMovie={setSelectedMovie} />
+                                            )}
+                                        </Searchbar>
+                                    ) : (
+                                        <div className="input-group">
+                                            <input
+                                                type="text"
+                                                className="form-control"
+                                                value={selectedMovie.name}
+                                                readOnly
+                                            />
+                                            <button
+                                                className="btn btn-outline-danger"
+                                                type="button"
+                                                onClick={() => setSelectedMovie(null)}
+                                                title="Clear selection"
+                                            >
+                                                &times;
+                                            </button>
+                                        </div>
+                                    )}
+                                </div>
+
+                                <div className="col-md-8">
+                                    <label className="form-label">Discussion Title</label>
+                                    <input
+                                        type="text"
+                                        className="form-control"
+                                        placeholder="Enter discussion title..."
+                                        value={newTitle}
+                                        onChange={(e) => setNewTitle(e.target.value)}
+                                        required
+                                    />
+                                </div>
+
+                                <div className="col-md-4">
+                                    <button
+                                        className="btn btn-success w-100"
+                                        onClick={handleCreateDiscussion}
+                                        disabled={!selectedMovie || !newTitle.trim()}
+                                    >
+                                        Create
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             )}
@@ -140,44 +230,37 @@ function DiscussionList() {
                 </button>
             </div>
             <div className="container mt-4">
-                {followedDiscussions.length > 0 && (
-                    <div className="mb-4">
-                        <h2>❤️ Followed discussions [{followedDiscussions?.length}]</h2>
-                        <ul className="list-group">
-                            {followedDiscussions.map(({ id, title }) => (
-                                <li key={id} className="list-group-item d-flex justify-content-between">
-                                    <div>
-                                        <Link to={`/discussion/${id}`} className="text-decoration-underline fw-medium">
-                                            {title}
-                                        </Link>
-                                        <span className="badge bg-success ms-2">Joined</span>
-                                    </div>
-                                    <button className="btn btn-danger" onClick={() => handleUnfollow(id, title)}>
-                                        Unfollow Room
-                                    </button>
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
-                )}
+                {followedDiscussions.map((discussion) => {
+                    const poster = discussion?.movie?.poster;
+
+                    return (
+                        <DiscussionItem
+                            key={discussion.id}
+                            id={discussion.id}
+                            title={discussion.title}
+                            poster={poster}
+                            joined={true}
+                            onClick={() => handleUnfollow(discussion.id, discussion.title)}
+                            buttonLabel="Unfollow Room"
+                            buttonVariant="danger"
+                        />
+                    );
+                })}
+
                 {error && <h2 className="text-danger">Could not load past discussions.</h2>}
                 {!isLoading ? (
                     <>
                         <h2>Discussions [{discussions?.length}]</h2>
-                        <ul className="list-group">
-                            {filteredDiscussions.map(({ id, title }) => (
-                                <li key={id} className="list-group-item d-flex justify-content-between">
-                                    <div>
-                                        <Link to={`/discussion/${id}`} className="text-decoration-underline fw-medium">
-                                            {title}
-                                        </Link>
-                                    </div>
-                                    <button className="btn btn-primary" onClick={() => handleFollow(id, title)}>
-                                        Follow Discussion
-                                    </button>
-                                </li>
-                            ))}
-                        </ul>
+                        {filteredDiscussions.map((discussion) => (
+                            <DiscussionItem
+                                key={discussion.id}
+                                id={discussion.id}
+                                title={discussion.title}
+                                poster={discussion?.movie?.poster}
+                                onClick={() => handleFollow(discussion.id, discussion.title)}
+                                buttonLabel="Follow Discussion"
+                            />
+                        ))}
                     </>
                 ) : (
                     <Loader />

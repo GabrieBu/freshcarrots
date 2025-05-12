@@ -1,9 +1,13 @@
 import {Link} from "react-router-dom";
-import {lazy} from "react";
+import {lazy, useState} from "react";
+import SearchCard from "./SearchCard.jsx";
+import SearchCardCommunity from "./SearchCardCommunity.jsx";
 
 const Searchbar = lazy(() => import("./Searchbar"));
 
 function Navbar() {
+
+
     return (
         <nav className="navbar navbar-expand-lg navbar-dark bg-dark w-100" aria-label="Main navigation">
             <div className="container-fluid">
@@ -26,7 +30,11 @@ function Navbar() {
                         </li>
                     </ul>
                     <div className="w-50">
-                        <Searchbar/>
+                        <Searchbar>
+                            {(movie) => (
+                                <SearchCard key={movie.id} movie={movie} />
+                            )}
+                        </Searchbar>
                     </div>
                 </div>
             </div>
