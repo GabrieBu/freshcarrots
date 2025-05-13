@@ -1,11 +1,11 @@
 
 import axios from "axios";
-import { Link } from "react-router-dom";
 import {lazy, useEffect, useState} from "react";
 import useDiscussions from "../hooks/useDiscussions.js";
 import Searchbar from "./Searchbar.jsx";
 import SearchCardCommunity from "./SearchCardCommunity.jsx";
 import DiscussionItem from "./DiscussionItem.jsx";
+import {useInView} from "react-intersection-observer";
 
 const Loader = lazy(() => import("../ui/Loader"));
 
@@ -15,11 +15,33 @@ function DiscussionList() {
     const [newTitle, setNewTitle] = useState("");
     const [showCreateDiscussion, setShowCreateDiscussion] = useState(false);
     const [errorCreate, setErrorCreate] = useState(false);
-    const { discussions, setDiscussions, error, isLoading } = useDiscussions();
     const [errorModal, setErrorModal] = useState(false);
     const [selectedMovie, setSelectedMovie] = useState();
+    const [pageNumber, setPageNumber] = useState(1);
+    const [sortByDate, setSortByDate] = useState("desc");
+    const [movieQuery, setMovieQuery] = useState("");
+    const [debouncedMovieQuery, setDebouncedMovieQuery] = useState("");
 
-    console.log(discussions);
+    const { discussions, setDiscussions, error, loading, hasMore } = useDiscussions(pageNumber, debouncedMovieQuery, sortByDate);
+
+    const { ref, inView } = useInView({});
+
+    // when more reviews are available, retrigger the query with the next page of reviews (50 revs)
+    useEffect(() => {
+        if (inView && hasMore) {
+            console.log("in view")
+            setPageNumber((pageNumber) => pageNumber + 1); //increase page
+        }
+    }, [inView, hasMore]);
+
+    useEffect(() => {
+        const handler = setTimeout(() => {
+            setDebouncedMovieQuery(movieQuery);
+            setPageNumber(1); // Reset to first page on new search
+        }, 500);
+
+        return () => clearTimeout(handler);
+    }, [movieQuery]);
 
     useEffect(() => {
         /* initialize username retrieving from local storage */
@@ -56,7 +78,7 @@ function DiscussionList() {
     //it updates followed discussion, useState and localStorage (for future retrieves)
     const handleFollow = (id, title) => {
         if (!followedDiscussions.some((d) => d.id === id)) {
-            const fullDiscussion = discussions.find((d) => d.id === id);
+            const fullDiscussion = discussions?.find((d) => d.id === id);
 
             const updatedFollowed = [  //set to local storage
                 ...followedDiscussions,
@@ -112,7 +134,7 @@ function DiscussionList() {
             .catch(() => setErrorCreate(true));
     }
 
-    const filteredDiscussions = discussions.filter(
+    const filteredDiscussions = discussions?.filter(
         (d) => !followedDiscussions.some((fd) => fd.id === d.id) //split followed discussion from not followed
     );
 
@@ -140,6 +162,7 @@ function DiscussionList() {
                     </div>
                 </div>
             </div>
+
             {errorCreate && <h2 className="text-danger">Error creating new discussion. Try again later!</h2>}
             {showCreateDiscussion && (
                 <div className="container mt-4">
@@ -153,7 +176,7 @@ function DiscussionList() {
                                         src={selectedMovie?.poster}
                                         className="card-img-top"
                                         alt={selectedMovie?.name}
-                                        style={{ height: '300px', objectFit: 'cover' }}
+                                        style={{height: '300px', objectFit: 'cover'}}
                                     />
                                     <div className="card-body">
                                         <h5 className="card-title">{selectedMovie?.name}</h5>
@@ -171,7 +194,8 @@ function DiscussionList() {
                                     {!selectedMovie ? (
                                         <Searchbar onSelectMovie={setSelectedMovie}>
                                             {(movie) => (
-                                                <SearchCardCommunity key={movie.id} movie={movie} onSelectMovie={setSelectedMovie} />
+                                                <SearchCardCommunity key={movie.id} movie={movie}
+                                                                     onSelectMovie={setSelectedMovie}/>
                                             )}
                                         </Searchbar>
                                     ) : (
@@ -229,45 +253,107 @@ function DiscussionList() {
                     {!showCreateDiscussion ? "Create a new discussion" : "Close X"}
                 </button>
             </div>
-            <div className="container mt-4">
-                {followedDiscussions.map((discussion) => {
-                    const poster = discussion?.movie?.poster;
 
-                    return (
-                        <DiscussionItem
-                            key={discussion.id}
-                            id={discussion.id}
-                            title={discussion.title}
-                            poster={poster}
-                            joined={true}
-                            onClick={() => handleUnfollow(discussion.id, discussion.title)}
-                            buttonLabel="Unfollow Room"
-                            buttonVariant="danger"
+            <div
+                className="bg-light p-3 mt-4 mb-4 shadow-sm rounded"
+                style={{border: "1px solid #ccc"}}
+            >
+                <div className="row gy-2">
+                    <div className="col-md-3">
+                        <label htmlFor="DiscussionMovieFilter" className="form-label">
+                            Name movie:
+                        </label>
+                        <input
+                            id="DiscussionMovieFilter"
+                            type="text"
+                            className="form-control"
+                            placeholder="Search movie title"
+                            value={movieQuery}
+                            onChange={(e) => setMovieQuery(e.target.value)}
                         />
-                    );
-                })}
+                    </div>
 
-                {error && <h2 className="text-danger">Could not load past discussions.</h2>}
-                {!isLoading ? (
+                    <div className="col-md-3">
+                        <label htmlFor="SortByDate" className="form-label">
+                            Sort by Date:
+                        </label>
+                        <select
+                            id="SortByDate"
+                            className="form-select"
+                            value={sortByDate}
+                            onChange={(e) => setSortByDate(e.target.value)}
+                        >
+                            <option value="desc">Newest First</option>
+                            <option value="asc">Oldest First</option>
+                        </select>
+                    </div>
+
+                    <div className="col-md-2 d-flex align-items-end">
+                        <button
+                            className="btn btn-outline-secondary w-100"
+                            onClick={() => {
+                                setMovieQuery("");
+                                setDebouncedMovieQuery("");
+                                setSortByDate("desc");
+                                setPageNumber(1);
+                            }}
+                        >
+                            Reset Filters
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div className="container mt-4">
+                {!loading && followedDiscussions?.length > 0 &&
                     <>
-                        <h2>Discussions [{discussions?.length}]</h2>
-                        {filteredDiscussions.map((discussion) => (
+                        <h2>❤️ Followed discussions [{followedDiscussions?.length}]</h2>
+                        {followedDiscussions.map((discussion) => {
+                            const poster = discussion?.movie?.poster;
+
+                            return (
                             <DiscussionItem
                                 key={discussion.id}
                                 id={discussion.id}
                                 title={discussion.title}
-                                poster={discussion?.movie?.poster}
-                                onClick={() => handleFollow(discussion.id, discussion.title)}
-                                buttonLabel="Follow Discussion"
+                                movie={discussion?.movie}
+                                joined={true}
+                                onClick={() => handleUnfollow(discussion.id, discussion.title)}
+                                buttonLabel="Unfollow Discussion"
+                                buttonVariant="danger"
+                                createdAt={discussion?.date}
                             />
-                        ))}
+                            );
+                        })}
+                    </>}
+
+                {error && <h2 className="text-danger">Could not load past discussions.</h2>}
+                {!loading ? (
+                    <>
+                        <hr className="my-4 border-top border-secondary opacity-25"/>
+                        <h2>Discussions</h2>
+                        {filteredDiscussions.map((discussion, index) => {
+                            const isLast = index === filteredDiscussions.length - 1;
+
+                            return (
+                                <DiscussionItem
+                                    key={discussion.id}
+                                    id={discussion.id}
+                                    title={discussion.title}
+                                    movie={discussion?.movie}
+                                    onClick={() => handleFollow(discussion.id, discussion.title)}
+                                    buttonLabel="Follow Discussion"
+                                    createdAt={discussion?.date}
+                                />
+                            );
+                        })}
                     </>
                 ) : (
-                    <Loader />
+                    <Loader/>
                 )}
             </div>
+            <div ref={ref}></div>
         </>
-    );
+);
 }
-
 export default DiscussionList;
