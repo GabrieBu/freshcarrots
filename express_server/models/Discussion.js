@@ -42,6 +42,10 @@ var DiscussionSchema = new Schema(
         title: {type: String, required: true},
         movie: {type: movieSchema, required: true},
         messages: {type: [messageSchema], required: true, default: []}, //array of messages
+        date: {
+            type: Date,
+            default: Date.now,
+        },
     }
 );
 

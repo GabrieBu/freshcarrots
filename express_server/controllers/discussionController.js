@@ -12,14 +12,57 @@ export const newDiscussion = async (req, res) => {
     }
 };
 
-export const getDiscussions = async (req, res) => {
+/*export const getDiscussions = async (req, res) => {
     try {
         const discussions = await Discussion.find({})
         res.json(discussions);
     } catch (error) {
         res.json({ error: error.message });
     }
+};*/
+
+export const getDiscussions = async (req, res) => {
+    const { movieFilter = "", page = 1, sortByDate = "" } = req.query;
+    const pageSize = 6; //page size of 20
+    const skip = (page - 1) * pageSize;
+
+    console.log(req.query)
+
+    const matchStage = {};
+
+    if (movieFilter.trim() !== "") {
+        matchStage["movie.name"] = { $regex: movieFilter}; // to handle better, this is 1:1 match case
+    }
+
+    try {
+        const pipeline = [
+            { $match: matchStage },
+            {
+                $addFields: {
+                    messageCount: { $size: "$messages" }
+                }
+            },
+            {
+                $sort:
+                    sortByDate === "asc"
+                        ? { date: 1 }
+                        : sortByDate === "desc"
+                            ? { date: -1 }
+                            : { messageCount: -1 } // fallback
+            },
+            { $skip: skip },
+            { $limit: pageSize }
+        ];
+
+        const discussions = await Discussion.aggregate(pipeline);
+        console.log(discussions)
+        res.json(discussions);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
 };
+
+
 
 export const getMessages = async (req, res) => {
     try {
