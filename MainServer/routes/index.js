@@ -35,10 +35,13 @@ router.post('/newDiscussion', async function(req, res, next) {
   }
 });
 
-/* GET past discussions */
+/* GET, retrieve past discussions */
 router.get('/getDiscussions', async function(req, res, next) {
+  console.log(req.query)
   try {
-    const response = await axios.get('http://localhost:3001/getDiscussions');
+    const response = await axios.get('http://localhost:3001/getDiscussions', {
+      params: req.query // Pass all query parameters dynamically
+    }); // Pass all query parameters dynamically);
     res.json(response.data);
   } catch (error) {
     res.status(500).send('Error occured: getDiscussions ' + error.message);
