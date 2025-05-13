@@ -3,15 +3,23 @@ import createError from 'http-errors';
 import express from 'express';
 import mongoose from "mongoose";
 import cors from "cors";
-import path from 'path';
 import cookieParser from 'cookie-parser';
 import logger from 'morgan';
-import { fileURLToPath } from 'url';
 import indexRouter from './routes/index.js';
 import usersRouter from './routes/users.js';
+import swaggerUi from "swagger-ui-express";
+import { readFile } from 'fs/promises';
+import { fileURLToPath } from 'url';
+import path from 'path';
 
+// Get __dirname equivalent in ESM
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
+// Now read the file using a reliable relative path
+const swaggerPath = path.join(__dirname, './swagger/swaggerDocumentation.json');
+const swaggerJson = await readFile(swaggerPath, 'utf8');
+const swaggerDocument = JSON.parse(swaggerJson);
 
 mongoose.Promise = global.Promise;
 
@@ -39,7 +47,7 @@ app.use(
     cors({
       origin: "http://localhost:3000", // allow just React frontend
       methods: "GET, POST, PUT, DELETE, OPTIONS",
-      credentials: true, // Allow cookies and auth headers
+      credentials: true, // allow cookies and auth headers
     })
 );
 app.use(express.json());
@@ -49,6 +57,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+console.log('Swagger JSON loaded:', swaggerDocument);
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

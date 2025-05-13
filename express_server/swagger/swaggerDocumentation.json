@@ -100,7 +100,7 @@
 				}
 			}
 		},
-		"/newDiscussion":{
+		"/newDiscussion": {
 			"post": {
 				"tags": [
 					"Create new Discussion"
@@ -181,7 +181,6 @@
 					}
 				}
 			}
-
 		},
 		"/getMessages": {
 			"get": {
@@ -254,7 +253,6 @@
 					}
 				}
 			}
-
 		},
 		"/newMessage": {
 			"post": {
@@ -327,7 +325,7 @@
 				}
 			}
 		},
-		"/newImage":{
+		"/newImage": {
 			"post": {
 				"tags": [
 					"send new image"
@@ -460,7 +458,7 @@
 					}
 				}
 			},
-			"discussionSchema":{
+			"discussionSchema": {
 				"type": "object",
 				"properties": {
 					"id": {
@@ -474,7 +472,8 @@
 					}
 				}
 			},
-			"messagesSchema":{
+			"messagesSchema": {
+				"type": "object",
 				"properties": {
 					"sender": {
 						"type": "string",
@@ -494,7 +493,6 @@
 						"description": "time when message was sent"
 					}
 				}
-
 			}
 		}
 	}
