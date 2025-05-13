@@ -1,4 +1,5 @@
 import { lazy} from "react";
+import Footer from "../components/Footer.jsx";
 
 const DiscussionList = lazy(() => import("../components/DiscussionList"));
 const LayoutContent = lazy(() => import("../ui/LayoutContent"));
@@ -11,6 +12,7 @@ function Community() {
           <LayoutContent>
             <DiscussionList />
           </LayoutContent>
+          <Footer />
       </>
   );
 }
