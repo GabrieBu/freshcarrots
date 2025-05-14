@@ -39,9 +39,10 @@ const languageMap = {
 };
 
 function Carousels() {
-    const { moviesByCategory, loading, error } = useMoviesByCategory(hotGenres); //hooks returning 20 movies each for 4 carousels
+    const browserLanguageCode = navigator.language.substring(0, 2);
+    const userLanguage = languageMap[browserLanguageCode] || 'English'; //getting dynamically the language of the user, to query db custom
+    const { moviesByCategory, loading, error } = useMoviesByCategory(hotGenres, userLanguage); //hooks returning 20 movies each for 4 carousels
     const {moviesByGenre, moviesForAdult, worldwideMovies,cultLanguageMovies} = moviesByCategory;
-    const userLanguage = languageMap[navigator.language.substring(0, 2)]; //getting dynamically the language of the user, to query db custom
 
     return (
         error ?

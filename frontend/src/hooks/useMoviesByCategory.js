@@ -7,7 +7,8 @@ const API_BASE_URL = "http://localhost:3000";
 * Hook used to get movies for carousels in Homepage
 * */
 
-export default function useMoviesByCategory(hotGenres) {
+export default function useMoviesByCategory(hotGenres, userLanguage) {
+    console.log("in hook: ", userLanguage)
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(false);
     const [moviesByCategory, setMoviesByCategory] = useState({
@@ -38,7 +39,7 @@ export default function useMoviesByCategory(hotGenres) {
                     Promise.all(hotGenres.map((item) => fetchMovies("topRated", { genre: item?.genre }))),
                     fetchMovies("ageMin", { age_min: "18" }),
                     fetchMovies("getWorldwideMovies"),
-                    fetchMovies("getCultLanguage", {language: "French"})
+                    fetchMovies("getCultLanguage", {language: userLanguage}) //dynamic fetch movies depending on user's language
                 ]);
 
                 //create a complex object, dict of
