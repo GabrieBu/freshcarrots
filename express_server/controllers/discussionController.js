@@ -23,7 +23,7 @@ export const newDiscussion = async (req, res) => {
 
 export const getDiscussions = async (req, res) => {
     const { movieFilter = "", page = 1, sortByDate = "" } = req.query;
-    const pageSize = 6; //page size of 20
+    const pageSize = 10; //page size of 10
     const skip = (page - 1) * pageSize;
 
     console.log(req.query)
