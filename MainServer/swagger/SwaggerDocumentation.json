@@ -1,136 +1,129 @@
 {
   "openapi": "3.0.2",
   "info": {
-    "title": "Main Server",
+    "title": "Main Server - Central Dispatcher",
     "version": "1.0",
-    "description": "Routing to SpringBoot and Express server",
+    "description": "Central server routing requests to the static data server (SpringBoot) or the dynamic data server (Express).",
     "termsOfService": "http://api_url/terms/"
   },
   "servers": [
     {
       "url": "http://localhost:3000/",
-      "description": "the Main routing server"
+      "description": "dev"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Reviews",
+      "description": "Operations related to movie reviews (proxied to Express)."
+    },
+    {
+      "name": "Movies",
+      "description": "Operations related to movie data (proxied to SpringBoot)."
+    },
+    {
+      "name": "Discussions",
+      "description": "Operations related to community discussions (proxied to Express)."
+    },
+    {
+      "name": "Messages",
+      "description": "Operations related to messages within discussions (proxied to Express)."
+    },
+    {
+      "name": "Genres",
+      "description": "Operations related to movie genres (proxied to SpringBoot)."
     }
   ],
   "paths": {
-       "/getReviews": {
-       "get": {
-         "tags": [
-           "Retrieve all reviews with optional filters"
-         ],
-         "description": "Fetches available reviews, applying filters specified in the query parameters.",
-         "operationId": "getReviews",
-         "parameters": [
-           {
-             "in": "query",
-             "name": "criticFilter",
-             "schema": {
-               "type": "boolean"
-             },
-             "required": false,
-             "description": "Filter reviews by TopCritic."
-           },
-           {
-             "in": "query",
-             "name": "typeFilter",
-             "schema": {
-               "type": "string"
-             },
-             "required": false,
-             "description": "Filter reviews by type Filter(Rotten or Fresh)."
-           },
-           {
-             "in": "query",
-             "name": "minDateFilter",
-             "schema": {
-               "type": "string",
-               "format": "date"
-             },
-             "required": false,
-             "description": "Filter reviews by min Date."
-           },
-           {
-             "in": "query",
-             "name": "maxDateFilter",
-             "schema": {
-               "type": "string",
-               "format": "date"
-             },
-             "required": false,
-             "description": "Filter reviews by max Date."
-           },
-           {
-             "in": "query",
-             "name": "reviewMovieFilter",
-             "schema": {
-               "type": "string"
-             },
-             "required": false,
-             "description": "Filter reviews by Movie Title."
-           }
-         ],
-         "responses": {
-           "200": {
-             "description": "Successfully retrieved the list of reviews",
-             "content": {
-               "application/json": {
-                 "schema": {
-                   "type": "array",
-                   "items": {
-                     "$ref": "#/components/schemas/Review"
-                   }
-                 }
-               }
-             }
-           },
-            "500": {
-              "description": "Internal Server Error - Unexpected error occurred",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "$ref": "#/components/schemas/Error"
-                  },
-                  "example": {
-                    "message": "Error occurred: getReviews Internal Server Error",
-                    "internal_code": "internal_server_error"
-                  }
-                }
-              }
-           }
-         }
-       }
-       },
-    "/getTopFiveMovies":{
+    "/getReviews": {
       "get": {
         "tags": [
-          "Retrieve 5 top Rated Movies"
+          "Reviews"
         ],
-        "description": "Fetches 5 top Rated Movies ",
-        "operationId": "getTopFiveMovies",
+        "description": "Proxies the request to the dynamic data server (Express) to fetch available reviews, applying filters specified in the query parameters.",
+        "operationId": "getExpressReviews",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "criticFilter",
+            "schema": {
+              "type": "boolean"
+            },
+            "required": false,
+            "description": "Filter reviews by either top critic or normal ones"
+          },
+          {
+            "in": "query",
+            "name": "typeFilter",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Filter reviews by either f or normal ones"
+          },
+          {
+            "in": "query",
+            "name": "minDateFilter",
+            "schema": {
+              "type": "string",
+              "format": "date"
+            },
+            "required": false,
+            "description": "Filter reviews by min Date."
+          },
+          {
+            "in": "query",
+            "name": "maxDateFilter",
+            "schema": {
+              "type": "string",
+              "format": "date"
+            },
+            "required": false,
+            "description": "Filter reviews by max Date."
+          },
+          {
+            "in": "query",
+            "name": "reviewMovieFilter",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Filter reviews by Movie Title."
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "schema": {
+              "type": "integer"
+            },
+            "required": false,
+            "description": "Page number for pagination (passed to Express)."
+          }
+        ],
         "responses": {
           "200": {
-            "description": "Successfully retrieved the list of 5 Movies",
+            "description": "Successfully retrieved list of reviews (response from Express).",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/TopRatedMovie"
+                    "$ref": "#/components/schemas/ExpressReview"
                   }
                 }
               }
             }
           },
           "500": {
-            "description": "Internal Server Error - Unexpected error occurred",
+            "description": "Internal Server Error - Error in Main Server or the Express server.",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
                 },
                 "example": {
-                  "message": "Error occurred: getTopFiveMovies Internal Server Error",
-                  "internal_code": "internal_server_error"
+                  "message": "Error occurred: getReviews Internal Server Error",
+                  "internal_code": "proxy_error_express"
                 }
               }
             }
@@ -138,13 +131,51 @@
         }
       }
     },
-    "/topRated!!!!!": {
+    "/getTopFiveMovies": {
       "get": {
         "tags": [
-          "Retrieve Top 20 Movies By Genre ordered by rating"
+          "Movies"
         ],
-        "description": "Retrieve Top 20 Movies By Genre ordered by rating",
-        "operationId": "topRated",
+        "description": "Proxies the request to the static data server (SpringBoot) to retrieve 5 top rated movies.",
+        "operationId": "getSpringBootTopFiveMovies",
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved the list of 5 top rated movies (response from SpringBoot).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SpringBootTopRatedMovie"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error - Error in Main Server or the SpringBoot server.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "message": "Error occurred: getTopFiveMovies Internal Server Error",
+                  "internal_code": "proxy_error_springboot"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/topRated": {
+      "get": {
+        "tags": [
+          "Movies"
+        ],
+        "description": "Proxies the request to the static data server (SpringBoot) to retrieve top 20 movies by genre.",
+        "operationId": "getSpringBootTopRatedByGenre",
         "parameters": [
           {
             "in": "query",
@@ -153,25 +184,25 @@
               "type": "string"
             },
             "required": true,
-            "description": "Genre of movies"
+            "description": "Genre of movies we want to return for specific carousel"
           }
         ],
         "responses": {
           "200": {
-            "description": "Successfully retrieved the list of movies",
+            "description": "Successfully retrieved the list of 20 movies (response from SpringBoot).",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/topMovieByGenre"
+                    "$ref": "#/components/schemas/SpringBootTopMovieByGenre"
                   }
                 }
               }
             }
           },
           "500": {
-            "description": "Internal Server Error - Unexpected error occurred",
+            "description": "Internal Server Error - Error in Main Server or the SpringBoot server.",
             "content": {
               "application/json": {
                 "schema": {
@@ -179,22 +210,21 @@
                 },
                 "example": {
                   "message": "Error occurred: topRated Internal Server Error",
-                  "internal_code": "internal_server_error"
+                  "internal_code": "proxy_error_springboot"
                 }
               }
             }
           }
         }
       }
-
     },
-    "/getMovieById":{
+    "/getMovieById": {
       "get": {
         "tags": [
-          "Retrieve single movie by ID"
+          "Movies"
         ],
-        "description": "Retrieve single movie by ID",
-        "operationId": "getMovieById",
+        "description": "Proxies the request to the static data server (SpringBoot) to retrieve movie by ID.",
+        "operationId": "getSpringBootMovieById",
         "parameters": [
           {
             "in": "query",
@@ -203,25 +233,22 @@
               "type": "integer"
             },
             "required": true,
-            "description": "id of the movie"
+            "description": "Id of the movie that the user wants to retrieve"
           }
         ],
         "responses": {
           "200": {
-            "description": "Successfully retrieved the movie",
+            "description": "Successfully retrieved the movie (response from SpringBoot).",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/topMovieByGenre"
-                  }
+                  "$ref": "#/components/schemas/SpringBootTopMovieByGenre"
                 }
               }
             }
           },
           "500": {
-            "description": "Internal Server Error - Unexpected error occurred",
+            "description": "Internal Server Error - Error in Main Server or the SpringBoot server.",
             "content": {
               "application/json": {
                 "schema": {
@@ -229,22 +256,21 @@
                 },
                 "example": {
                   "message": "Error occurred: getMovieById Internal Server Error",
-                  "internal_code": "internal_server_error"
+                  "internal_code": "proxy_error_springboot"
                 }
               }
             }
           }
         }
       }
-
     },
-    "/getMovieByName":{
+    "/getMovieByName": {
       "get": {
         "tags": [
-          "Retrieve single movie by name"
+          "Movies"
         ],
-        "description": "Retrieve single movie by name",
-        "operationId": "getMovieByName",
+        "description": "Proxies the request to the static data server (SpringBoot) to retrieve movie by title.",
+        "operationId": "getSpringBootMovieByName",
         "parameters": [
           {
             "in": "query",
@@ -253,25 +279,22 @@
               "type": "string"
             },
             "required": true,
-            "description": "string of the movie"
+            "description": "Title of the movie that the user wants to retrieve"
           }
         ],
         "responses": {
           "200": {
-            "description": "Successfully retrieved the movie",
+            "description": "Successfully retrieved the movie (response from SpringBoot).",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/topMovieByName"
-                  }
+                  "$ref": "#/components/schemas/SpringBootTopMovieByName"
                 }
               }
             }
           },
           "500": {
-            "description": "Internal Server Error - Unexpected error occurred",
+            "description": "Internal Server Error - Error in Main Server or the SpringBoot server.",
             "content": {
               "application/json": {
                 "schema": {
@@ -279,22 +302,21 @@
                 },
                 "example": {
                   "message": "Error occurred: getMovieByName Internal Server Error",
-                  "internal_code": "internal_server_error"
+                  "internal_code": "proxy_error_springboot"
                 }
               }
             }
           }
         }
       }
-
     },
-    "/ageMin!!!!!!":{
+    "/ageMin": {
       "get": {
         "tags": [
-          "Retrieve 20 movies with PG >18"
+          "Movies"
         ],
-        "description": "Retrieve 20 movies with PG >18",
-        "operationId": "ageMin",
+        "description": "Proxies the request to the static data server (SpringBoot) to retrieve movies by minimum age rating.",
+        "operationId": "getSpringBootMoviesByMinAge",
         "parameters": [
           {
             "in": "query",
@@ -303,25 +325,25 @@
               "type": "integer"
             },
             "required": true,
-            "description": "minimum age to watch the movies"
+            "description": "Minimum parental grade"
           }
         ],
         "responses": {
           "200": {
-            "description": "Successfully retrieved the movies",
+            "description": "Successfully retrieved movies with minimum PG (response from SpringBoot).",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/TopRatedMovie"
+                    "$ref": "#/components/schemas/SpringBootTopRatedMovie"
                   }
                 }
               }
             }
           },
           "500": {
-            "description": "Internal Server Error - Unexpected error occurred",
+            "description": "Internal Server Error - Error in Main Server or the SpringBoot server.",
             "content": {
               "application/json": {
                 "schema": {
@@ -329,107 +351,7 @@
                 },
                 "example": {
                   "message": "Error occurred: ageMin Internal Server Error",
-                  "internal_code": "internal_server_error"
-                }
-              }
-            }
-          }
-        }
-      }
-
-    },
-    "/getWorldwideMovies!!!!!":{
-      "get": {
-        "tags": [
-          "Retrieve global popular movies"
-        ],
-        "description": "Retrieve global popular movies",
-        "operationId": "getWorldwideMovies",
-        "parameters": [
-          {
-            "in": "query",
-            "name": "age_min",
-            "schema": {
-              "type": "integer"
-            },
-            "required": true,
-            "description": "minimum age to watch the movies"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successfully retrieved the movies",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/topMovieByGenre"
-                  }
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal Server Error - Unexpected error occurred",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                },
-                "example": {
-                  "message": "Error occurred: ageMin Internal Server Error",
-                  "internal_code": "internal_server_error"
-                }
-              }
-            }
-          }
-        }
-      }
-
-    },
-    "/getCultLanguage!!!!":{
-      "get": {
-        "tags": [
-          "Retrieve movies with.........."
-        ],
-        "description": "Retrieve movies with............",
-        "operationId": "getCultLanguage",
-        "parameters": [
-          {
-            "in": "query",
-            "name": "age_min",
-            "schema": {
-              "type": "integer"
-            },
-            "required": true,
-            "description": "minimum age to watch the movies"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successfully retrieved the movies",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/topMovieByGenre"
-                  }
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal Server Error - Unexpected error occurred",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                },
-                "example": {
-                  "message": "Error occurred: ageMin Internal Server Error",
-                  "internal_code": "internal_server_error"
+                  "internal_code": "proxy_error_springboot"
                 }
               }
             }
@@ -437,40 +359,29 @@
         }
       }
     },
-    "/getFilteredMovies !!!!!!": {
+    "/getWorldwideMovies": {
       "get": {
         "tags": [
-          "Retrieve all movies filtered with params"
+          "Movies"
         ],
-        "description": "Retrieve all movies filtered with params",
-        "operationId": "getFilteredMovies",
-        "parameters": [
-          {
-            "in": "query",
-            "name": "age_min",
-            "schema": {
-              "type": "integer"
-            },
-            "required": true,
-            "description": "minimum age to watch the movies"
-          }
-        ],
+        "description": "Proxies the request to the static data server (SpringBoot) to retrieve globally popular movies.",
+        "operationId": "getSpringBootWorldwideMovies",
         "responses": {
           "200": {
-            "description": "Successfully retrieved the movies",
+            "description": "Successfully retrieved the top movies (response from SpringBoot).",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/topMovieByGenre"
+                    "$ref": "#/components/schemas/SpringBootTopMovieByGenre"
                   }
                 }
               }
             }
           },
           "500": {
-            "description": "Internal Server Error - Unexpected error occurred",
+            "description": "Internal Server Error - Error in Main Server or the SpringBoot server.",
             "content": {
               "application/json": {
                 "schema": {
@@ -478,39 +389,144 @@
                 },
                 "example": {
                   "message": "Error occurred: ageMin Internal Server Error",
-                  "internal_code": "internal_server_error"
+                  "internal_code": "proxy_error_springboot"
                 }
               }
             }
           }
         }
       }
-
+    },
+    "/getCultLanguage": {
+      "get": {
+        "tags": [
+          "Movies"
+        ],
+        "description": "Proxies the request to the static data server (SpringBoot) to retrieve top rated movies by language.",
+        "operationId": "getSpringBootCultLanguageMovies",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "language",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "User language (first 2 chars)"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved the movies (response from SpringBoot).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SpringBootTopMovieByGenre"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error - Error in Main Server or the SpringBoot server.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "message": "Error occurred: ageMin Internal Server Error",
+                  "internal_code": "proxy_error_springboot"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/getFilteredMovies": {
+      "get": {
+        "tags": [
+          "Movies"
+        ],
+        "description": "Proxies the request to the static data server (SpringBoot) to retrieve filtered movies.",
+        "operationId": "getSpringBootFilteredMovies",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "page",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "Number of the query page (page size = 45)"
+          },
+          {
+            "in": "query",
+            "name": "orderByName",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Order movies by name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved the movies (response from SpringBoot).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SpringBootTopMovieByGenre"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error - Error in Main Server or the SpringBoot server.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "message": "Error occurred: ageMin Internal Server Error",
+                  "internal_code": "proxy_error_springboot"
+                }
+              }
+            }
+          }
+        }
+      }
     },
     "/getGenres": {
       "get": {
         "tags": [
-          "Retrieve all genres"
+          "Genres"
         ],
-        "description": "Retrieve all genres",
-        "operationId": "getGenres",
-        "parameters": [],
+        "description": "Proxies the request to the static data server (SpringBoot) to retrieve all genres.",
+        "operationId": "getSpringBootGenres",
         "responses": {
           "200": {
-            "description": "Successfully retrieved the genres names",
+            "description": "Successfully retrieved the genres names (response from SpringBoot).",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/genreName"
+                    "$ref": "#/components/schemas/SpringBootGenreName"
                   }
                 }
               }
             }
           },
           "500": {
-            "description": "Internal Server Error - Unexpected error occurred",
+            "description": "Internal Server Error - Error in Main Server or the SpringBoot server.",
             "content": {
               "application/json": {
                 "schema": {
@@ -518,7 +534,7 @@
                 },
                 "example": {
                   "message": "Error occurred: getGenres Internal Server Error",
-                  "internal_code": "internal_server_error"
+                  "internal_code": "proxy_error_springboot"
                 }
               }
             }
@@ -526,26 +542,25 @@
         }
       }
     },
-    "/newDiscussion":{
+    "/newDiscussion": {
       "post": {
         "tags": [
-          "Create new Discussion"
+          "Discussions"
         ],
-        "description": "Create a new discussion for the chatrooms",
-        "operationId": "newDiscussion",
+        "description": "Proxies the request to the dynamic data server (Express) to create a new discussion.",
+        "operationId": "createExpressDiscussion",
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/newDiscussion"
+                "$ref": "#/components/schemas/ExpressDiscussionInput"
               }
             }
-          },
-          "required": true
+          },"required": true
         },
         "responses": {
           "200": {
-            "description": "Correct input of new Discussion",
+            "description": "New discussion successfully created (response from Express).",
             "content": {
               "application/json": {
                 "schema": {}
@@ -553,7 +568,7 @@
             }
           },
           "500": {
-            "description": "Internal Server Error - Unexpected error occurred",
+            "description": "Internal Server Error - Error in Main Server or the Express server.",
             "content": {
               "application/json": {
                 "schema": {
@@ -561,7 +576,7 @@
                 },
                 "example": {
                   "message": "Error occurred: getGenres Internal Server Error",
-                  "internal_code": "unexpected_error"
+                  "internal_code": "proxy_error_express"
                 }
               }
             }
@@ -572,27 +587,26 @@
     "/getDiscussions": {
       "get": {
         "tags": [
-          "Retrieve all discussions "
+          "Discussions"
         ],
-        "description": "Retrieve all discussions",
-        "operationId": "getDiscussions",
-        "parameters": [],
+        "description": "Proxies the request to the dynamic data server (Express) to retrieve discussions.",
+        "operationId": "getExpressDiscussions",
         "responses": {
           "200": {
-            "description": "Successfully retrieved all the discussions",
+            "description": "Successfully retrieved discussions (response from Express).",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/discussionSchema"
+                    "$ref": "#/components/schemas/ExpressDiscussion"
                   }
                 }
               }
             }
           },
           "500": {
-            "description": "Internal Server Error - Unexpected error occurred",
+            "description": "Internal Server Error - Error in Main Server or the Express server.",
             "content": {
               "application/json": {
                 "schema": {
@@ -600,22 +614,21 @@
                 },
                 "example": {
                   "message": "Error occurred: getGenres Internal Server Error",
-                  "internal_code": "internal_server_error"
+                  "internal_code": "proxy_error_express"
                 }
               }
             }
           }
         }
       }
-
     },
     "/getMessages": {
       "get": {
         "tags": [
-          "Retrieve 50 messages "
+          "Messages"
         ],
-        "description": "Retrieve 50 messages",
-        "operationId": "getMessages",
+        "description": "Proxies the request to the dynamic data server (Express) to retrieve messages for a discussion room.",
+        "operationId": "getExpressMessages",
         "parameters": [
           {
             "in": "query",
@@ -638,14 +651,28 @@
         ],
         "responses": {
           "200": {
-            "description": "Successfully retrieved all the discussions",
+            "description": "Successfully messages retrieved (response from Express).",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/messagesSchema"
+                    "$ref": "#/components/schemas/ExpressMessage"
                   }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error - Error in Main Server or the Express server.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "message": "Error occurred: getMessages Internal Server Error",
+                  "internal_code": "proxy_error_express"
                 }
               }
             }
@@ -656,15 +683,15 @@
     "/newMessage": {
       "post": {
         "tags": [
-          "Send new message"
+          "Messages"
         ],
-        "description": "Create new message",
-        "operationId": "newMessage",
+        "description": "Proxies the request to the dynamic data server (Express) to send a new message.",
+        "operationId": "sendExpressMessage",
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/messagesSchema"
+                "$ref": "#/components/schemas/ExpressMessageInput"
               }
             }
           },
@@ -672,7 +699,7 @@
         },
         "responses": {
           "200": {
-            "description": "Correct input of new Discussion",
+            "description": "Correct input of new Discussion (response from Express).",
             "content": {
               "application/json": {
                 "schema": {}
@@ -680,7 +707,7 @@
             }
           },
           "500": {
-            "description": "Internal Server Error - Unexpected error occurred",
+            "description": "Internal Server Error - Error in Main Server or the Express server.",
             "content": {
               "application/json": {
                 "schema": {
@@ -688,7 +715,7 @@
                 },
                 "example": {
                   "message": "Error occurred: newMessage Internal Server Error",
-                  "internal_code": "unexpectedErrors"
+                  "internal_code": "proxy_error_express"
                 }
               }
             }
@@ -696,18 +723,18 @@
         }
       }
     },
-    "/newImage":{
+    "/newImage": {
       "post": {
         "tags": [
-          "send new image"
+          "Messages"
         ],
-        "description": "Send new message",
-        "operationId": "newImage",
+        "description": "Proxies the request to the dynamic data server (Express) to send a new image message.",
+        "operationId": "sendExpressImage",
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/messagesSchema"
+                "$ref": "#/components/schemas/ExpressImageInput"
               }
             }
           },
@@ -715,7 +742,7 @@
         },
         "responses": {
           "200": {
-            "description": "Correct input of new Discussion",
+            "description": "Image successfully sent (response from Express).",
             "content": {
               "application/json": {
                 "schema": {}
@@ -723,7 +750,7 @@
             }
           },
           "500": {
-            "description": "Internal Server Error - Unexpected error occurred",
+            "description": "Internal Server Error - Error in Main Server or the Express server.",
             "content": {
               "application/json": {
                 "schema": {
@@ -731,7 +758,7 @@
                 },
                 "example": {
                   "message": "Error occurred: newImage Internal Server Error",
-                  "internal_code": "unexpectedErrors"
+                  "internal_code": "proxy_error_express"
                 }
               }
             }
@@ -742,7 +769,7 @@
   },
   "components": {
     "schemas": {
-      "Review": {
+      "ExpressReview": {
         "type": "object",
         "properties": {
           "id": {
@@ -788,7 +815,7 @@
           }
         }
       },
-      "TopRatedMovie": {
+      "SpringBootTopRatedMovie": {
         "type": "object",
         "properties": {
           "id": {
@@ -810,7 +837,7 @@
           }
         }
       },
-      "topMovieByGenre": {
+      "SpringBootTopMovieByGenre": {
         "type": "object",
         "properties": {
           "id": {
@@ -827,7 +854,7 @@
           }
         }
       },
-      "topMovieByName": {
+      "SpringBootTopMovieByName": {
         "type": "object",
         "properties": {
           "id": {
@@ -849,7 +876,7 @@
           }
         }
       },
-      "genreName": {
+      "SpringBootGenreName": {
         "type": "object",
         "properties": {
           "name": {
@@ -858,20 +885,7 @@
           }
         }
       },
-      "newDiscussion": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "description": "Random id of Chatroom"
-          },
-          "name": {
-            "type": "string",
-            "description": "name of chatroom"
-          }
-        }
-      },
-      "discussionSchema":{
+      "ExpressDiscussion": {
         "type": "object",
         "properties": {
           "id": {
@@ -881,31 +895,111 @@
             "type": "string"
           },
           "messages": {
-            "$ref": "#/components/schemas/messagesSchema"
+            "$ref": "#/components/schemas/ExpressMessage"
           }
         }
       },
-      "messagesSchema":{
+      "ExpressDiscussionInput": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "movie": {
+            "$ref": "#/components/schemas/ExpressMovie"
+          }
+        }
+      },
+      "ExpressMessage": {
+        "type": "object",
         "properties": {
           "sender": {
             "type": "string",
-            "description": "sender of message"
+            "description": "Sender's username of the new message"
           },
           "message": {
             "type": "string",
-            "description": "body of message"
+            "description": "Text of the new message"
           },
           "image": {
             "type": "string",
-            "description": "image if sent"
+            "description": "Image if specified"
+          },
+          "id_room": {
+            "type": "string",
+            "description": "Room's id in which user wants to send the new message/image"
           },
           "time_stamp": {
             "type": "string",
             "format": "date-time",
-            "description": "time when message was sent"
+            "description": "Timestamp of the new message"
           }
         }
-
+      },
+      "ExpressMessageInput": {
+        "type": "object",
+        "properties": {
+          "sender": {
+            "type": "string",
+            "description": "Sender's username"
+          },
+          "message": {
+            "type": "string",
+            "description": "Text content of the message"
+          },
+          "id_room": {
+            "type": "string",
+            "description": "Identifier of the discussion room"
+          }
+        },
+        "required": [
+          "sender",
+          "message",
+          "id_room"
+        ]
+      },
+      "ExpressImageInput": {
+        "type": "object",
+        "properties": {
+          "sender": {
+            "type": "string",
+            "description": "Sender's username"
+          },
+          "image": {
+            "type": "string",
+            "description": "URL or data of the image/video"
+          },
+          "id_room": {
+            "type": "string",
+            "description": "Identifier of the discussion room"
+          }
+        },
+        "required": [
+          "sender",
+          "image",
+          "id_room"
+        ]
+      },
+      "ExpressMovie": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique identifier of the movie."
+          },
+          "name": {
+            "type": "string",
+            "description": "Title of the movie."
+          },
+          "year": {
+            "type": "integer",
+            "description": "Year the movie was released."
+          },
+          "poster": {
+            "type": "string",
+            "description": "URL of the movie's poster image."
+          }
+        }
       }
     }
   }
