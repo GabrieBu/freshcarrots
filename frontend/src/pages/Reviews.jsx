@@ -190,7 +190,6 @@ function Reviews() {
         {reviews?.map((review, index) => {
           return (
             <Review
-              ref={index === reviews.length - 1 ? ref : null}
               review={review}
               key={index}
             />

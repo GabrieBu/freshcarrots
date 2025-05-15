@@ -1,117 +1,39 @@
 
 import axios from "axios";
-import {lazy, useEffect, useState} from "react";
+import {useEffect, useState} from "react";
 import useDiscussions from "../hooks/useDiscussions.js";
 import Searchbar from "./Searchbar.jsx";
 import SearchCardCommunity from "./SearchCardCommunity.jsx";
 import DiscussionItem from "./DiscussionItem.jsx";
-import {useInView} from "react-intersection-observer";
+import {useNavigate} from "react-router-dom";
+import UserModal from "./UserModal.jsx";
 
-const Loader = lazy(() => import("../ui/Loader"));
 
 function DiscussionList() {
-    const [followedDiscussions, setFollowedDiscussions] = useState([]);
     const [username, setUsername] = useState("");
     const [newTitle, setNewTitle] = useState("");
     const [showCreateDiscussion, setShowCreateDiscussion] = useState(false);
     const [errorCreate, setErrorCreate] = useState(false);
-    const [errorModal, setErrorModal] = useState(false);
     const [selectedMovie, setSelectedMovie] = useState();
-    const [pageNumber, setPageNumber] = useState(1);
-    const [sortByDate, setSortByDate] = useState("desc");
-    const [movieQuery, setMovieQuery] = useState("");
-    const [debouncedMovieQuery, setDebouncedMovieQuery] = useState("");
+    const [movieQuery, setMovieQuery] = useState(() => {
+        return localStorage.getItem("movieQuery") || "";
+    });
+    const [sortByDate, setSortByDate] = useState(() => {
+        return localStorage.getItem("sortByDate") || "desc";
+    });
 
-    const { discussions, setDiscussions, error, loading, hasMore } = useDiscussions(pageNumber, debouncedMovieQuery, sortByDate);
+    const navigate = useNavigate();
 
-    const { ref, inView } = useInView({});
-
-    // when more reviews are available, retrigger the query with the next page of reviews (50 revs)
-    useEffect(() => {
-        if (inView && hasMore) {
-            console.log("in view")
-            setPageNumber((pageNumber) => pageNumber + 1); //increase page
-        }
-    }, [inView, hasMore]);
+    const { discussions, error, loading } = useDiscussions(movieQuery, sortByDate);
 
     useEffect(() => {
-        const handler = setTimeout(() => {
-            setDebouncedMovieQuery(movieQuery);
-            setPageNumber(1); // Reset to first page on new search
-        }, 500);
-
-        return () => clearTimeout(handler);
+        localStorage.setItem("movieQuery", movieQuery);
     }, [movieQuery]);
 
     useEffect(() => {
-        /* initialize username retrieving from local storage */
-        const user = JSON.parse(localStorage.getItem("username")) || "";
-        if (user) {
-            setUsername(user);
-        } else {
-            //if not present ask the user to insert it
-            const modalElement = document.getElementById("modalUsername");
-            const modal = new window.bootstrap.Modal(modalElement);
-            modal.show(); //show the bootstrap modal
-            return;
-        }
-        //retrieve past followed discussion from the localstorage, if present
-        const storedDiscussions = JSON.parse(localStorage.getItem("followedDiscussions")) || [];
-        setFollowedDiscussions(storedDiscussions);
-    }, []);
+        localStorage.setItem("sortByDate", sortByDate);
+    }, [sortByDate]);
 
-    // submiut username in the modal, store in useState
-    function handleSubmitModal() {
-        if(username!== "") {
-            localStorage.setItem("username", JSON.stringify(username));
-            const modalElement = document.getElementById("modalUsername");
-            const modal = window.bootstrap.Modal.getInstance(modalElement)
-            modal.hide();
-
-            document.querySelectorAll(".modal-backdrop").forEach((el) => el.remove());
-        }
-        else{
-            setErrorModal(true);
-        }
-    }
-
-    //it updates followed discussion, useState and localStorage (for future retrieves)
-    const handleFollow = (id, title) => {
-        if (!followedDiscussions.some((d) => d.id === id)) {
-            const fullDiscussion = discussions?.find((d) => d.id === id);
-
-            const updatedFollowed = [  //set to local storage
-                ...followedDiscussions,
-                {
-                    id,
-                    title,
-                    movie: fullDiscussion?.movie || null  // store movie info if available
-                }
-            ];
-
-            setFollowedDiscussions(updatedFollowed);
-            localStorage.setItem("followedDiscussions", JSON.stringify(updatedFollowed)); // persist in local storage
-
-            setDiscussions((prevDiscussions) => prevDiscussions.filter((d) => d.id !== id));
-        }
-    };
-
-    const handleUnfollow = (id, title) => {
-        const unfollowed = followedDiscussions.find((d) => d.id === id); //save all discussion instead of the new unfollowed
-        const updatedFollowed = followedDiscussions.filter((d) => d.id !== id);
-
-        setFollowedDiscussions(updatedFollowed);
-        localStorage.setItem("followedDiscussions", JSON.stringify(updatedFollowed)); //update (remove) followed discussion
-
-        setDiscussions((prevDiscussions) => [
-            ...prevDiscussions.filter((d) => d.id !== id), // remove if already present
-            {
-                id,
-                title,
-                movie: unfollowed?.movie || null  //update local state
-            }
-        ]);
-    };
 
     function handleCreateDiscussion() {
         if (newTitle.trim() === "") return;
@@ -127,41 +49,20 @@ function DiscussionList() {
             .post("http://localhost:3000/newDiscussion", newDiscussion)
             .then(() => {
                 //discussion stored, update local state
-                setDiscussions((prevDiscussions) => [...prevDiscussions, newDiscussion]); //update local state
                 setNewTitle("");
                 setSelectedMovie(null);
+                navigate(`/discussion/${newDiscussion.id}`);
             })
             .catch(() => setErrorCreate(true));
     }
 
-    const filteredDiscussions = discussions?.filter(
-        (d) => !followedDiscussions.some((fd) => fd.id === d.id) //split followed discussion from not followed
-    );
+    function handleFollow(id, title) {
+
+    }
 
     return (
-        <>
-            <div id="modalUsername" className="modal fade" tabIndex="-1">
-                <div className="modal-dialog modal-sm">
-                    <div className="modal-content">
-                        <div className="modal-header">
-                            <h5 className="modal-title">Enter a username to discuss among members.</h5>
-                        </div>
-                        <div className="modal-body">
-                            {errorModal && <h6 className="text-danger">Username is required</h6>}
-                            <input
-                                type="text"
-                                className="form-control"
-                                placeholder="Type..."
-                                value={username}
-                                onChange={(e) => setUsername(e.target.value)}
-                            />
-                        </div>
-                        <div className="modal-footer">
-                            <button className="btn btn-primary" onClick={handleSubmitModal}>Submit</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <div style={{minHeight: '100vh', display: 'flex', flexDirection: 'column'}}>
+            <UserModal username={username} onSetUsername={setUsername}/>
 
             {errorCreate && <h2 className="text-danger">Error creating new discussion. Try again later!</h2>}
             {showCreateDiscussion && (
@@ -293,9 +194,7 @@ function DiscussionList() {
                             className="btn btn-outline-secondary w-100"
                             onClick={() => {
                                 setMovieQuery("");
-                                setDebouncedMovieQuery("");
                                 setSortByDate("desc");
-                                setPageNumber(1);
                             }}
                         >
                             Reset Filters
@@ -304,40 +203,16 @@ function DiscussionList() {
                 </div>
             </div>
 
-            <div className="container mt-4">
-                {!loading && followedDiscussions?.length > 0 &&
-                    <>
-                        <h2>❤️ Followed discussions [{followedDiscussions?.length}]</h2>
-                        {followedDiscussions.map((discussion) => {
-                            const poster = discussion?.movie?.poster;
-
-                            return (
-                            <DiscussionItem
-                                key={discussion.id}
-                                id={discussion.id}
-                                title={discussion.title}
-                                movie={discussion?.movie}
-                                joined={true}
-                                onClick={() => handleUnfollow(discussion.id, discussion.title)}
-                                buttonLabel="Unfollow Discussion"
-                                buttonVariant="danger"
-                                createdAt={discussion?.date}
-                            />
-                            );
-                        })}
-                    </>}
-
-                {error && <h2 className="text-danger">Could not load past discussions.</h2>}
-                {!loading ? (
-                    <>
-                        <hr className="my-4 border-top border-secondary opacity-25"/>
-                        <h2>Discussions</h2>
-                        {filteredDiscussions.map((discussion, index) => {
-                            const isLast = index === filteredDiscussions.length - 1;
-
-                            return (
+            {error && <h2 className="text-danger">Could not load past discussions.</h2>}
+            {!loading && (
+                <>
+                    <hr className="my-4 border-top border-secondary opacity-25"/>
+                    <h2>Discussions [{discussions?.length > 0 && discussions?.length}]</h2>
+                    {discussions?.length > 0 ? discussions.map((discussion, index) => {
+                        return (
+                            <>
                                 <DiscussionItem
-                                    key={discussion.id}
+                                    key={index}
                                     id={discussion.id}
                                     title={discussion.title}
                                     movie={discussion?.movie}
@@ -345,15 +220,13 @@ function DiscussionList() {
                                     buttonLabel="Follow Discussion"
                                     createdAt={discussion?.date}
                                 />
-                            );
-                        })}
-                    </>
-                ) : (
-                    <Loader/>
-                )}
-            </div>
-            <div ref={ref}></div>
-        </>
-);
+                            </>
+                        );
+                    }) : <h4 className="text-primary text-center">No discussion found</h4>}
+                </>
+            )}
+        </div>
+    );
 }
+
 export default DiscussionList;

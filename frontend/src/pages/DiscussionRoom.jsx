@@ -38,20 +38,13 @@ function DiscussionRoom() {
     const [uploading, setUploading] = useState(false);
     const [pageNumber, setPageNumber] = useState(0);
     const [hasMore, setHasMore] = useState(false);
-    const [readyForScroll, setReadyForScroll] = useState(false);
+    const [showReadMore, setShowReadMore] = useState(true);
+    const [movie, setMovie] = useState(null);
 
     const fileInputRef = useRef(null);
     const canvasRef = useRef(null);
     const selectedFileRef = useRef(null);
     const chatContainerRef = useRef(null);
-
-    const { ref, inView } = useInView({});
-
-    useEffect(() => {
-        if (inView && hasMore && readyForScroll) {
-            setPageNumber((prev) => prev + 1);
-        }
-    }, [inView, hasMore, readyForScroll]);
 
     useEffect(() => {
         async function fetchMessages() {
@@ -67,10 +60,12 @@ function DiscussionRoom() {
                     const newMessages = res.data.messages.filter(
                         (msg) => !messageSet.has(msg.time_stamp)
                     );
-                    return [...newMessages, ...prevMessages]; // prepend for top-down paging
+                    const orderedNewMessages = newMessages.reverse();
+                    return [...orderedNewMessages, ...prevMessages]; // prepend for top-down paging
                 });
 
                 setTitle(res.data.title);
+                setMovie(res.data.movie);
                 setHasMore(res.data.hasMore);
             } catch (err) {
                 console.error("Error fetching messages:", err);
@@ -90,7 +85,6 @@ function DiscussionRoom() {
                 ...prev,
                 { sender: senderUsername, message: chatText, time_stamp },
             ]);
-            scrollToBottom();
         });
 
         socket.on("image", (room, senderUsername, image, time_stamp) => {
@@ -98,7 +92,6 @@ function DiscussionRoom() {
                 ...prev,
                 { sender: senderUsername, image, time_stamp },
             ]);
-            scrollToBottom();
         });
 
         return () => {
@@ -106,28 +99,6 @@ function DiscussionRoom() {
             socket.off("image");
         };
     }, [id_room, username]);
-
-    useEffect(() => {
-        // Scroll to bottom on initial load
-        const timeout = setTimeout(() => {
-            scrollToBottom();
-        }, 500);
-        return () => clearTimeout(timeout);
-    }, []);
-
-    const scrollToBottom = () => {
-        if (chatContainerRef.current) {
-            chatContainerRef.current.scrollTo({
-                top: chatContainerRef.current.scrollHeight,
-                behavior: "auto", // instant scroll
-            });
-
-            // delay enabling scroll trigger to prevent first inView fire
-            setTimeout(() => {
-                setReadyForScroll(true);
-            }, 300);
-        }
-    };
 
     const handleSend = async () => {
         if (newMessage.trim() === "" && !selectedFileRef.current) return;
@@ -180,7 +151,6 @@ function DiscussionRoom() {
         setNewMessage("");
         selectedFileRef.current = null;
         fileInputRef.current.value = null;
-        scrollToBottom();
     };
 
     const handleKeyPress = (e) => {
@@ -221,6 +191,15 @@ function DiscussionRoom() {
         });
     };
 
+    function handleReadMore() {
+        if(hasMore) {
+            setPageNumber(prev => prev + 1)
+        }
+        else{
+            setShowReadMore(false)
+        }
+    }
+
     return (
         <div className="container-fluid vh-100 d-flex flex-column bg-light">
             <div className="d-flex justify-content-between align-items-center p-3 bg-white border-bottom shadow-sm">
@@ -230,60 +209,65 @@ function DiscussionRoom() {
                 >
                     ← Back
                 </button>
-                <h4 className="m-0 text-primary">{title}</h4>
-                <div style={{ width: "42px" }}></div> {/* Spacer */}
+                <h4 className="m-0">{title} {movie?.name && <span className="badge text-bg-primary">{movie.name}</span>}{" "}{movie?.year && <span className="badge text-bg-secondary">{movie.year}</span>}</h4>
+                <div style={{ width: "42px" }}></div>
             </div>
 
             {error && (
-                <div className="alert alert-danger text-center">
-                    Error loading messages from database!
+                <div className="text-center">
+                    <h2 className="text-danger">Error loading messages from database!</h2>
                 </div>
             )}
 
             <div
                 className="flex-grow-1 overflow-auto px-3 py-2"
                 ref={chatContainerRef}
-                style={{ backgroundColor: "#f8f9fa", borderTop: "1px solid #dee2e6" }}
+                style={{backgroundColor: "#f8f9fa", borderTop: "1px solid #dee2e6"}}
             >
-                {loading && <Loader />}
-                {messages.map((msg, index) => (
-                    <div
-                        key={index}
-                        ref={index === 0 ? ref : null}
-                        className={`d-flex mb-3 ${
-                            msg.sender === username ? "justify-content-end" : "justify-content-start"
-                        }`}
-                    >
-                        <div
-                            className={`p-3 shadow-sm rounded-4 ${
-                                msg.sender === username ? "bg-primary text-white" : "bg-white"
-                            }`}
-                            style={{ maxWidth: "75%", position: "relative" }}
-                        >
-                            {msg.sender !== username && (
-                                <div className="fw-bold mb-1">{msg.sender}</div>
-                            )}
-                            {msg?.image && (
-                                <img
-                                    src={msg?.image}
-                                    alt="Attachment"
-                                    className="img-fluid rounded mb-2"
-                                    style={{ maxWidth: "100%", borderRadius: "12px" }}
-                                />
-                            )}
-                            {msg?.message && (
-                                <div className="mb-1">{msg?.message}</div>
-                            )}
+                {loading ? <Loader/> : (
+                    <>
+                        {showReadMore && hasMore && <div className="d-flex justify-content-center">
+                            <button className="btn btn-outline-secondary mb-4" onClick={handleReadMore}>Read More</button>
+                        </div>}
+                        {messages.map((msg, index) => (
                             <div
-                                className={`small text-end ${
-                                    msg.sender === username ? "text-light" : "text-muted"
+                                key={index}
+                                className={`d-flex mb-3 ${
+                                    msg.sender === username ? "justify-content-end" : "justify-content-start"
                                 }`}
                             >
-                                {formatTimestamp(msg?.time_stamp)}
+                                <div
+                                    className={`p-3 shadow-sm rounded-4 ${
+                                        msg.sender === username ? "bg-primary text-white" : "bg-white"
+                                    }`}
+                                    style={{maxWidth: "75%", position: "relative"}}
+                                >
+                                    {msg.sender !== username && (
+                                        <div className="fw-bold mb-1">{msg.sender}</div>
+                                    )}
+                                    {msg?.image && (
+                                        <img
+                                            src={msg?.image}
+                                            alt="Attachment"
+                                            className="img-fluid rounded mb-2"
+                                            style={{maxWidth: "100%", borderRadius: "12px"}}
+                                        />
+                                    )}
+                                    {msg?.message && (
+                                        <div className="mb-1">{msg?.message}</div>
+                                    )}
+                                    <div
+                                        className={`small text-end ${
+                                            msg.sender === username ? "text-light" : "text-muted"
+                                        }`}
+                                    >
+                                        {formatTimestamp(msg?.time_stamp)}
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                    </div>
-                ))}
+                        ))}
+                    </>
+                )}
             </div>
 
             <div className="input-group p-3 border-top bg-white shadow-sm">
@@ -294,7 +278,7 @@ function DiscussionRoom() {
                     value={newMessage}
                     onChange={(e) => setNewMessage(e.target.value)}
                     onKeyDown={handleKeyPress}
-                    style={{ marginRight: "0.5rem" }}
+                    style={{marginRight: "0.5rem"}}
                 />
                 <input
                     type="file"
@@ -309,7 +293,7 @@ function DiscussionRoom() {
                     className="image-upload-button me-2"
                     title="Attach an image"
                     style={{
-                        border: selectedFileRef.current ? "3px solid #28a745" : "3px solid transparent",
+                        border: selectedFileRef.current ? "3px solid #70c458" : "3px solid transparent",
                         borderRadius: "50%",
                         width: "64px",
                         height: "64px",
@@ -323,7 +307,7 @@ function DiscussionRoom() {
                     }}
                 >
                     <img
-                        src="./../../public/icons8-image-64.png"
+                        src="/icons8-image-64.png"
                         alt="Upload"
                         style={{
                             width: "40px",
