@@ -11,7 +11,14 @@ router.get('/getReviews', async function(req, res, next) {
 
     res.json(response.data);
   } catch (error) {
-    res.status(500).send('Error occured: getReviews ' + error.message);
+    if (error.response) {
+      //downstream the error to the frontend
+      const message = error.response.data?.error || error.response.data?.error_message || 'Downstream error';
+      res.status(error.response.status).json({ error_message: message });
+    } else {
+      // unexpected error
+      res.status(500).json({ error_message: 'Dispatcher error: ' + error.message });
+    }
   }
 });
 
@@ -21,7 +28,14 @@ router.get('/getTopFiveMovies', async function(req, res, next) {
     const response = await axios.get('http://localhost:3002/movies/getTopFiveMovies');
     res.json(response.data);
   } catch (error) {
-    res.status(500).send('Error occured: getTopFiveMovies ' + error.message);
+    if (error.response) {
+      //downstream the error to the frontend
+      const message = error.response.data?.error || error.response.data?.error_message || 'Downstream error';
+      res.status(error.response.status).json({ error_message: message });
+    } else {
+      // unexpected error
+      res.status(500).json({ error_message: 'Dispatcher error: ' + error.message });
+    }
   }
 });
 
@@ -31,7 +45,14 @@ router.post('/newDiscussion', async function(req, res, next) {
     await axios.post('http://localhost:3001/newDiscussion', req.body);
     res.status(200).json({ message: "Discussion created!"});
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    if (error.response) {
+      //downstream the error to the frontend
+      const message = error.response.data?.error || error.response.data?.error_message || 'Downstream error';
+      res.status(error.response.status).json({ error_message: message });
+    } else {
+      // unexpected error
+      res.status(500).json({ error_message: 'Dispatcher error: ' + error.message });
+    }
   }
 });
 
@@ -41,10 +62,17 @@ router.get('/getDiscussions', async function(req, res, next) {
   try {
     const response = await axios.get('http://localhost:3001/getDiscussions', {
       params: req.query // Pass all query parameters dynamically
-    }); // Pass all query parameters dynamically);
+    });
     res.json(response.data);
   } catch (error) {
-    res.status(500).send('Error occured: getDiscussions ' + error.message);
+    if (error.response) {
+      //downstream the error to the frontend
+      const message = error.response.data?.error || error.response.data?.error_message || 'Downstream error';
+      res.status(error.response.status).json({ error_message: message });
+    } else {
+      // unexpected error
+      res.status(500).json({ error_message: 'Dispatcher error: ' + error.message });
+    }
   }
 });
 
@@ -55,7 +83,14 @@ router.get('/getMessages', async function(req, res, next) {
     });
     res.json(response.data);
   } catch (error) {
-    res.status(500).send('Error occured: getMessages ' + error.message);
+    if (error.response) {
+      //downstream the error to the frontend
+      const message = error.response.data?.error || error.response.data?.error_message || 'Downstream error';
+      res.status(error.response.status).json({ error_message: message });
+    } else {
+      // unexpected error
+      res.status(500).json({ error_message: 'Dispatcher error: ' + error.message });
+    }
   }
 });
 
@@ -64,7 +99,14 @@ router.post('/newMessage', async function(req, res, next) {
     const response = await axios.post('http://localhost:3001/newMessage', req.body);
     res.json(response.data);
   } catch (error) {
-    res.status(500).send('Error occured: newImage ' + error.message);
+    if (error.response) {
+      //downstream the error to the frontend
+      const message = error.response.data?.error || error.response.data?.error_message || 'Downstream error';
+      res.status(error.response.status).json({ error_message: message });
+    } else {
+      // unexpected error
+      res.status(500).json({ error_message: 'Dispatcher error: ' + error.message });
+    }
   }
 });
 
@@ -74,7 +116,14 @@ router.post('/newImage', async function(req, res, next) {
     const response = await axios.post('http://localhost:3001/newImage', req.body);
     res.json(response.data);
   } catch (error) {
-    res.status(500).send('Error occured: newMessage ' + error.message);
+    if (error.response) {
+      //downstream the error to the frontend
+      const message = error.response.data?.error || error.response.data?.error_message || 'Downstream error';
+      res.status(error.response.status).json({ error_message: message });
+    } else {
+      // unexpected error
+      res.status(500).json({ error_message: 'Dispatcher error: ' + error.message });
+    }
   }
 });
 
@@ -87,7 +136,14 @@ router.get('/topRated', async function(req, res, next) {
     console.log("response: " + JSON.stringify(response.data));
     res.json(response.data);
   } catch (error) {
-    res.status(500).send('Error occured: newMessage ' + error.message);
+    if (error.response) {
+      //downstream the error to the frontend
+      const message = error.response.data?.error || error.response.data?.error_message || 'Downstream error';
+      res.status(error.response.status).json({ error_message: message });
+    } else {
+      // unexpected error
+      res.status(500).json({ error_message: 'Dispatcher error: ' + error.message });
+    }
   }
 });
 
@@ -100,7 +156,14 @@ router.get('/getMovieById', async function(req, res, next) {
     console.log("response: " + JSON.stringify(response.data));
     res.json(response.data);
   } catch (error) {
-    res.status(500).send('Error occured: newMessage ' + error.message);
+    if (error.response) {
+      //downstream the error to the frontend
+      const message = error.response.data?.error || error.response.data?.error_message || 'Downstream error';
+      res.status(error.response.status).json({ error_message: message });
+    } else {
+      // unexpected error
+      res.status(500).json({ error_message: 'Dispatcher error: ' + error.message });
+    }
   }
 });
 
@@ -113,7 +176,14 @@ router.get('/getMovieByName', async function(req, res, next) {
     console.log("response: " + JSON.stringify(response.data));
     res.json(response.data);
   } catch (error) {
-    res.status(500).send('Error occured: newMessage ' + error.message);
+    if (error.response) {
+      //downstream the error to the frontend
+      const message = error.response.data?.error || error.response.data?.error_message || 'Downstream error';
+      res.status(error.response.status).json({ error_message: message });
+    } else {
+      // unexpected error
+      res.status(500).json({ error_message: 'Dispatcher error: ' + error.message });
+    }
   }
 });
 
@@ -124,7 +194,14 @@ router.get('/ageMin', async function(req, res, next) {
     });
     res.json(response.data);
   } catch (error) {
-    res.status(500).send('Error occured: ageMin ' + error.message);
+    if (error.response) {
+      //downstream the error to the frontend
+      const message = error.response.data?.error || error.response.data?.error_message || 'Downstream error';
+      res.status(error.response.status).json({ error_message: message });
+    } else {
+      // unexpected error
+      res.status(500).json({ error_message: 'Dispatcher error: ' + error.message });
+    }
   }
 });
 
@@ -133,7 +210,14 @@ router.get('/getWorldwideMovies', async function(req, res, next) {
     const response = await axios.get('http://localhost:3002/movies/getWorldwideMovies')
     res.json(response.data);
   } catch (error) {
-    res.status(500).send('Error occured: /getCultLanguage ' + error.message);
+    if (error.response) {
+      //downstream the error to the frontend
+      const message = error.response.data?.error || error.response.data?.error_message || 'Downstream error';
+      res.status(error.response.status).json({ error_message: message });
+    } else {
+      // unexpected error
+      res.status(500).json({ error_message: 'Dispatcher error: ' + error.message });
+    }
   }
 });
 
@@ -144,7 +228,14 @@ router.get('/getCultLanguage', async function(req, res, next) {
     });
     res.json(response.data);
   } catch (error) {
-    res.status(500).send('Error occured: /getCultLanguage ' + error.message);
+    if (error.response) {
+      //downstream the error to the frontend
+      const message = error.response.data?.error || error.response.data?.error_message || 'Downstream error';
+      res.status(error.response.status).json({ error_message: message });
+    } else {
+      // unexpected error
+      res.status(500).json({ error_message: 'Dispatcher error: ' + error.message });
+    }
   }
 });
 
@@ -155,7 +246,14 @@ router.get('/getFilteredMovies', async function(req, res, next) {
     });
     res.json(response.data.content);
   } catch (error) {
-    res.status(500).send('Error occured: /getFiltered ' + error.message);
+    if (error.response) {
+      //downstream the error to the frontend
+      const message = error.response.data?.error || error.response.data?.error_message || 'Downstream error';
+      res.status(error.response.status).json({ error_message: message });
+    } else {
+      // unexpected error
+      res.status(500).json({ error_message: 'Dispatcher error: ' + error.message });
+    }
   }
 });
 
@@ -166,7 +264,14 @@ router.get('/getGenres', async function(req, res, next) {
     });
     res.json(response.data);
   } catch (error) {
-    res.status(500).send('Error occured: /getGenres ' + error.message);
+    if (error.response) {
+      //downstream the error to the frontend
+      const message = error.response.data?.error || error.response.data?.error_message || 'Downstream error';
+      res.status(error.response.status).json({ error_message: message });
+    } else {
+      // unexpected error
+      res.status(500).json({ error_message: 'Dispatcher error: ' + error.message });
+    }
   }
 });
 
