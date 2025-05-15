@@ -2,8 +2,12 @@ import Discussion from "../models/Discussion.js";
 
 export const newDiscussion = async (req, res) => {
     try {
-        console.log(req.body);
         const { title, id, movie } = req.body;
+
+        if(!title || !id || !movie) {
+            res.status(400).json({ error_message: "Missing parameters" });
+        }
+
         const newDiscussion = new Discussion({ title, id, movie });
         await newDiscussion.save();
         res.status(200).json();
@@ -12,50 +16,27 @@ export const newDiscussion = async (req, res) => {
     }
 };
 
-/*export const getDiscussions = async (req, res) => {
-    try {
-        const discussions = await Discussion.find({})
-        res.json(discussions);
-    } catch (error) {
-        res.json({ error: error.message });
-    }
-};*/
-
 export const getDiscussions = async (req, res) => {
-    const { movieFilter = "", page = 1, sortByDate = "" } = req.query;
-    const pageSize = 10; //page size of 10
-    const skip = (page - 1) * pageSize;
+    const {movieQuery, sortByDate = 'asc'} = req.query
+    const filters = {}
+    const sort={}
 
-    console.log(req.query)
-
-    const matchStage = {};
-
-    if (movieFilter.trim() !== "") {
-        matchStage["movie.name"] = { $regex: movieFilter}; // to handle better, this is 1:1 match case
+    if(movieQuery && movieQuery !== "")
+    {
+        filters.$or = [
+            { 'movie.name': movieQuery }, // 1:1 match
+            { 'movie.name': { $regex: `^${movieQuery}`, $options: 'i' } }, // Starts with (case-insensitive)
+            { 'movie.name': { $regex: movieQuery, $options: 'i' } } // Contained within (case-insensitive)
+        ];
     }
 
-    try {
-        const pipeline = [
-            { $match: matchStage },
-            {
-                $addFields: {
-                    messageCount: { $size: "$messages" }
-                }
-            },
-            {
-                $sort:
-                    sortByDate === "asc"
-                        ? { date: 1 }
-                        : sortByDate === "desc"
-                            ? { date: -1 }
-                            : { messageCount: -1 } // fallback
-            },
-            { $skip: skip },
-            { $limit: pageSize }
-        ];
+    if (sortByDate) {
+        sort.date = sortByDate === 'asc' ? 1 : -1; // 1 for ascending, -1 for descending
+    }
 
-        const discussions = await Discussion.aggregate(pipeline);
-        console.log(discussions)
+    console.log(filters);
+    try{
+        const discussions = await Discussion.find(filters).sort(sort);
         res.json(discussions);
     } catch (error) {
         res.status(500).json({ error: error.message });
@@ -66,28 +47,29 @@ export const getDiscussions = async (req, res) => {
 
 export const getMessages = async (req, res) => {
     try {
+        const pageSize = 50;
         const { id_room, page} = req.query;
-        console.log(id_room, page)
 
-        if (!id_room) {
-            return res.status(400).json({ error: "Room ID is required" });
+        if (!id_room || !page) {
+            return res.status(400).json({ error_message: "Missing parameters" });
         }
 
         //calculate offset and limit to get only 50 messages time by time
-        const offsetNum = Number(page)*50;
-        const limitNum = Number(page + 1) * 50; //slice will exclude last index
+        const offsetNum = Number(page)*pageSize;
+        const limitNum = Number(page + 1) * pageSize; //slice will exclude last index
         console.log("offsetNum e limitNum", offsetNum, limitNum);
 
         const discussion = await Discussion.findOne(
             { id: id_room },
             { messages: { $slice: [offsetNum, limitNum] } } // Only fetch requested messages
         );
-        const moreMessages = discussion?.messages?.length > 0;
+
+        const moreMessages = discussion?.messages?.length === pageSize;
 
         if (!discussion) {
             return res.status(404).json({ error: "Discussion not found" });
         }
-        res.json({ title: discussion.title, messages: discussion.messages, hasMore: moreMessages});
+        res.json({ title: discussion?.title, movie: discussion?.movie, messages: discussion?.messages, hasMore: moreMessages});
     } catch (error) {
         res.json({ error_message: error.message });
     }
@@ -107,7 +89,7 @@ export const newMessage = async (req, res) => {
             return res.status(404).json({ error: "Discussion not found" });
         }
 
-        discussion.messages.push({ sender, message, time_stamp });
+        discussion.messages.unshift({ sender, message, time_stamp }); //appends to the start of the array
         await discussion.save();
         res.status(200).json();
     } catch (error) {
@@ -129,7 +111,7 @@ export const newImage = async (req, res) => {
             return res.status(404).json({ error: "Discussion not found" });
         }
 
-        discussion.messages.push({ sender, image, time_stamp });
+        discussion.messages.unshift({ sender, image, time_stamp }); //appends to the start of the array
         await discussion.save();
         res.status(200).json();
     } catch (error) {
