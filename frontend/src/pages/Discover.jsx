@@ -188,28 +188,35 @@ function Discover() {
               <h2 className="text-danger">Error loading movies</h2>
             )}
             {Array.isArray(movies) && movies.map((movie, index) => (
-              <div
-                key={index}
-                className="col"
-                ref={index === movies.length - 1 ? ref : null}
-              >
-                <Link to={`/movie/${movie?.id}`}>
-                  <div className="movie-card-movies">
-                    <img src={movie?.link} alt={movie?.name} />
-                    <p>{movie?.name}</p>
-                  </div>
-                </Link>
-              </div>
+                <div
+                    key={index}
+                    className="col"
+                    ref={index === movies.length - 1 ? ref : null}
+                >
+                  <Link to={`/movie/${movie?.id}`}>
+                    <div className="movie-card-movies relative">
+                      {/* Date badge */}
+                      {movie?.date && <span className="badge bg-light mb-2 text-dark">{movie?.date}</span>}
+
+                      <img src={movie?.link} alt={movie?.name}/>
+
+                      {/* Movie name */}
+                      <p className="mt-2 text-sm font-medium text-center text-gray-800 truncate">
+                        {movie?.name}
+                      </p>
+                    </div>
+                  </Link>
+                </div>
             ))}
             {loadingMovies && (
                 <div className="col-12 my-5">
-                  <Loader />
+                  <Loader/>
                 </div>
             )}
           </div>
         </div>
       </LayoutContent>
-      <Footer />
+      <Footer/>
     </>
   );
 }

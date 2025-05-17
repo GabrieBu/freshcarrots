@@ -147,8 +147,11 @@ function HeroSection({ ref }) {
                                                     style={{
                                                         fontSize: "1rem",
                                                         lineHeight: "1.5",
-                                                        maxHeight: "100%", // no cut-off
-                                                        overflowY: "auto", // scroll if needed
+                                                        display: "-webkit-box",
+                                                        WebkitLineClamp: 3,
+                                                        WebkitBoxOrient: "vertical",
+                                                        overflow: "hidden",
+                                                        textOverflow: "ellipsis",
                                                     }}
                                                 >
                                                     {movie?.description}
