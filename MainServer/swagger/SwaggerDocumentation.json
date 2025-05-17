@@ -47,19 +47,29 @@
             "in": "query",
             "name": "criticFilter",
             "schema": {
-              "type": "boolean"
+              "type": "string",
+              "enum": [
+                "all_critics",
+                "True",
+                "False"
+              ]
             },
             "required": false,
-            "description": "Filter reviews by either top critic or normal ones"
+            "description": "Filter reviews by Top Critic status (true for Top Critic reviews)."
           },
           {
             "in": "query",
             "name": "typeFilter",
             "schema": {
-              "type": "string"
+              "type": "string",
+              "enum": [
+                "all_types",
+                "Fresh",
+                "Rotten"
+              ]
             },
             "required": false,
-            "description": "Filter reviews by either f or normal ones"
+            "description": "Filter reviews by a specific type or category (fresh or rotten)"
           },
           {
             "in": "query",
@@ -69,7 +79,7 @@
               "format": "date"
             },
             "required": false,
-            "description": "Filter reviews by min Date."
+            "description": "Filter reviews published on or after this date (YYYY-MM-DD)."
           },
           {
             "in": "query",
@@ -79,7 +89,7 @@
               "format": "date"
             },
             "required": false,
-            "description": "Filter reviews by max Date."
+            "description": "Filter reviews published on or before this date (YYYY-MM-DD)."
           },
           {
             "in": "query",
@@ -88,7 +98,7 @@
               "type": "string"
             },
             "required": false,
-            "description": "Filter reviews by Movie Title."
+            "description": "Filter reviews where the movie title contains this string (case-insensitive)."
           },
           {
             "in": "query",
@@ -96,34 +106,33 @@
             "schema": {
               "type": "integer"
             },
-            "required": false,
-            "description": "Page number for pagination (passed to Express)."
+            "required": true,
+            "description": "Page number for pagination (results per page: 10)."
           }
         ],
         "responses": {
           "200": {
-            "description": "Successfully retrieved list of reviews (response from Express).",
+            "description": "A list of reviews retrieved successfully.",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/ExpressReview"
+                    "$ref": "#/components/schemas/reviewSchema"
                   }
                 }
               }
             }
           },
           "500": {
-            "description": "Internal Server Error - Error in Main Server or the Express server.",
+            "description": "Internal Server Error - An unexpected error occurred on the server.",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error"
+                  "$ref": "#/components/schemas/errorSchema"
                 },
                 "example": {
-                  "message": "Error occurred: getReviews Internal Server Error",
-                  "internal_code": "proxy_error_express"
+                  "error_message": "Internal Server Error: Failed to retrieve reviews."
                 }
               }
             }
@@ -157,11 +166,10 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error"
+                  "$ref": "#/components/schemas/errorSchema"
                 },
                 "example": {
-                  "message": "Error occurred: getTopFiveMovies Internal Server Error",
-                  "internal_code": "proxy_error_springboot"
+                  "error_message": "Downstream error from Springboot static server"
                 }
               }
             }
@@ -206,11 +214,10 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error"
+                  "$ref": "#/components/schemas/errorSchema"
                 },
                 "example": {
-                  "message": "Error occurred: topRated Internal Server Error",
-                  "internal_code": "proxy_error_springboot"
+                  "error_message": "Downstream error Springboot static server"
                 }
               }
             }
@@ -252,11 +259,10 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error"
+                  "$ref": "#/components/schemas/errorSchema"
                 },
                 "example": {
-                  "message": "Error occurred: getMovieById Internal Server Error",
-                  "internal_code": "proxy_error_springboot"
+                  "error_message": "Downstream error"
                 }
               }
             }
@@ -298,11 +304,10 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error"
+                  "$ref": "#/components/schemas/errorSchema"
                 },
                 "example": {
-                  "message": "Error occurred: getMovieByName Internal Server Error",
-                  "internal_code": "proxy_error_springboot"
+                  "error_message": "Error occurred: getMovieByName Internal Server Error"
                 }
               }
             }
@@ -336,7 +341,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/SpringBootTopRatedMovie"
+                    "$ref": "#/components/schemas/SpringBootAgeMin"
                   }
                 }
               }
@@ -347,11 +352,10 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error"
+                  "$ref": "#/components/schemas/errorSchema"
                 },
                 "example": {
-                  "message": "Error occurred: ageMin Internal Server Error",
-                  "internal_code": "proxy_error_springboot"
+                  "error_message": "Error occurred: ageMin Internal Server Error"
                 }
               }
             }
@@ -385,11 +389,10 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error"
+                  "$ref": "#/components/schemas/errorSchema"
                 },
                 "example": {
-                  "message": "Error occurred: ageMin Internal Server Error",
-                  "internal_code": "proxy_error_springboot"
+                  "error_message": "Error occurred: ageMin Internal Server Error"
                 }
               }
             }
@@ -412,7 +415,7 @@
               "type": "string"
             },
             "required": true,
-            "description": "User language (first 2 chars)"
+            "description": "User language (e.g. French, Italian)"
           }
         ],
         "responses": {
@@ -434,11 +437,10 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error"
+                  "$ref": "#/components/schemas/errorSchema"
                 },
                 "example": {
-                  "message": "Error occurred: ageMin Internal Server Error",
-                  "internal_code": "proxy_error_springboot"
+                  "error_message": "Error occurred: ageMin Internal Server Error"
                 }
               }
             }
@@ -467,10 +469,41 @@
             "in": "query",
             "name": "orderByName",
             "schema": {
+              "type": "string",
+              "enum": ["", "asc", "desc"]
+            },
+            "required": false,
+            "description": "Order movies by name ASC/DESC"
+          },
+          {
+            "in": "query",
+            "name": "byRating",
+            "schema": {
+              "type": "string",
+              "enum": ["","zeroToOne","oneToTwo", "twoToThree", "threeToFour", "fourToFive"]
+            },
+            "required": false,
+            "description": "Order movies by ranges of value rating"
+
+          },
+          {
+            "in": "query",
+            "name": "orderByDate",
+            "schema": {
+              "type": "string",
+              "enum": ["", "asc", "desc"]
+            },
+            "required": false,
+            "description": "Order movies by date ASC/DESC"
+          },
+          {
+            "in": "query",
+            "name": "genre",
+            "schema": {
               "type": "string"
             },
-            "required": true,
-            "description": "Order movies by name"
+            "required": false,
+            "description": "Genre name of the movie"
           }
         ],
         "responses": {
@@ -492,11 +525,10 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error"
+                  "$ref": "#/components/schemas/errorSchema"
                 },
                 "example": {
-                  "message": "Error occurred: ageMin Internal Server Error",
-                  "internal_code": "proxy_error_springboot"
+                  "error_message": "Error occurred: ageMin Internal Server Error"
                 }
               }
             }
@@ -530,11 +562,10 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error"
+                  "$ref": "#/components/schemas/errorSchema"
                 },
                 "example": {
-                  "message": "Error occurred: getGenres Internal Server Error",
-                  "internal_code": "proxy_error_springboot"
+                  "error_message": "Error occurred: getGenres Internal Server Error"
                 }
               }
             }
@@ -553,14 +584,15 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/ExpressDiscussionInput"
+                "$ref": "#/components/schemas/newDiscussion"
               }
             }
-          },"required": true
+          },
+          "required": true
         },
         "responses": {
           "200": {
-            "description": "New discussion successfully created (response from Express).",
+            "description": "Discussion room created successfully.",
             "content": {
               "application/json": {
                 "schema": {}
@@ -568,15 +600,14 @@
             }
           },
           "500": {
-            "description": "Internal Server Error - Error in Main Server or the Express server.",
+            "description": "Internal Server Error - An unexpected error occurred while creating the discussion.",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error"
+                  "$ref": "#/components/schemas/errorSchema"
                 },
                 "example": {
-                  "message": "Error occurred: getGenres Internal Server Error",
-                  "internal_code": "proxy_error_express"
+                  "error_message": "Internal Server Error: Failed to create new discussion."
                 }
               }
             }
@@ -593,28 +624,27 @@
         "operationId": "getExpressDiscussions",
         "responses": {
           "200": {
-            "description": "Successfully retrieved discussions (response from Express).",
+            "description": "A list of discussion rooms retrieved successfully",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/ExpressDiscussion"
+                    "$ref": "#/components/schemas/discussionSchema"
                   }
                 }
               }
             }
           },
           "500": {
-            "description": "Internal Server Error - Error in Main Server or the Express server.",
+            "description": "Internal Server Error - An unexpected error occurred while retrieving discussions.",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error"
+                  "$ref": "#/components/schemas/errorSchema"
                 },
                 "example": {
-                  "message": "Error occurred: getGenres Internal Server Error",
-                  "internal_code": "proxy_error_express"
+                  "error_message": "Internal Server Error: Failed to retrieve discussions."
                 }
               }
             }
@@ -634,45 +664,67 @@
             "in": "query",
             "name": "id_room",
             "schema": {
-              "type": "integer"
+              "type": "string"
             },
             "required": true,
-            "description": "id of the message room"
+            "description": "Unique identifier of the discussion room"
           },
           {
             "in": "query",
-            "name": "pageNumber",
+            "name": "page",
             "schema": {
               "type": "integer"
             },
             "required": true,
-            "description": "number of the page to load"
+            "description": "Page number for pagination (results per page: 50)."
           }
         ],
         "responses": {
           "200": {
-            "description": "Successfully messages retrieved (response from Express).",
+            "description": "A list of last messages retrieved successfully",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/ExpressMessage"
-                  }
+                  "$ref": "#/components/schemas/discussionRoomSchema"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request - Missing required parameters.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorSchema"
+                },
+                "example": {
+                  "error_message": "Bad Request: Missing the required parameter id_room or pageNumber."
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found - Discussion room not found for the specified ID.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorSchema"
+                },
+                "example": {
+                  "error_message": "Not Found: Discussion room with the specified ID does not exist."
                 }
               }
             }
           },
           "500": {
-            "description": "Internal Server Error - Error in Main Server or the Express server.",
+            "description": "Internal Server Error - An unexpected error occurred while retrieving messages.",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error"
+                  "$ref": "#/components/schemas/errorSchema"
                 },
                 "example": {
-                  "message": "Error occurred: getMessages Internal Server Error",
-                  "internal_code": "proxy_error_express"
+                  "error_message": "Internal Server Error: Failed to retrieve messages."
                 }
               }
             }
@@ -691,7 +743,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/ExpressMessageInput"
+                "$ref": "#/components/schemas/messageSchema"
               }
             }
           },
@@ -699,23 +751,48 @@
         },
         "responses": {
           "200": {
-            "description": "Correct input of new Discussion (response from Express).",
+            "description": "Message sent successfully to the discussion room.",
             "content": {
               "application/json": {
                 "schema": {}
               }
             }
           },
-          "500": {
-            "description": "Internal Server Error - Error in Main Server or the Express server.",
+          "400": {
+            "description": "Bad Request - Missing required parameters in the request body.",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error"
+                  "$ref": "#/components/schemas/errorSchema"
                 },
                 "example": {
-                  "message": "Error occurred: newMessage Internal Server Error",
-                  "internal_code": "proxy_error_express"
+                  "error_message": "Bad Request: Missing required fields in the message payload."
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found - Discussion room not found for the specified ID.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorSchema"
+                },
+                "example": {
+                  "error_message": "Not Found: Discussion room with the specified ID does not exist."
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error - An unexpected error occurred while sending the message.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorSchema"
+                },
+                "example": {
+                  "error_message": "Internal Server Error: Failed to send the message."
                 }
               }
             }
@@ -734,7 +811,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/ExpressImageInput"
+                "$ref": "#/components/schemas/imageSchema"
               }
             }
           },
@@ -742,23 +819,48 @@
         },
         "responses": {
           "200": {
-            "description": "Image successfully sent (response from Express).",
+            "description": "Image/video message sent successfully to the discussion room.",
             "content": {
               "application/json": {
                 "schema": {}
               }
             }
           },
-          "500": {
-            "description": "Internal Server Error - Error in Main Server or the Express server.",
+          "400": {
+            "description": "Bad Request - Missing required parameters in the request body.",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error"
+                  "$ref": "#/components/schemas/errorSchema"
                 },
                 "example": {
-                  "message": "Error occurred: newImage Internal Server Error",
-                  "internal_code": "proxy_error_express"
+                  "error_message": "Bad Request: Missing required fields in the image/video message payload."
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found - Discussion room not found for the specified ID.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorSchema"
+                },
+                "example": {
+                  "error_message": "Not Found: Discussion room with the specified ID does not exist."
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error - An unexpected error occurred while sending the image/video message.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorSchema"
+                },
+                "example": {
+                  "error_message": "Internal Server Error: Failed to send the image/video message."
                 }
               }
             }
@@ -769,52 +871,6 @@
   },
   "components": {
     "schemas": {
-      "ExpressReview": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "description": "Unique ID of the review"
-          },
-          "title": {
-            "type": "string",
-            "description": "Title of the review"
-          },
-          "content": {
-            "type": "string",
-            "description": "Review content"
-          },
-          "rating": {
-            "type": "number",
-            "format": "float",
-            "description": "Rating score of the review"
-          },
-          "category": {
-            "type": "string",
-            "description": "Category of the review"
-          },
-          "author": {
-            "type": "string",
-            "description": "Name of the review author"
-          },
-          "date": {
-            "type": "string",
-            "format": "date-time",
-            "description": "Date when the review was published"
-          }
-        }
-      },
-      "Error": {
-        "type": "object",
-        "properties": {
-          "message": {
-            "type": "string"
-          },
-          "internal_code": {
-            "type": "string"
-          }
-        }
-      },
       "SpringBootTopRatedMovie": {
         "type": "object",
         "properties": {
@@ -825,6 +881,10 @@
           "name": {
             "type": "string",
             "description": "Title of the movie"
+          },
+          "description": {
+            "type": "string",
+            "description": "Description of the movie"
           },
           "link": {
             "type": "string",
@@ -865,126 +925,218 @@
             "type": "string",
             "description": "Title of the movie"
           },
-          "date": {
-            "type": "string",
-            "format": "date",
-            "description": "date of the movie"
+          "year": {
+            "type": "integer",
+            "description": "Year of publication"
           },
-          "link": {
+          "poster": {
             "type": "string",
-            "description": "Link of the proper Poster"
+            "description": "Link of the poster image"
           }
         }
       },
       "SpringBootGenreName": {
         "type": "object",
         "properties": {
-          "name": {
+          "genreName": {
             "type": "string",
             "description": "Name of the genre"
           }
         }
       },
-      "ExpressDiscussion": {
+      "SpringBootAgeMin": {
         "type": "object",
         "properties": {
           "id": {
-            "type": "string"
+            "type": "integer",
+            "description": "Unique ID of the movie"
           },
-          "title": {
-            "type": "string"
+          "name": {
+            "type": "string",
+            "description": "Title of the movie"
           },
-          "messages": {
-            "$ref": "#/components/schemas/ExpressMessage"
+          "link": {
+            "type": "string",
+            "description": "Link of the poster image"
+          },
+          "rating": {
+            "type": "float",
+            "description": "Rating of the movie"
           }
         }
       },
-      "ExpressDiscussionInput": {
+      "SpringBootWorldWide": {
         "type": "object",
         "properties": {
-          "title": {
-            "type": "string"
+          "id": {
+            "type": "integer",
+            "description": "Unique ID of the movie"
           },
-          "movie": {
-            "$ref": "#/components/schemas/ExpressMovie"
+          "name": {
+            "type": "string",
+            "description": "Title of the movie"
+          },
+          "link": {
+            "type": "string",
+            "description": "Link of the poster image"
+          },
+          "rating": {
+            "type": "decimal",
+            "description": "Rating of the movie"
+          },
+          "count": {
+            "type": "integer",
+            "description": "Number of release in the worldwide"
           }
         }
       },
-      "ExpressMessage": {
+      "reviewSchema": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Unique identifier of the review."
+          },
+          "movie_title": {
+            "type": "string",
+            "description": "Title of the movie reviewed"
+          },
+          "critic_name": {
+            "type": "string",
+            "description": "Name of the critic"
+          },
+          "top_critic": {
+            "type": "boolean",
+            "description": "True if it's a top critic"
+          },
+          "publisher_name": {
+            "type": "string",
+            "description": "Name of the review publisher"
+          },
+          "review_type": {
+            "type": "string",
+            "description": "A sort of rating positive/negative (fresh / rotten)"
+          },
+          "review_date": {
+            "type": "string",
+            "format": "date",
+            "description": "Date of publication"
+          },
+          "review_content": {
+            "type": "string",
+            "description": "Full text content of the review."
+          },
+          "link": {
+            "type": "string",
+            "description": "Link to the article page of the review (RottenTomatoes website)"
+          }
+        }
+      },
+      "errorSchema": {
+        "type": "object",
+        "properties": {
+          "error_message": {
+            "type": "string",
+            "description": "Human-readable message describing the error."
+          }
+        }
+      },
+      "newDiscussion": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique identifier for the new discussion room (automatically generated)."
+          },
+          "title": {
+            "type": "string",
+            "description": "Title or topic of the discussion room."
+          },
+          "movie": {
+            "$ref": "#/components/schemas/movieSchema"
+          }
+        }
+      },
+      "discussionSchema": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "object",
+            "description": "Unique identifier assigned by MongoDB of the discussion room."
+          },
+          "id": {
+            "type": "string",
+            "description": "Unique identifier of the discussion room."
+          },
+          "title": {
+            "type": "string",
+            "description": "Title of the discussion."
+          },
+          "movie": {
+            "$ref": "#/components/schemas/movieSchema"
+          },
+          "messages": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/messageReturnedSchema"
+            }
+          },
+          "date": {
+            "type": "string",
+            "format": "date",
+            "description": "Timestamp of the creation"
+          }
+        }
+      },
+      "messageSchema": {
         "type": "object",
         "properties": {
           "sender": {
             "type": "string",
-            "description": "Sender's username of the new message"
+            "description": "Username of the message sender."
           },
           "message": {
             "type": "string",
-            "description": "Text of the new message"
-          },
-          "image": {
-            "type": "string",
-            "description": "Image if specified"
+            "description": "Text content of the message."
           },
           "id_room": {
             "type": "string",
-            "description": "Room's id in which user wants to send the new message/image"
+            "description": "Unique identifier of the discussion room to which the message belongs."
           },
           "time_stamp": {
             "type": "string",
             "format": "date-time",
-            "description": "Timestamp of the new message"
+            "description": "Timestamp indicating when the message was sent (ISO 8601 format)."
           }
         }
       },
-      "ExpressMessageInput": {
+      "imageSchema": {
         "type": "object",
         "properties": {
           "sender": {
             "type": "string",
-            "description": "Sender's username"
-          },
-          "message": {
-            "type": "string",
-            "description": "Text content of the message"
-          },
-          "id_room": {
-            "type": "string",
-            "description": "Identifier of the discussion room"
-          }
-        },
-        "required": [
-          "sender",
-          "message",
-          "id_room"
-        ]
-      },
-      "ExpressImageInput": {
-        "type": "object",
-        "properties": {
-          "sender": {
-            "type": "string",
-            "description": "Sender's username"
+            "description": "Username of the message sender."
           },
           "image": {
             "type": "string",
-            "description": "URL or data of the image/video"
+            "description": "URL (BASE 64 format) or data of the image/video"
           },
           "id_room": {
             "type": "string",
-            "description": "Identifier of the discussion room"
+            "description": "Unique identifier of the discussion room to which the message belongs."
+          },
+          "time_stamp": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Timestamp indicating when the message was sent (ISO 8601 format)."
           }
-        },
-        "required": [
-          "sender",
-          "image",
-          "id_room"
-        ]
+        }
       },
-      "ExpressMovie": {
+      "movieSchema": {
         "type": "object",
         "properties": {
           "id": {
-            "type": "string",
+            "type": "integer",
             "description": "Unique identifier of the movie."
           },
           "name": {
@@ -998,6 +1150,54 @@
           "poster": {
             "type": "string",
             "description": "URL of the movie's poster image."
+          }
+        }
+      },
+      "messageReturnedSchema": {
+        "type": "object",
+        "properties": {
+          "sender": {
+            "type": "string",
+            "description": "Username of the message sender, whether was specified"
+          },
+          "message": {
+            "type": "string",
+            "description": "Text content of the message, whether was specified"
+          },
+          "image": {
+            "type": "string",
+            "description": "URL (BASE 64 format) or data of the image/video"
+          },
+          "id_room": {
+            "type": "string",
+            "description": "Unique identifier of the discussion room to which the message belongs."
+          },
+          "time_stamp": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Timestamp indicating when the message was sent (ISO 8601 format)."
+          }
+        }
+      },
+      "discussionRoomSchema": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": ""
+          },
+          "movie": {
+            "$ref": "#/components/schemas/movieSchema"
+          },
+          "messages": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/messageReturnedSchema"
+            }
+          },
+          "hasMore": {
+            "type": "boolean",
+            "description": "Whether the paginated query has more items to fetch"
           }
         }
       }
