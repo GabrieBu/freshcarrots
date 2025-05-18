@@ -2,6 +2,9 @@ var express = require('express');
 var router = express.Router();
 const axios = require('axios')
 
+const DOWNSTREAM_SPRING = 'Downstream error from edge static data Springboot Server'
+const DOWNSTREAM_EXPRESS = 'Downstream error from edge dynamic data Express Server'
+
 /* GET reviews. */
 router.get('/getReviews', async function(req, res, next) {
   try {
@@ -13,7 +16,7 @@ router.get('/getReviews', async function(req, res, next) {
   } catch (error) {
     if (error.response) {
       //downstream the error to the frontend
-      const message = error.response.data?.error || error.response.data?.error_message || 'Downstream error';
+      const message = error.response.data?.error || error.response.data?.error_message || DOWNSTREAM_EXPRESS;
       res.status(error.response.status).json({ error_message: message });
     } else {
       // unexpected error
@@ -28,10 +31,10 @@ router.get('/getTopFiveMovies', async function(req, res, next) {
     const response = await axios.get('http://localhost:3002/movies/getTopFiveMovies');
     res.json(response.data);
   } catch (error) {
-    if (error.response) {
+    if (error.message && error?.status !== 500) {
       //downstream the error to the frontend
-      const message = error.response.data?.error || error.response.data?.error_message || 'Downstream error';
-      res.status(error.response.status).json({ error_message: message });
+      const message = error?.message || DOWNSTREAM_SPRING;
+      res.status(error.status).json({ error_message: message });
     } else {
       // unexpected error
       res.status(500).json({ error_message: 'Dispatcher error: ' + error.message });
@@ -47,7 +50,7 @@ router.post('/newDiscussion', async function(req, res, next) {
   } catch (error) {
     if (error.response) {
       //downstream the error to the frontend
-      const message = error.response.data?.error || error.response.data?.error_message || 'Downstream error';
+      const message = error.response.data?.error || error.response.data?.error_message || DOWNSTREAM_EXPRESS;
       res.status(error.response.status).json({ error_message: message });
     } else {
       // unexpected error
@@ -67,7 +70,7 @@ router.get('/getDiscussions', async function(req, res, next) {
   } catch (error) {
     if (error.response) {
       //downstream the error to the frontend
-      const message = error.response.data?.error || error.response.data?.error_message || 'Downstream error';
+      const message = error.response.data?.error || error.response.data?.error_message || DOWNSTREAM_EXPRESS;
       res.status(error.response.status).json({ error_message: message });
     } else {
       // unexpected error
@@ -78,6 +81,7 @@ router.get('/getDiscussions', async function(req, res, next) {
 
 router.get('/getMessages', async function(req, res, next) {
   try {
+    console.log("params: ", req.query)
     const response = await axios.get('http://localhost:3001/getMessages', {
       params: req.query // pass all query parameters to the express_server
     });
@@ -85,7 +89,7 @@ router.get('/getMessages', async function(req, res, next) {
   } catch (error) {
     if (error.response) {
       //downstream the error to the frontend
-      const message = error.response.data?.error || error.response.data?.error_message || 'Downstream error';
+      const message = error.response.data?.error || error.response.data?.error_message || DOWNSTREAM_EXPRESS;
       res.status(error.response.status).json({ error_message: message });
     } else {
       // unexpected error
@@ -101,7 +105,7 @@ router.post('/newMessage', async function(req, res, next) {
   } catch (error) {
     if (error.response) {
       //downstream the error to the frontend
-      const message = error.response.data?.error || error.response.data?.error_message || 'Downstream error';
+      const message = error.response.data?.error || error.response.data?.error_message || DOWNSTREAM_EXPRESS;
       res.status(error.response.status).json({ error_message: message });
     } else {
       // unexpected error
@@ -118,7 +122,7 @@ router.post('/newImage', async function(req, res, next) {
   } catch (error) {
     if (error.response) {
       //downstream the error to the frontend
-      const message = error.response.data?.error || error.response.data?.error_message || 'Downstream error';
+      const message = error.response.data?.error || error.response.data?.error_message || DOWNSTREAM_EXPRESS;
       res.status(error.response.status).json({ error_message: message });
     } else {
       // unexpected error
@@ -136,10 +140,10 @@ router.get('/topRated', async function(req, res, next) {
     console.log("response: " + JSON.stringify(response.data));
     res.json(response.data);
   } catch (error) {
-    if (error.response) {
+    if (error.message && error?.status !== 500) {
       //downstream the error to the frontend
-      const message = error.response.data?.error || error.response.data?.error_message || 'Downstream error';
-      res.status(error.response.status).json({ error_message: message });
+      const message = error?.message || DOWNSTREAM_SPRING;
+      res.status(error.status).json({ error_message: message });
     } else {
       // unexpected error
       res.status(500).json({ error_message: 'Dispatcher error: ' + error.message });
@@ -148,7 +152,6 @@ router.get('/topRated', async function(req, res, next) {
 });
 
 router.get('/getMovieById', async function(req, res, next) {
-  console.log("params: " + JSON.stringify(req.query));
   try {
     const response = await axios.get('http://localhost:3002/movies/getMovieById', {
       params: req.query
@@ -156,10 +159,11 @@ router.get('/getMovieById', async function(req, res, next) {
     console.log("response: " + JSON.stringify(response.data));
     res.json(response.data);
   } catch (error) {
-    if (error.response) {
+    console.log(error);
+    if (error.message && error?.status !== 500) {
       //downstream the error to the frontend
-      const message = error.response.data?.error || error.response.data?.error_message || 'Downstream error';
-      res.status(error.response.status).json({ error_message: message });
+      const message = error?.message || DOWNSTREAM_SPRING;
+      res.status(error.status).json({ error_message: message });
     } else {
       // unexpected error
       res.status(500).json({ error_message: 'Dispatcher error: ' + error.message });
@@ -176,10 +180,10 @@ router.get('/getMovieByName', async function(req, res, next) {
     console.log("response: " + JSON.stringify(response.data));
     res.json(response.data);
   } catch (error) {
-    if (error.response) {
+    if (error.message && error?.status !== 500) {
       //downstream the error to the frontend
-      const message = error.response.data?.error || error.response.data?.error_message || 'Downstream error';
-      res.status(error.response.status).json({ error_message: message });
+      const message = error?.message || DOWNSTREAM_SPRING;
+      res.status(error.status).json({ error_message: message });
     } else {
       // unexpected error
       res.status(500).json({ error_message: 'Dispatcher error: ' + error.message });
@@ -194,10 +198,10 @@ router.get('/ageMin', async function(req, res, next) {
     });
     res.json(response.data);
   } catch (error) {
-    if (error.response) {
+    if (error.message && error?.status !== 500) {
       //downstream the error to the frontend
-      const message = error.response.data?.error || error.response.data?.error_message || 'Downstream error';
-      res.status(error.response.status).json({ error_message: message });
+      const message = error?.message || DOWNSTREAM_SPRING;
+      res.status(error.status).json({ error_message: message });
     } else {
       // unexpected error
       res.status(500).json({ error_message: 'Dispatcher error: ' + error.message });
@@ -210,10 +214,10 @@ router.get('/getWorldwideMovies', async function(req, res, next) {
     const response = await axios.get('http://localhost:3002/movies/getWorldwideMovies')
     res.json(response.data);
   } catch (error) {
-    if (error.response) {
+    if (error.message && error?.status !== 500) {
       //downstream the error to the frontend
-      const message = error.response.data?.error || error.response.data?.error_message || 'Downstream error';
-      res.status(error.response.status).json({ error_message: message });
+      const message = error?.message || DOWNSTREAM_SPRING;
+      res.status(error.status).json({ error_message: message });
     } else {
       // unexpected error
       res.status(500).json({ error_message: 'Dispatcher error: ' + error.message });
@@ -226,12 +230,13 @@ router.get('/getCultLanguage', async function(req, res, next) {
     const response = await axios.get('http://localhost:3002/movies/getCultLanguage', {
       params: req.query
     });
+    console.log("response: ", JSON.stringify(response.data));
     res.json(response.data);
   } catch (error) {
-    if (error.response) {
+    if (error.message && error?.status !== 500) {
       //downstream the error to the frontend
-      const message = error.response.data?.error || error.response.data?.error_message || 'Downstream error';
-      res.status(error.response.status).json({ error_message: message });
+      const message = error?.message || DOWNSTREAM_SPRING;
+      res.status(error.status).json({ error_message: message });
     } else {
       // unexpected error
       res.status(500).json({ error_message: 'Dispatcher error: ' + error.message });
@@ -240,16 +245,18 @@ router.get('/getCultLanguage', async function(req, res, next) {
 });
 
 router.get('/getFilteredMovies', async function(req, res, next) {
+ console.log("params: " + JSON.stringify(req.query));
   try {
     const response = await axios.get('http://localhost:3002/movies/getFilteredMovies', {
       params: req.query
     });
+    console.log(response.data.content);
     res.json(response.data.content);
   } catch (error) {
-    if (error.response) {
+    if (error.message && error?.status !== 500) {
       //downstream the error to the frontend
-      const message = error.response.data?.error || error.response.data?.error_message || 'Downstream error';
-      res.status(error.response.status).json({ error_message: message });
+      const message = error?.message || DOWNSTREAM_SPRING;
+      res.status(error.status).json({ error_message: message });
     } else {
       // unexpected error
       res.status(500).json({ error_message: 'Dispatcher error: ' + error.message });
@@ -266,7 +273,7 @@ router.get('/getGenres', async function(req, res, next) {
   } catch (error) {
     if (error.response) {
       //downstream the error to the frontend
-      const message = error.response.data?.error || error.response.data?.error_message || 'Downstream error';
+      const message = error.response.data?.error || error.response.data?.error_message || DOWNSTREAM_SPRING;
       res.status(error.response.status).json({ error_message: message });
     } else {
       // unexpected error
