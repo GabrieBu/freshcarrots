@@ -5,12 +5,13 @@ export const getReviews = async (req, res) => {
     let {minDateFilter, maxDateFilter} = req.query;
     let {reviewMovieFilter} = req.query;
 
-    if(!page){
-        res.status(400).send({error: "Missing required parameters"});
-    }
-
     const page = parseInt(req.query.page) || 1;
     const toSkip = (page - 1) * 10;
+
+    if(!page){
+        res.status(400).send({error_message: "Missing required parameters"});
+    }
+
     try {
         const filters = {}
         if(criticFilter && criticFilter !== "all_critics"){
@@ -39,12 +40,15 @@ export const getReviews = async (req, res) => {
             }
         }
         console.log("filter: " + filters);
-        const review = await Review.find(filters)
+        const reviews = await Review.find(filters)
             .sort({ review_date: -1 }) //from latest to oldest
             .skip(toSkip)  // skip previous pages
             .limit(10); // one page = 10 reviews
-        res.json(review);
+
+        console.log(reviews)
+
+        res.json(reviews);
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        res.status(500).json({ error_message: error.message });
     }
 };

@@ -19,14 +19,15 @@
 					"Reviews"
 				],
 				"summary": "Retrieve reviews with optional filtering and pagination",
-				"description": "Fetches a paginated list of movie reviews. Supports filtering by Top Critic status, review type,\n        a date range, and movie title.",
+				"description": "Fetches a paginated list of movie reviews. Supports filtering by Top Critic status, review type, \n a date range, and movie title.",
 				"operationId": "getReviews",
 				"parameters": [
 					{
 						"in": "query",
 						"name": "criticFilter",
 						"schema": {
-							"type": "boolean"
+							"type": "string",
+							"enum": ["all_critics", "True", "False"]
 						},
 						"required": false,
 						"description": "Filter reviews by Top Critic status (true for Top Critic reviews)."
@@ -35,10 +36,11 @@
 						"in": "query",
 						"name": "typeFilter",
 						"schema": {
-							"type": "string"
+							"type": "string",
+							"enum": ["all_types", "Fresh", "Rotten"]
 						},
 						"required": false,
-						"description": "Filter reviews by a specific type or category."
+						"description": "Filter reviews by a specific type or category (fresh or rotten)"
 					},
 					{
 						"in": "query",
@@ -76,7 +78,7 @@
 							"type": "integer"
 						},
 						"required": true,
-						"description": "Page number for pagination (results per page: 20)."
+						"description": "Page number for pagination (results per page: 10)."
 					}
 				],
 				"responses": {
@@ -101,8 +103,7 @@
 									"$ref": "#/components/schemas/errorSchema"
 								},
 								"example": {
-									"message": "Internal Server Error: Failed to retrieve reviews.",
-									"code": "INTERNAL_SERVER_ERROR"
+									"error_message": "Internal Server Error: Failed to retrieve reviews."
 								}
 							}
 						}
@@ -116,7 +117,7 @@
 					"Discussions"
 				],
 				"summary": "Create a new discussion room for a specific movie",
-				"description": "Initiates a new discussion thread related to a particular movie, allowing fans to join and chat.",
+				"description": "Initiates a new discussion thread related to a particular movie, allowing fans to join and chat",
 				"operationId": "newDiscussion",
 				"requestBody": {
 					"content": {
@@ -145,8 +146,7 @@
 									"$ref": "#/components/schemas/errorSchema"
 								},
 								"example": {
-									"message": "Internal Server Error: Failed to create new discussion.",
-									"code": "INTERNAL_SERVER_ERROR"
+									"error_message": "Internal Server Error: Failed to create new discussion."
 								}
 							}
 						}
@@ -159,45 +159,12 @@
 				"tags": [
 					"Discussions"
 				],
-				"summary": "Retrieve discussions with optional filtering and pagination",
-				"description": "Retrieves a paginated list of discussion rooms, with optional filtering by movie title and sorting by creation date.",
+				"summary": "Retrieve discussions with optional filtering",
+				"description": "Retrieves a paginated list of discussion rooms, with optional filtering by movie title and sorting by creation date",
 				"operationId": "getDiscussions",
-				"parameters": [
-					{
-						"in": "query",
-						"name": "movieFilter",
-						"schema": {
-							"type": "string"
-						},
-						"required": false,
-						"description": "Filter discussions by movie title (case-insensitive, partial matches allowed)."
-					},
-					{
-						"in": "query",
-						"name": "page",
-						"schema": {
-							"type": "integer"
-						},
-						"required": true,
-						"description": "Page number for pagination (results per page: 10)."
-					},
-					{
-						"in": "query",
-						"name": "sortByDate",
-						"schema": {
-							"type": "string",
-							"enum": [
-								"asc",
-								"desc"
-							]
-						},
-						"required": false,
-						"description": "Sort discussions by creation date ('asc' for oldest first, 'desc' for newest first)."
-					}
-				],
 				"responses": {
 					"200": {
-						"description": "A list of discussion rooms retrieved successfully.",
+						"description": "A list of discussion rooms retrieved successfully",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -217,8 +184,7 @@
 									"$ref": "#/components/schemas/errorSchema"
 								},
 								"example": {
-									"message": "Internal Server Error: Failed to retrieve discussions.",
-									"code": "INTERNAL_SERVER_ERROR"
+									"error_message": "Internal Server Error: Failed to retrieve discussions."
 								}
 							}
 						}
@@ -242,7 +208,7 @@
 							"type": "string"
 						},
 						"required": true,
-						"description": "Unique identifier of the discussion room."
+						"description": "Unique identifier of the discussion room"
 					},
 					{
 						"in": "query",
@@ -256,14 +222,11 @@
 				],
 				"responses": {
 					"200": {
-						"description": "A list of messages retrieved successfully.",
+						"description": "A list of last messages retrieved successfully",
 						"content": {
 							"application/json": {
 								"schema": {
-									"type": "array",
-									"items": {
-										"$ref": "#/components/schemas/messageSchema"
-									}
+									"$ref": "#/components/schemas/discussionRoomSchema"
 								}
 							}
 						}
@@ -276,8 +239,7 @@
 									"$ref": "#/components/schemas/errorSchema"
 								},
 								"example": {
-									"message": "Bad Request: Missing the required parameter id_room or pageNumber.",
-									"code": "MISSING_PARAMETER"
+									"error_message": "Bad Request: Missing the required parameter id_room or pageNumber."
 								}
 							}
 						}
@@ -290,8 +252,7 @@
 									"$ref": "#/components/schemas/errorSchema"
 								},
 								"example": {
-									"message": "Not Found: Discussion room with the specified ID does not exist.",
-									"code": "RESOURCE_NOT_FOUND"
+									"error_message": "Not Found: Discussion room with the specified ID does not exist."
 								}
 							}
 						}
@@ -304,8 +265,7 @@
 									"$ref": "#/components/schemas/errorSchema"
 								},
 								"example": {
-									"message": "Internal Server Error: Failed to retrieve messages.",
-									"code": "INTERNAL_SERVER_ERROR"
+									"error_message": "Internal Server Error: Failed to retrieve messages."
 								}
 							}
 						}
@@ -319,7 +279,7 @@
 					"Messages"
 				],
 				"summary": "Send a new text message to a discussion room",
-				"description": "Publishes a new text message to the specified discussion room, broadcasting it to all connected members.",
+				"description": "Publishes a new text message to the specified discussion room, broadcasting it to all connected members",
 				"operationId": "newMessage",
 				"requestBody": {
 					"content": {
@@ -348,8 +308,7 @@
 									"$ref": "#/components/schemas/errorSchema"
 								},
 								"example": {
-									"message": "Bad Request: Missing required fields in the message payload.",
-									"code": "MISSING_PARAMETER"
+									"error_message": "Bad Request: Missing required fields in the message payload."
 								}
 							}
 						}
@@ -362,8 +321,7 @@
 									"$ref": "#/components/schemas/errorSchema"
 								},
 								"example": {
-									"message": "Not Found: Discussion room with the specified ID does not exist.",
-									"code": "RESOURCE_NOT_FOUND"
+									"error_message": "Not Found: Discussion room with the specified ID does not exist."
 								}
 							}
 						}
@@ -376,8 +334,7 @@
 									"$ref": "#/components/schemas/errorSchema"
 								},
 								"example": {
-									"message": "Internal Server Error: Failed to send the message.",
-									"code": "INTERNAL_SERVER_ERROR"
+									"error_message": "Internal Server Error: Failed to send the message."
 								}
 							}
 						}
@@ -391,13 +348,13 @@
 					"Messages"
 				],
 				"summary": "Send a new image or video message to a discussion room",
-				"description": "Publishes a new image or video message to the specified discussion room, broadcasting it to all connected members.",
+				"description": "Publishes a new image or video message to the specified discussion room, broadcasting it to all connected members",
 				"operationId": "newImage",
 				"requestBody": {
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": "#/components/schemas/messageSchema"
+								"$ref": "#/components/schemas/imageSchema"
 							}
 						}
 					},
@@ -420,8 +377,7 @@
 									"$ref": "#/components/schemas/errorSchema"
 								},
 								"example": {
-									"message": "Bad Request: Missing required fields in the image/video message payload.",
-									"code": "MISSING_PARAMETER"
+									"error_message": "Bad Request: Missing required fields in the image/video message payload."
 								}
 							}
 						}
@@ -434,8 +390,7 @@
 									"$ref": "#/components/schemas/errorSchema"
 								},
 								"example": {
-									"message": "Not Found: Discussion room with the specified ID does not exist.",
-									"code": "RESOURCE_NOT_FOUND"
+									"error_message": "Not Found: Discussion room with the specified ID does not exist."
 								}
 							}
 						}
@@ -448,8 +403,7 @@
 									"$ref": "#/components/schemas/errorSchema"
 								},
 								"example": {
-									"message": "Internal Server Error: Failed to send the image/video message.",
-									"code": "INTERNAL_SERVER_ERROR"
+									"error_message": "Internal Server Error: Failed to send the image/video message."
 								}
 							}
 						}
@@ -467,44 +421,47 @@
 						"type": "integer",
 						"description": "Unique identifier of the review."
 					},
-					"title": {
+					"movie_title": {
 						"type": "string",
-						"description": "Title of the review."
+						"description": "Title of the movie reviewed"
 					},
-					"content": {
+					"critic_name": {
+						"type": "string",
+						"description": "Name of the critic"
+					},
+					"top_critic": {
+						"type": "boolean",
+						"description": "True if it's a top critic"
+					},
+					"publisher_name": {
+						"type": "string",
+						"description": "Name of the review publisher"
+					},
+					"review_type": {
+						"type": "string",
+						"description": "A sort of rating positive/negative (fresh / rotten)"
+					},
+					"review_date": {
+						"type": "string",
+						"format": "date",
+						"description": "Date of publication"
+					},
+					"review_content": {
 						"type": "string",
 						"description": "Full text content of the review."
 					},
-					"rating": {
-						"type": "number",
-						"format": "float",
-						"description": "Numerical rating given in the review."
-					},
-					"category": {
+					"link": {
 						"type": "string",
-						"description": "Category or genre of the reviewed item."
-					},
-					"author": {
-						"type": "string",
-						"description": "Name of the author who wrote the review."
-					},
-					"date": {
-						"type": "string",
-						"format": "date-time",
-						"description": "Timestamp indicating when the review was published (ISO 8601 format)."
+						"description": "Link to the article page of the review (RottenTomatoes website)"
 					}
 				}
 			},
 			"errorSchema": {
 				"type": "object",
 				"properties": {
-					"message": {
+					"error_message": {
 						"type": "string",
 						"description": "Human-readable message describing the error."
-					},
-					"code": {
-						"type": "string",
-						"description": "A unique code identifying the type of error."
 					}
 				}
 			},
@@ -521,17 +478,16 @@
 					},
 					"movie": {
 						"$ref": "#/components/schemas/movieSchema"
-					},
-					"date": {
-						"type": "string",
-						"format": "date-time",
-						"description": "Timestamp indicating when the discussion room was created (ISO 8601 format)."
 					}
 				}
 			},
 			"discussionSchema": {
 				"type": "object",
 				"properties": {
+					"_id": {
+						"type": "object",
+						"description": "Unique identifier assigned by MongoDB of the discussion room."
+					},
 					"id": {
 						"type": "string",
 						"description": "Unique identifier of the discussion room."
@@ -540,8 +496,19 @@
 						"type": "string",
 						"description": "Title of the discussion."
 					},
+					"movie": {
+						"$ref": "#/components/schemas/movieSchema"
+					},
 					"messages": {
-						"$ref": "#/components/schemas/messageSchema"
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/messageReturnedSchema"
+						}
+					},
+					"date": {
+						"type": "string",
+						"format": "date",
+						"description": "Timestamp of the creation"
 					}
 				}
 			},
@@ -550,19 +517,37 @@
 				"properties": {
 					"sender": {
 						"type": "string",
-						"description": "Username or identifier of the message sender."
+						"description": "Username of the message sender."
 					},
 					"message": {
 						"type": "string",
 						"description": "Text content of the message."
 					},
+					"id_room": {
+						"type": "string",
+						"description": "Unique identifier of the discussion room to which the message belongs."
+					},
+					"time_stamp": {
+						"type": "string",
+						"format": "date-time",
+						"description": "Timestamp indicating when the message was sent (ISO 8601 format)."
+					}
+				}
+			},
+			"imageSchema": {
+				"type": "object",
+				"properties": {
+					"sender": {
+						"type": "string",
+						"description": "Username of the message sender."
+					},
 					"image": {
 						"type": "string",
-						"description": "URL or data of the image/video, if included in the message."
+						"description": "URL (BASE 64 format) or data of the image/video"
 					},
 					"id_room": {
 						"type": "string",
-						"description": "Identifier of the discussion room to which the message belongs."
+						"description": "Unique identifier of the discussion room to which the message belongs."
 					},
 					"time_stamp": {
 						"type": "string",
@@ -575,7 +560,7 @@
 				"type": "object",
 				"properties": {
 					"id": {
-						"type": "string",
+						"type": "integer",
 						"description": "Unique identifier of the movie."
 					},
 					"name": {
@@ -591,6 +576,54 @@
 						"description": "URL of the movie's poster image."
 					}
 				}
+			},
+			"messageReturnedSchema": {
+				"type": "object",
+				"properties": {
+					"sender": {
+						"type": "string",
+						"description": "Username of the message sender, whether was specified"
+					},
+					"message": {
+						"type": "string",
+						"description": "Text content of the message, whether was specified"
+					},
+					"image": {
+						"type": "string",
+						"description": "URL (BASE 64 format) or data of the image/video"
+					},
+					"id_room": {
+						"type": "string",
+						"description": "Unique identifier of the discussion room to which the message belongs."
+					},
+					"time_stamp": {
+						"type": "string",
+						"format": "date-time",
+						"description": "Timestamp indicating when the message was sent (ISO 8601 format)."
+					}
+				}
+			},
+
+			"discussionRoomSchema": {
+				"type": "object",
+				"properties": {
+					"title": {
+						"type": "string",
+						"description": ""
+					},
+					"movie": {
+						"$ref": "#/components/schemas/movieSchema"
+					},
+					"messages": {
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/messageReturnedSchema"
+						}
+					},
+					"hasMore": {
+						"type": "boolean",
+						"description": "Whether the paginated query has more items to fetch"
+					}				}
 			}
 		}
 	}
