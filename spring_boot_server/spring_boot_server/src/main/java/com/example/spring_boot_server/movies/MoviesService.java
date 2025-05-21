@@ -68,12 +68,11 @@ public class MoviesService {
         return moviesRepository.findCultLanguage(language);
     }
 
-    public Page<MovieYearPosterDTO> findFilteredMovies(Pageable pageable, String orderByName, String orderByDate, String byRating, String genre) {
-        Specification<Movie> spec = MovieSpecification.filterBy(orderByName, orderByDate, byRating, genre);
+    public Page<MovieYearPosterDTO> findFilteredMovies(Pageable pageable, String order, String ratingRange, String genre) {
+        Specification<Movie> spec = MovieSpecification.filterBy(order, ratingRange, genre);
 
         Page<Movie> moviePage = moviesRepository.findAll(spec, pageable);
 
         return moviePage.map(movie -> new MovieYearPosterDTO(movie.getId(), movie.getName(), movie.getPoster().getLink(), movie.getDate()));
     }
-
 }
