@@ -67,7 +67,7 @@ function Discover() {
       options: [
         {
           name: "",
-          label: "All names",
+          label: "No Ordering",
         },
         {
           name: "ascName",
@@ -76,15 +76,6 @@ function Discover() {
         {
           name: "descName",
           label: "From Z to A",
-        },
-      ],
-    },
-    {
-      typeFilter: "date",
-      options: [
-        {
-          name: "",
-          label: "All dates",
         },
         {
           name: "descDate",
