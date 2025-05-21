@@ -467,34 +467,24 @@
           },
           {
             "in": "query",
-            "name": "orderByName",
+            "name": "order",
             "schema": {
               "type": "string",
-              "enum": ["", "asc", "desc"]
+              "enum": ["ascName", "descName", "ascDate", "descDate"]
             },
             "required": false,
-            "description": "Order movies by name ASC/DESC"
+            "description": "Order movies by name or date ASC/DESC"
           },
           {
             "in": "query",
-            "name": "byRating",
+            "name": "ratingRange",
             "schema": {
               "type": "string",
-              "enum": ["","zeroToOne","oneToTwo", "twoToThree", "threeToFour", "fourToFive"]
+              "enum": ["zeroToOne","oneToTwo", "twoToThree", "threeToFour", "fourToFive"]
             },
             "required": false,
             "description": "Order movies by ranges of value rating"
 
-          },
-          {
-            "in": "query",
-            "name": "orderByDate",
-            "schema": {
-              "type": "string",
-              "enum": ["", "asc", "desc"]
-            },
-            "required": false,
-            "description": "Order movies by date ASC/DESC"
           },
           {
             "in": "query",
