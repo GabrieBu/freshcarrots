@@ -9,36 +9,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MovieSpecification {
-    public static Specification<Movie> filterBy(String orderByName, String orderByDate, String byRating, String genre) {
+    public static Specification<Movie> filterBy(String order, String ratingRange, String genre) {
         return (Root<Movie> root, CriteriaQuery<?> query, CriteriaBuilder cb) -> {
             List<Predicate> predicates = new ArrayList<>();
             List<Order> orderList = new ArrayList<>();
 
-            if (orderByDate != null && !orderByDate.isEmpty()) {
-                if (orderByDate.equalsIgnoreCase("desc")) {
-                    orderList.add(cb.desc(cb.coalesce(root.get("date"), 0)));
-                } else if (orderByDate.equalsIgnoreCase("asc")) {
-                    orderList.add(cb.asc(cb.coalesce(root.get("date"), Double.MAX_VALUE)));
-                }
+            // Apply genre filter first to ensure join is used correctly
+            if (genre != null && !genre.isEmpty()) {
+                Join<Movie, Genre> genreJoin = root.join("genres", JoinType.LEFT);
+                predicates.add(cb.equal(genreJoin.get("genre"), genre));
             }
 
-            if (orderByName != null && !orderByName.isEmpty()) {
-                if (orderByName.equalsIgnoreCase("desc")) {
-                    orderList.add(cb.desc(cb.lower(root.get("name"))));
-                } else if (orderByName.equalsIgnoreCase("asc")) {
-                    orderList.add(cb.asc(cb.lower(root.get("name"))));
-                }
-            }
-
-            orderList.add(cb.desc(cb.coalesce(root.get("rating"), 0.0)));
-
-            // Final fallback to ensure deterministic sort
-            orderList.add(cb.asc(root.get("id")));
-
-            query.orderBy(orderList);
-
-            if (byRating != null && !byRating.isEmpty()) {
-                switch (byRating) {
+            System.out.println(ratingRange);
+            // Apply rating filter
+            if (ratingRange != null && !ratingRange.isEmpty()) {
+                switch (ratingRange) {
                     case "zeroToOne":
                         predicates.add(cb.between(root.get("rating"), 0.0, 1.0));
                         break;
@@ -57,10 +42,31 @@ public class MovieSpecification {
                 }
             }
 
-            if (genre != null && !genre.isEmpty()) {
-                Join<Movie, Genre> genreJoin = root.join("genres", JoinType.LEFT);
-                predicates.add(cb.equal(genreJoin.get("genre"), genre));
+            if (order != null && !order.isEmpty()) {
+                switch (order.toLowerCase()) {
+                    case "ascdate":
+                        orderList.add(cb.asc(cb.coalesce(root.get("date"), cb.literal(Float.MAX_VALUE))));
+                        break;
+                    case "descdate":
+                        orderList.add(cb.desc(cb.coalesce(root.get("date"), cb.literal(0))));
+                        break;
+                    case "ascname":
+                        orderList.add(cb.asc(cb.lower(root.get("name"))));
+                        break;
+                    case "descname":
+                        orderList.add(cb.desc(cb.lower(root.get("name"))));
+                        break;
+                }
             }
+
+            // Always sort by rating (desc) as fallback
+            orderList.add(cb.desc(cb.coalesce(root.get("rating"), 0.0)));
+
+            // Final fallback to ensure deterministic sort
+            orderList.add(cb.asc(root.get("id")));
+
+            // Apply ordering after everything else is done
+            query.orderBy(orderList);
 
             return cb.and(predicates.toArray(new Predicate[0]));
         };
