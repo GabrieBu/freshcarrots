@@ -12,6 +12,8 @@ export const getReviews = async (req, res) => {
         res.status(400).send({error_message: "Missing required parameters"});
     }
 
+    console.log(JSON.stringify(req.query));
+
     try {
         const filters = {}
         if(criticFilter && criticFilter !== "all_critics"){
@@ -33,9 +35,9 @@ export const getReviews = async (req, res) => {
             if(reviewMovieFilter && reviewMovieFilter !== "")
             {
                 filters.$or = [
-                    { 'movie.name': reviewMovieFilter }, // 1:1 match
-                    { 'movie.name': { $regex: `^${reviewMovieFilter}`, $options: 'i' } }, // Starts with (case-insensitive)
-                    { 'movie.name': { $regex: reviewMovieFilter, $options: 'i' } } // Contained within (case-insensitive)
+                    { 'movie_title': reviewMovieFilter }, // 1:1 match
+                    { 'movie_title': { $regex: `^${reviewMovieFilter}`, $options: 'i' } }, // Starts with (case-insensitive)
+                    { 'movie_title': { $regex: reviewMovieFilter, $options: 'i' } } // Contained within (case-insensitive)
                 ];
             }
         }

@@ -21,7 +21,7 @@ export const getDiscussions = async (req, res) => {
     const filters = {}
     const sort={}
 
-    if(movieQuery && movieQuery !== "")
+    if(movieQuery && movieQuery !== "") //if title movie specified apply it in the pipeline
     {
         filters.$or = [
             { 'movie.name': movieQuery }, // 1:1 match
@@ -30,7 +30,7 @@ export const getDiscussions = async (req, res) => {
         ];
     }
 
-    if (sortByDate) {
+    if (sortByDate) { //if sorting specified
         sort.date = sortByDate === 'asc' ? 1 : -1; // 1 for ascending, -1 for descending
     }
 
@@ -61,7 +61,7 @@ export const getMessages = async (req, res) => {
         const limitNum = Number(page + 1) * pageSize; //slice will exclude last index
         console.log("offsetNum e limitNum", offsetNum, limitNum);
 
-        const discussion = await Discussion.findOne(
+        const discussion = await Discussion.findOne( //query the db
             { id: id_room },
             { messages: { $slice: [offsetNum, limitNum] } } // Only fetch requested messages
         );
