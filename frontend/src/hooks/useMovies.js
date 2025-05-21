@@ -21,29 +21,29 @@ export default function useMovies(pageNumber, selectedFilters) {
 
     setLoading(true);
     let filter = {};
+    console.log("Selected Filters", selectedFilters)
+      selectedFilters.forEach((item) => {
+          const value = item?.value;
 
-    //update filters to send it to the express server
-    selectedFilters.forEach((item) => {
-      if (item?.value === "ascName") filter.orderByName = "asc";
-      if (item?.value === "descName") filter.orderByName = "desc";
-      if (item?.value === "ascDate") filter.orderByDate = "asc";
-      if (item?.value === "descDate") filter.orderByDate = "desc";
-      if (
-          [
-            "zeroToOne",
-            "oneToTwo",
-            "twoToThree",
-            "threeToFour",
-            "fourToFive",
-          ].includes(item?.value)
-      ) {
-        filter.byRating = item?.value;
-      }
-      if (!filter.byRating && !filter.orderByName && !filter.orderByDate) {
-        filter.genre = item?.value;
-      }
-    });
+          if (value === "ascName" || value === "descName" || value === "ascDate" || value === "descDate") {
+              filter.order = value;
+          } else if (
+              [
+                  "zeroToOne",
+                  "oneToTwo",
+                  "twoToThree",
+                  "threeToFour",
+                  "fourToFive",
+              ].includes(value)
+          ) {
+              filter.ratingRange = value;
+          } else {
+              // fallback: assume it's a genre (because it's neither order nor rating)
+              filter.genre = value;
+          }
+      });
 
+    console.log("Filters:", filter)
     filter = { ...filter, page: pageNumber };
     setError(false);
 

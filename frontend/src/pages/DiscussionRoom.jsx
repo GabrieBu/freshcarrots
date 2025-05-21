@@ -51,15 +51,18 @@ function DiscussionRoom() {
             setLoading(true);
             setError(false);
             try {
+                // download messages from the db
                 const res = await axios.get("http://localhost:3000/getMessages", {
                     params: { id_room, page: pageNumber },
                 });
 
+                //update local state with messages
                 setMessages((prevMessages) => {
                     const messageSet = new Set(prevMessages.map((msg) => msg.time_stamp));
                     const newMessages = res.data.messages.filter(
                         (msg) => !messageSet.has(msg.time_stamp)
                     );
+                    // messgaes in db are reversed
                     const orderedNewMessages = newMessages.reverse();
                     return [...orderedNewMessages, ...prevMessages]; // prepend for top-down paging
                 });
@@ -78,15 +81,18 @@ function DiscussionRoom() {
     }, [pageNumber]);
 
     useEffect(() => {
+        //handler definition of sockets
         socket.emit("create or join", id_room, username);
 
         socket.on("message", (room, senderUsername, chatText, time_stamp) => {
+            //receivein a new message -> update local state
             setMessages((prev) => [
                 ...prev,
                 { sender: senderUsername, message: chatText, time_stamp },
             ]);
         });
 
+        //receivein a new message -> update local state
         socket.on("image", (room, senderUsername, image, time_stamp) => {
             setMessages((prev) => [
                 ...prev,
@@ -94,7 +100,7 @@ function DiscussionRoom() {
             ]);
         });
 
-        return () => {
+        return () => { // cleanup function
             socket.off("message");
             socket.off("image");
         };
@@ -108,12 +114,13 @@ function DiscussionRoom() {
 
         if (selectedFileRef.current) {
             setUploading(true);
-            imageBlob = await convertCanvasToImage();
+            imageBlob = await convertCanvasToImage(); //loading image into the canva element
             setUploading(false);
 
+            // emit the message "image"
             socket.emit("image", id_room, username, imageBlob, time_stamp_message);
             try {
-                await axios.post("http://localhost:3000/newImage", {
+                await axios.post("http://localhost:3000/newImage", { //store to the db the new message
                     id_room,
                     sender: username,
                     image: imageBlob,
@@ -125,9 +132,9 @@ function DiscussionRoom() {
         }
 
         if (newMessage.trim() !== "") {
-            socket.emit("message", id_room, username, newMessage, time_stamp_message);
+            socket.emit("message", id_room, username, newMessage, time_stamp_message); //emits message "message"
             try {
-                await axios.post("http://localhost:3000/newMessage", {
+                await axios.post("http://localhost:3000/newMessage", { //store to the db the new message
                     id_room,
                     sender: username,
                     message: newMessage,
@@ -153,7 +160,7 @@ function DiscussionRoom() {
         fileInputRef.current.value = null;
     };
 
-    const handleKeyPress = (e) => {
+    const handleKeyPress = (e) => { //handle sending with enter
         if (e.key === "Enter" && !e.shiftKey) {
             e.preventDefault();
             handleSend();
@@ -170,6 +177,7 @@ function DiscussionRoom() {
 
     const loadImageToCanvas = (file) => {
         const reader = new FileReader();
+        //read image from the disk, load it into the canva
         reader.onload = function (e) {
             const img = new Image();
             img.onload = function () {
@@ -181,7 +189,7 @@ function DiscussionRoom() {
             };
             img.src = e.target.result;
         };
-        reader.readAsDataURL(file);
+        reader.readAsDataURL(file); //save to the ref local state
     };
 
     const convertCanvasToImage = () => {
