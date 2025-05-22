@@ -1,0 +1,12 @@
+./MainServer/node_modules
+/node_modules/
+/.idea/
+/.idea/
+/.idea/runConfigurations/
+/.idea/shelf/
+/.idea/.gitignore
+/.idea/express_server.iml
+/.idea/jsLibraryMappings.xml
+/.idea/modules.xml
+/.idea/vcs.xml
+/.idea/workspace.xml
