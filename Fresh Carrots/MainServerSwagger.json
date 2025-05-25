@@ -1,0 +1,1196 @@
+{
+  "openapi": "3.0.2",
+  "info": {
+    "title": "Main Server - Central Dispatcher",
+    "version": "1.0",
+    "description": "Central server routing requests to the static data server (SpringBoot) or the dynamic data server (Express).",
+    "termsOfService": "http://api_url/terms/"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000/",
+      "description": "dev"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Reviews",
+      "description": "Operations related to movie reviews (proxied to Express)."
+    },
+    {
+      "name": "Movies",
+      "description": "Operations related to movie data (proxied to SpringBoot)."
+    },
+    {
+      "name": "Discussions",
+      "description": "Operations related to community discussions (proxied to Express)."
+    },
+    {
+      "name": "Messages",
+      "description": "Operations related to messages within discussions (proxied to Express)."
+    },
+    {
+      "name": "Genres",
+      "description": "Operations related to movie genres (proxied to SpringBoot)."
+    }
+  ],
+  "paths": {
+    "/getReviews": {
+      "get": {
+        "tags": [
+          "Reviews"
+        ],
+        "description": "Proxies the request to the dynamic data server (Express) to fetch available reviews, applying filters specified in the query parameters.",
+        "operationId": "getExpressReviews",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "criticFilter",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "all_critics",
+                "True",
+                "False"
+              ]
+            },
+            "required": false,
+            "description": "Filter reviews by Top Critic status (true for Top Critic reviews)."
+          },
+          {
+            "in": "query",
+            "name": "typeFilter",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "all_types",
+                "Fresh",
+                "Rotten"
+              ]
+            },
+            "required": false,
+            "description": "Filter reviews by a specific type or category (fresh or rotten)"
+          },
+          {
+            "in": "query",
+            "name": "minDateFilter",
+            "schema": {
+              "type": "string",
+              "format": "date"
+            },
+            "required": false,
+            "description": "Filter reviews published on or after this date (YYYY-MM-DD)."
+          },
+          {
+            "in": "query",
+            "name": "maxDateFilter",
+            "schema": {
+              "type": "string",
+              "format": "date"
+            },
+            "required": false,
+            "description": "Filter reviews published on or before this date (YYYY-MM-DD)."
+          },
+          {
+            "in": "query",
+            "name": "reviewMovieFilter",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Filter reviews where the movie title contains this string (case-insensitive)."
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "Page number for pagination (results per page: 10)."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A list of reviews retrieved successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/reviewSchema"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error - An unexpected error occurred on the server.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorSchema"
+                },
+                "example": {
+                  "error_message": "Internal Server Error: Failed to retrieve reviews."
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/getTopFiveMovies": {
+      "get": {
+        "tags": [
+          "Movies"
+        ],
+        "description": "Proxies the request to the static data server (SpringBoot) to retrieve 5 top rated movies.",
+        "operationId": "getSpringBootTopFiveMovies",
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved the list of 5 top rated movies (response from SpringBoot).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SpringBootTopRatedMovie"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error - Error in Main Server or the SpringBoot server.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorSchema"
+                },
+                "example": {
+                  "error_message": "Downstream error from Springboot static server"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/topRated": {
+      "get": {
+        "tags": [
+          "Movies"
+        ],
+        "description": "Proxies the request to the static data server (SpringBoot) to retrieve top 20 movies by genre.",
+        "operationId": "getSpringBootTopRatedByGenre",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "genre",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Genre of movies we want to return for specific carousel"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved the list of 20 movies (response from SpringBoot).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SpringBootTopMovieByGenre"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error - Error in Main Server or the SpringBoot server.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorSchema"
+                },
+                "example": {
+                  "error_message": "Downstream error Springboot static server"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/getMovieById": {
+      "get": {
+        "tags": [
+          "Movies"
+        ],
+        "description": "Proxies the request to the static data server (SpringBoot) to retrieve movie by ID.",
+        "operationId": "getSpringBootMovieById",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "id",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "Id of the movie that the user wants to retrieve"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved the movie (response from SpringBoot).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SpringBootTopMovieByGenre"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error - Error in Main Server or the SpringBoot server.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorSchema"
+                },
+                "example": {
+                  "error_message": "Downstream error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/getMovieByName": {
+      "get": {
+        "tags": [
+          "Movies"
+        ],
+        "description": "Proxies the request to the static data server (SpringBoot) to retrieve movie by title.",
+        "operationId": "getSpringBootMovieByName",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "name",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Title of the movie that the user wants to retrieve"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved the movie (response from SpringBoot).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SpringBootTopMovieByName"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error - Error in Main Server or the SpringBoot server.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorSchema"
+                },
+                "example": {
+                  "error_message": "Error occurred: getMovieByName Internal Server Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/ageMin": {
+      "get": {
+        "tags": [
+          "Movies"
+        ],
+        "description": "Proxies the request to the static data server (SpringBoot) to retrieve movies by minimum age rating.",
+        "operationId": "getSpringBootMoviesByMinAge",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "age_min",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "Minimum parental grade"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved movies with minimum PG (response from SpringBoot).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SpringBootAgeMin"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error - Error in Main Server or the SpringBoot server.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorSchema"
+                },
+                "example": {
+                  "error_message": "Error occurred: ageMin Internal Server Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/getWorldwideMovies": {
+      "get": {
+        "tags": [
+          "Movies"
+        ],
+        "description": "Proxies the request to the static data server (SpringBoot) to retrieve globally popular movies.",
+        "operationId": "getSpringBootWorldwideMovies",
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved the top movies (response from SpringBoot).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SpringBootTopMovieByGenre"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error - Error in Main Server or the SpringBoot server.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorSchema"
+                },
+                "example": {
+                  "error_message": "Error occurred: ageMin Internal Server Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/getCultLanguage": {
+      "get": {
+        "tags": [
+          "Movies"
+        ],
+        "description": "Proxies the request to the static data server (SpringBoot) to retrieve top rated movies by language.",
+        "operationId": "getSpringBootCultLanguageMovies",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "language",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "User language (e.g. French, Italian)"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved the movies (response from SpringBoot).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SpringBootTopMovieByGenre"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error - Error in Main Server or the SpringBoot server.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorSchema"
+                },
+                "example": {
+                  "error_message": "Error occurred: ageMin Internal Server Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/getFilteredMovies": {
+      "get": {
+        "tags": [
+          "Movies"
+        ],
+        "description": "Proxies the request to the static data server (SpringBoot) to retrieve filtered movies.",
+        "operationId": "getSpringBootFilteredMovies",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "page",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "Number of the query page (page size = 45)"
+          },
+          {
+            "in": "query",
+            "name": "order",
+            "schema": {
+              "type": "string",
+              "enum": ["ascName", "descName", "ascDate", "descDate"]
+            },
+            "required": false,
+            "description": "Order movies by name or date ASC/DESC"
+          },
+          {
+            "in": "query",
+            "name": "ratingRange",
+            "schema": {
+              "type": "string",
+              "enum": ["zeroToOne","oneToTwo", "twoToThree", "threeToFour", "fourToFive"]
+            },
+            "required": false,
+            "description": "Order movies by ranges of value rating"
+
+          },
+          {
+            "in": "query",
+            "name": "genre",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Genre name of the movie"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved the movies (response from SpringBoot).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SpringBootTopMovieByGenre"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error - Error in Main Server or the SpringBoot server.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorSchema"
+                },
+                "example": {
+                  "error_message": "Error occurred: ageMin Internal Server Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/getGenres": {
+      "get": {
+        "tags": [
+          "Genres"
+        ],
+        "description": "Proxies the request to the static data server (SpringBoot) to retrieve all genres.",
+        "operationId": "getSpringBootGenres",
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved the genres names (response from SpringBoot).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SpringBootGenreName"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error - Error in Main Server or the SpringBoot server.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorSchema"
+                },
+                "example": {
+                  "error_message": "Error occurred: getGenres Internal Server Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/newDiscussion": {
+      "post": {
+        "tags": [
+          "Discussions"
+        ],
+        "description": "Proxies the request to the dynamic data server (Express) to create a new discussion.",
+        "operationId": "createExpressDiscussion",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/newDiscussion"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Discussion room created successfully.",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error - An unexpected error occurred while creating the discussion.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorSchema"
+                },
+                "example": {
+                  "error_message": "Internal Server Error: Failed to create new discussion."
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/getDiscussions": {
+      "get": {
+        "tags": [
+          "Discussions"
+        ],
+        "description": "Proxies the request to the dynamic data server (Express) to retrieve discussions.",
+        "operationId": "getExpressDiscussions",
+        "responses": {
+          "200": {
+            "description": "A list of discussion rooms retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/discussionSchema"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error - An unexpected error occurred while retrieving discussions.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorSchema"
+                },
+                "example": {
+                  "error_message": "Internal Server Error: Failed to retrieve discussions."
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/getMessages": {
+      "get": {
+        "tags": [
+          "Messages"
+        ],
+        "description": "Proxies the request to the dynamic data server (Express) to retrieve messages for a discussion room.",
+        "operationId": "getExpressMessages",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "id_room",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Unique identifier of the discussion room"
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "Page number for pagination (results per page: 50)."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A list of last messages retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/discussionRoomSchema"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request - Missing required parameters.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorSchema"
+                },
+                "example": {
+                  "error_message": "Bad Request: Missing the required parameter id_room or pageNumber."
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found - Discussion room not found for the specified ID.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorSchema"
+                },
+                "example": {
+                  "error_message": "Not Found: Discussion room with the specified ID does not exist."
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error - An unexpected error occurred while retrieving messages.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorSchema"
+                },
+                "example": {
+                  "error_message": "Internal Server Error: Failed to retrieve messages."
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/newMessage": {
+      "post": {
+        "tags": [
+          "Messages"
+        ],
+        "description": "Proxies the request to the dynamic data server (Express) to send a new message.",
+        "operationId": "sendExpressMessage",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/messageSchema"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Message sent successfully to the discussion room.",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request - Missing required parameters in the request body.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorSchema"
+                },
+                "example": {
+                  "error_message": "Bad Request: Missing required fields in the message payload."
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found - Discussion room not found for the specified ID.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorSchema"
+                },
+                "example": {
+                  "error_message": "Not Found: Discussion room with the specified ID does not exist."
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error - An unexpected error occurred while sending the message.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorSchema"
+                },
+                "example": {
+                  "error_message": "Internal Server Error: Failed to send the message."
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/newImage": {
+      "post": {
+        "tags": [
+          "Messages"
+        ],
+        "description": "Proxies the request to the dynamic data server (Express) to send a new image message.",
+        "operationId": "sendExpressImage",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/imageSchema"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Image/video message sent successfully to the discussion room.",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request - Missing required parameters in the request body.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorSchema"
+                },
+                "example": {
+                  "error_message": "Bad Request: Missing required fields in the image/video message payload."
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found - Discussion room not found for the specified ID.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorSchema"
+                },
+                "example": {
+                  "error_message": "Not Found: Discussion room with the specified ID does not exist."
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error - An unexpected error occurred while sending the image/video message.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorSchema"
+                },
+                "example": {
+                  "error_message": "Internal Server Error: Failed to send the image/video message."
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "SpringBootTopRatedMovie": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Unique ID of the movie"
+          },
+          "name": {
+            "type": "string",
+            "description": "Title of the movie"
+          },
+          "description": {
+            "type": "string",
+            "description": "Description of the movie"
+          },
+          "link": {
+            "type": "string",
+            "description": "Link of the proper Poster"
+          },
+          "rating": {
+            "type": "number",
+            "format": "float",
+            "description": "Rating score of the movie"
+          }
+        }
+      },
+      "SpringBootTopMovieByGenre": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Unique ID of the movie"
+          },
+          "name": {
+            "type": "string",
+            "description": "Title of the movie"
+          },
+          "link": {
+            "type": "string",
+            "description": "Link of the proper Poster"
+          }
+        }
+      },
+      "SpringBootTopMovieByName": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Unique ID of the movie"
+          },
+          "name": {
+            "type": "string",
+            "description": "Title of the movie"
+          },
+          "year": {
+            "type": "integer",
+            "description": "Year of publication"
+          },
+          "poster": {
+            "type": "string",
+            "description": "Link of the poster image"
+          }
+        }
+      },
+      "SpringBootGenreName": {
+        "type": "object",
+        "properties": {
+          "genreName": {
+            "type": "string",
+            "description": "Name of the genre"
+          }
+        }
+      },
+      "SpringBootAgeMin": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Unique ID of the movie"
+          },
+          "name": {
+            "type": "string",
+            "description": "Title of the movie"
+          },
+          "link": {
+            "type": "string",
+            "description": "Link of the poster image"
+          },
+          "rating": {
+            "type": "float",
+            "description": "Rating of the movie"
+          }
+        }
+      },
+      "SpringBootWorldWide": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Unique ID of the movie"
+          },
+          "name": {
+            "type": "string",
+            "description": "Title of the movie"
+          },
+          "link": {
+            "type": "string",
+            "description": "Link of the poster image"
+          },
+          "rating": {
+            "type": "decimal",
+            "description": "Rating of the movie"
+          },
+          "count": {
+            "type": "integer",
+            "description": "Number of release in the worldwide"
+          }
+        }
+      },
+      "reviewSchema": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Unique identifier of the review."
+          },
+          "movie_title": {
+            "type": "string",
+            "description": "Title of the movie reviewed"
+          },
+          "critic_name": {
+            "type": "string",
+            "description": "Name of the critic"
+          },
+          "top_critic": {
+            "type": "boolean",
+            "description": "True if it's a top critic"
+          },
+          "publisher_name": {
+            "type": "string",
+            "description": "Name of the review publisher"
+          },
+          "review_type": {
+            "type": "string",
+            "description": "A sort of rating positive/negative (fresh / rotten)"
+          },
+          "review_date": {
+            "type": "string",
+            "format": "date",
+            "description": "Date of publication"
+          },
+          "review_content": {
+            "type": "string",
+            "description": "Full text content of the review."
+          },
+          "link": {
+            "type": "string",
+            "description": "Link to the article page of the review (RottenTomatoes website)"
+          }
+        }
+      },
+      "errorSchema": {
+        "type": "object",
+        "properties": {
+          "error_message": {
+            "type": "string",
+            "description": "Human-readable message describing the error."
+          }
+        }
+      },
+      "newDiscussion": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique identifier for the new discussion room (automatically generated)."
+          },
+          "title": {
+            "type": "string",
+            "description": "Title or topic of the discussion room."
+          },
+          "movie": {
+            "$ref": "#/components/schemas/movieSchema"
+          }
+        }
+      },
+      "discussionSchema": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "object",
+            "description": "Unique identifier assigned by MongoDB of the discussion room."
+          },
+          "id": {
+            "type": "string",
+            "description": "Unique identifier of the discussion room."
+          },
+          "title": {
+            "type": "string",
+            "description": "Title of the discussion."
+          },
+          "movie": {
+            "$ref": "#/components/schemas/movieSchema"
+          },
+          "messages": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/messageReturnedSchema"
+            }
+          },
+          "date": {
+            "type": "string",
+            "format": "date",
+            "description": "Timestamp of the creation"
+          }
+        }
+      },
+      "messageSchema": {
+        "type": "object",
+        "properties": {
+          "sender": {
+            "type": "string",
+            "description": "Username of the message sender."
+          },
+          "message": {
+            "type": "string",
+            "description": "Text content of the message."
+          },
+          "id_room": {
+            "type": "string",
+            "description": "Unique identifier of the discussion room to which the message belongs."
+          },
+          "time_stamp": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Timestamp indicating when the message was sent (ISO 8601 format)."
+          }
+        }
+      },
+      "imageSchema": {
+        "type": "object",
+        "properties": {
+          "sender": {
+            "type": "string",
+            "description": "Username of the message sender."
+          },
+          "image": {
+            "type": "string",
+            "description": "URL (BASE 64 format) or data of the image/video"
+          },
+          "id_room": {
+            "type": "string",
+            "description": "Unique identifier of the discussion room to which the message belongs."
+          },
+          "time_stamp": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Timestamp indicating when the message was sent (ISO 8601 format)."
+          }
+        }
+      },
+      "movieSchema": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Unique identifier of the movie."
+          },
+          "name": {
+            "type": "string",
+            "description": "Title of the movie."
+          },
+          "year": {
+            "type": "integer",
+            "description": "Year the movie was released."
+          },
+          "poster": {
+            "type": "string",
+            "description": "URL of the movie's poster image."
+          }
+        }
+      },
+      "messageReturnedSchema": {
+        "type": "object",
+        "properties": {
+          "sender": {
+            "type": "string",
+            "description": "Username of the message sender, whether was specified"
+          },
+          "message": {
+            "type": "string",
+            "description": "Text content of the message, whether was specified"
+          },
+          "image": {
+            "type": "string",
+            "description": "URL (BASE 64 format) or data of the image/video"
+          },
+          "id_room": {
+            "type": "string",
+            "description": "Unique identifier of the discussion room to which the message belongs."
+          },
+          "time_stamp": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Timestamp indicating when the message was sent (ISO 8601 format)."
+          }
+        }
+      },
+      "discussionRoomSchema": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": ""
+          },
+          "movie": {
+            "$ref": "#/components/schemas/movieSchema"
+          },
+          "messages": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/messageReturnedSchema"
+            }
+          },
+          "hasMore": {
+            "type": "boolean",
+            "description": "Whether the paginated query has more items to fetch"
+          }
+        }
+      }
+    }
+  }
+}
