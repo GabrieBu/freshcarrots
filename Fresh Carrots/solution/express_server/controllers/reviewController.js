@@ -1,5 +1,22 @@
 import Review from "../models/Review.js";
 
+/**
+ * Retrieves paginated movie reviews with optional filtering by critic type, review type,
+ * review date range, and movie title.
+ *
+ * @route GET /reviews
+ * @queryparam {string} [criticFilter] - Filter by critic type (e.g. "all_critics", "top_critics")
+ * @queryparam {string} [typeFilter] - Filter by review type (e.g. "Fresh", "Rotten", or "all_types")
+ * @queryparam {string} [minDateFilter] - Minimum review date (ISO format: YYYY-MM-DD)
+ * @queryparam {string} [maxDateFilter] - Maximum review date (ISO format: YYYY-MM-DD)
+ * @queryparam {string} [reviewMovieFilter] - Partial or full movie title to search for
+ * @queryparam {number} [page=1] - Page number for pagination (each page contains 10 reviews)
+ *
+ * @param {Object} req - Express request object containing query parameters
+ * @param {Object} res - Express response object for sending filtered and paginated review data
+ *
+ * @returns {Object[]} Array of review documents matching the filters
+ */
 export const getReviews = async (req, res) => {
     const {criticFilter, typeFilter} = req.query;
     let {minDateFilter, maxDateFilter} = req.query;

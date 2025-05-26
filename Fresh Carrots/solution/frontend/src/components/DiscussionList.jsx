@@ -8,7 +8,13 @@ import DiscussionItem from "./DiscussionItem.jsx";
 import {useNavigate} from "react-router-dom";
 import UserModal from "./UserModal.jsx";
 
-
+/**
+ * DiscussionList component handles displaying discussions,
+ * creating new discussions, filtering by movie title and sorting by date.
+ *
+ * @component
+ * @returns {JSX.Element} Rendered DiscussionList component.
+ */
 function DiscussionList() {
     const [username, setUsername] = useState("");
     const [newTitle, setNewTitle] = useState("");
@@ -34,7 +40,13 @@ function DiscussionList() {
         localStorage.setItem("sortByDate", sortByDate);
     }, [sortByDate]);
 
-
+    /**
+     * Handles creating a new discussion.
+     * Validates input, generates a random ID, posts the new discussion
+     * to the backend API, and navigates to the discussion page on success.
+     *
+     * @returns {void}
+     */
     function handleCreateDiscussion() {
         if (newTitle.trim() === "") return;
 
@@ -56,6 +68,14 @@ function DiscussionList() {
             .catch(() => setErrorCreate(true));
     }
 
+    /**
+     * Placeholder function for following a discussion.
+     * Intended to handle follow logic given a discussion id and title.
+     *
+     * @param {string} id - The unique ID of the discussion.
+     * @param {string} title - The title of the discussion.
+     * @returns {void}
+     */
     function handleFollow(id, title) {
 
     }

@@ -1,11 +1,29 @@
 import axios from 'axios'
 import { useEffect, useState } from 'react'
 
-/*
-* Hook used to get movie (max 20) in the searchbar, from the user's query title
-* Used in all page (Navbar reused component)
-* */
-
+/**
+ * Custom hook to search for movies by title.
+ *
+ * This hook sends a GET request (`/getMovieByName`)
+ * when the user types in the search bar. It implements debouncing to reduce
+ * unnecessary API calls, and it cancels previous requests if a new one is triggered.
+ *
+ * @function useSearch
+ * @param {string} query - The user's search input (movie title).
+ *
+ * @returns {Object} An object containing:
+ * - {Array} moviesSearched - An array of movie objects returned from the API.
+ * - {boolean} loading - Indicates whether the request is in progress.
+ * - {boolean} error - Indicates if there was an error during the fetch.
+ *
+ * @example
+ * const { moviesSearched, loading, error } = useSearch("Batman");
+ *
+ * @description
+ * - Avoids unnecessary API calls if the query is less than 2 characters or empty.
+ * - Cancels previous axios requests when a new search is initiated.
+ * - Useful for search bars, especially in reusable components like a Navbar.
+ */
 export default function useSearch(query) {
     const [moviesSearched, setMoviesSearched] = useState([]);
     const [loading, setLoading] = useState(false);

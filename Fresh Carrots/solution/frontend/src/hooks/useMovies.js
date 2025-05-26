@@ -1,10 +1,37 @@
 import axios from "axios";
 import { useEffect, useState, useRef } from "react";
 
-/*
-* Hook used to get movies for Discover page, returns movies filtered (query Springboot paginated with specifications)
-* */
-
+/**
+ * Custom hook to fetch a list of movies based on pagination and selected filters.
+ *
+ * This hook sends a GET request to the `/getFilteredMovies` endpoint using the filters
+ * such as genre, rating range, and sorting order. It supports infinite scrolling by appending results
+ * when only the page number changes, and resets the movie list when filters change.
+ *
+ * @function useMovies
+ * @param {number} pageNumber - The current page number for pagination (0-based).
+ * @param {Array} selectedFilters - Array of selected filter objects with a `value` key.
+ *  Possible values include:
+ *    - Sorting: `"ascName"`, `"descName"`, `"ascDate"`, `"descDate"`
+ *    - Ratings: `"zeroToOne"`, `"oneToTwo"`, `"twoToThree"`, `"threeToFour"`, `"fourToFive"`
+ *    - Genres: any other string assumed to represent a genre.
+ *
+ * @returns {Object} An object containing:
+ * - {Array} movies - The list of movie objects fetched from the API.
+ * - {boolean} loadingMovies - Whether the fetch is currently in progress.
+ * - {boolean} errorMovies - Whether an error occurred during the fetch.
+ *
+ * @example
+ * const { movies, loadingMovies, errorMovies } = useMovies(0, [
+ *   { value: "action" },
+ *   { value: "descDate" },
+ * ]);
+ *
+ * @description
+ * - Detects changes in selected filters using a ref and resets the list accordingly.
+ * - Appends movies if the page number changes but filters stay the same (infinite scroll support).
+ * - Handles loading and error states.
+ */
 export default function useMovies(pageNumber, selectedFilters) {
   const [movies, setMovies] = useState([]);
   const [loading, setLoading] = useState(true);

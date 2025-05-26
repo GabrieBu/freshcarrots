@@ -3,15 +3,26 @@ import useSearch from "../hooks/useSearch.js";
 
 const Loader = lazy(() => import("./../ui/Loader"));
 
+/**
+ * Searchbar component allowing users to search for movies by title.
+ * Displays a dropdown list with search results that can be selected.
+ *
+ * @param {Object} props - Component props.
+ * @param {function} props.onSelectMovie - Callback function called when a movie is selected from the dropdown.
+ * @param {function} props.children - Render prop function to render each movie result.
+ * @returns {JSX.Element} The Searchbar component JSX.
+ */
 function Searchbar({children, onSelectMovie}) {
     const [query, setQuery] = useState(''); // state for movie title query of the user
     const { moviesSearched, loading, error } = useSearch(query); //hook returns top 20 result searching by title
 
+    /**
+     * each time query changes, the hook is re-triggered and results returned again
+     *
+     * @param {React.ChangeEvent<HTMLInputElement>} event - The change event from the input field.
+     */
     const handleSearch = (event) => {
         setQuery(event.target.value); // update movie title query
-        /*
-        * each time query changes, the hook is re-triggered and results returned again
-        * */
     };
 
     //display results box if query is not blank

@@ -1,5 +1,15 @@
 import {useEffect, useState} from "react";
 
+/**
+ * UserModal component manages the user identification process.
+ * It displays a Bootstrap modal prompting the user to enter a username,
+ * stores the username in localStorage, and passes it back to the parent via callback.
+ *
+ * @param {Object} props - Component props.
+ * @param {string} props.username - Current username state.
+ * @param {function} props.onSetUsername - Callback function to update the username state in the parent.
+ * @returns {JSX.Element} The UserModal component JSX.
+ */
 function UserModal({ username, onSetUsername }) {
     const [errorModal, setErrorModal] = useState(false);
 

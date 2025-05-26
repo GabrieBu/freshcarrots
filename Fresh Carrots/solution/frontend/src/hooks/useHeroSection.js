@@ -1,10 +1,26 @@
 import axios from 'axios'
 import { useEffect, useState } from 'react'
 
-/*
-* Hook used to get top 5 movies filtered by rating DESC
-* */
-
+/**
+ * Custom hook to fetch the top five movies for the hero section.
+ *
+ * This hook retrieves a list of top 5 movies from the `/getTopFiveMovies` endpoint.
+ *
+ * @function useHeroSection
+ *
+ * @returns {Object} An object containing:
+ * - {Array} movies - An array of the top five movie objects.
+ * - {boolean} loading - Indicates if the data is currently being fetched.
+ * - {boolean} error - Indicates if an error occurred during the fetch.
+ *
+ * @example
+ * const { movies, loading, error } = useHeroSection();
+ *
+ * @description
+ * - Fetches movie data once on initial render.
+ * - Designed for the homepage hero section.
+ * - Automatically manages loading and error states.
+ */
 export default function useHeroSection() {
   const [movies, setMovies] = useState([]);
   const [loading, setLoading] = useState(true);

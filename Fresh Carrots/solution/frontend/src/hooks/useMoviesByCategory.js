@@ -3,10 +3,42 @@ import axios from "axios";
 
 const API_BASE_URL = "http://localhost:3000";
 
-/*
-* Hook used to get movies for carousels in Homepage
-* */
-
+/**
+ * Custom hook to fetch categorized movie data.
+ *
+ * This hook retrieves several types of movie lists:
+ * - Top-rated movies per genre (based on `hotGenres`)
+ * - Movies recommended for adults (age ≥ 18)
+ * - Popular worldwide movies
+ * - Culturally relevant movies based on the user's language
+ *
+ * Each of these categories is fetched in parallel using `Promise.all`, and the data
+ * is stored.
+ *
+ * @function useMoviesByCategory
+ * @param {Array<Object>} hotGenres - Array of genre objects (e.g., `{ genre: "Action" }`) used to fetch top-rated movies by genre.
+ * @param {string} userLanguage - The language code used to fetch culturally relevant movies (e.g., `"en"`, `"fr"`, `"it"`).
+ *
+ * @returns {Object} An object containing:
+ * - {Object} moviesByCategory - A structured object with:
+ *    - {Object} moviesByGenre - Key-value pairs where each key is a genre name and value is an array of movies.
+ *    - {Array} moviesForAdult - Array of movies recommended for adults (18+).
+ *    - {Array} worldwideMovies - Array of popular movies worldwide.
+ *    - {Array} cultLanguageMovies - Array of movies in or related to the user's language/culture.
+ * - {boolean} loading - Whether the data is currently being fetched.
+ * - {boolean} error - Whether an error occurred during the fetch.
+ *
+ * @example
+ * const { moviesByCategory, loading, error } = useMoviesByCategory(
+ *   [{ genre: "Drama" }, { genre: "Action" }],
+ *   "it"
+ * );
+ *
+ * @description
+ * - Fetches all required movie categories in parallel on initial mount.
+ * - Consolidates all results into a single structured state object.
+ * - Handles loading and error states.
+ */
 export default function useMoviesByCategory(hotGenres, userLanguage) {
     console.log("in hook: ", userLanguage)
     const [loading, setLoading] = useState(false);

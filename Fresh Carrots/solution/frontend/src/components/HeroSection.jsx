@@ -22,6 +22,12 @@ function printNumberCardinal(index) {
     }
 }
 
+/**
+ * Componente HeroSection che mostra una carousel con i 5 film migliori per rating.
+ * @param {object} props - Props del componente.
+ * @param {React.Ref} props.ref - Ref passata per il carousel.
+ * @returns {JSX.Element} Carousel con informazioni dei film.
+ */
 // eslint-disable-next-line react/prop-types
 function HeroSection({ ref }) {
     const { movies, loading, error } = useHeroSection(); //retrieve top5 movies by rating trough the hook

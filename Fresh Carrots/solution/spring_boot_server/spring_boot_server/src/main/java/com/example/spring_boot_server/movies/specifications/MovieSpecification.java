@@ -7,8 +7,31 @@ import jakarta.persistence.criteria.*;
 
 import java.util.ArrayList;
 import java.util.List;
-
+/**
+ * Utility class providing a dynamic {@link Specification} for filtering and sorting {@link Movie} entities
+ * based on various criteria such as rating range, genre, and order preferences.
+ *
+ * This class is used with Spring Data Specification API to build type-safe, dynamic queries.
+ */
 public class MovieSpecification {
+    /**
+     * Builds a {@link Specification} for filtering and ordering movies.
+     *
+     * @param order       Sorting order preference. Accepted values:
+     *                        {@code ascDate} - ascending by date
+     *                        {@code descDate} - descending by date
+     *                        {@code ascName} - ascending by name
+     *                        {@code descName} - descending by name
+     * @param ratingRange Rating range to filter movies. Accepted values:
+     *                        {@code zeroToOne} - ratings between 0.0 and 1.0
+     *                        {@code oneToTwo} - ratings between 1.0 and 2.0
+     *                        {@code twoToThree} - ratings between 2.0 and 3.0
+     *                        {@code threeToFour} - ratings between 3.0 and 4.0
+     *                        {@code fourToFive} - ratings between 4.0 and 5.0
+     * @param genre       Genre name to filter movies by. If null or empty, no genre filtering is applied.
+     *
+     * @return A {@link Specification<Movie>} object containing all the filtering and sorting logic
+     */
     public static Specification<Movie> filterBy(String order, String ratingRange, String genre) {
         return (Root<Movie> root, CriteriaQuery<?> query, CriteriaBuilder cb) -> {
             List<Predicate> predicates = new ArrayList<>();
