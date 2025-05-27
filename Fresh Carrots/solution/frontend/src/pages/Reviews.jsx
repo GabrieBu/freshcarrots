@@ -46,14 +46,50 @@ function Reviews() {
     reviewMovieFilter,
   ]);
 
+  /**
+   *
+   *  Function is called whenever filter about critics change
+   *
+   * This function changes value of filter about critics in the local state
+   *
+   * @function handleCriticFilterChange
+   * @param {React.ChangeEvent<HTMLInputElement>} event - The change event from the input field.
+
+   * @description
+   * - changes value of filter about critics
+   */
   const handleCriticFilterChange = (event) => {
     setCriticFilter(event.target.value);
   };
 
+  /**
+   *  Function changes value of filter about type of the reviews (Rotten/Fresh)
+   *
+   * This function changes value of filter about critics
+   *
+   * @function handleRottenChange
+   * @param {React.ChangeEvent<HTMLInputElement>} event - The change event from the input field.
+
+   * @description
+   * - Changes value of filter about type of the reviews (Rotten/Fresh)
+   */
   const handleRottenChange = (event) => {
     setTypeFilter(event.target.value);
   };
 
+  /**
+   *
+   *  Function to set filter about date.
+   *
+   * This function changes value of filter about date
+   *
+   * @function handleMinDate
+   * @param {React.ChangeEvent<HTMLInputElement>} event - The change event from the input field.
+
+   * @description
+   * - Will re-trigger the hook to get reviews from event.target.value specified
+   * - If max date is earlier than min date switches values
+   */
   const handleMinDate = (event) => {
     // invert order of filtering if start date < of end date
     if (
@@ -69,6 +105,19 @@ function Reviews() {
     setMinDate(event.target.value);
   };
 
+  /**
+   *
+   *  Function to set filter about date.
+   *
+   * This function changes value of filter about date
+   *
+   * @function handleMaxDate
+   * @param {React.ChangeEvent<HTMLInputElement>} event - The change event from the input field.
+
+   * @description
+   * - Will re-trigger the hook to get reviews from event.target.value specified
+   * - If min date is later than max date switches values
+   */
   const handleMaxDate = (event) => {
     // invert order of dates if start date < of end date
     if (
@@ -83,10 +132,34 @@ function Reviews() {
     }
     setMaxDate(event.target.value);
   };
+
+  /**
+   *
+   *  Function to set query for movie title search.
+   *
+   * This function changes value of local state of query movie title
+   *
+   * @function handleSearch
+   * @param {React.ChangeEvent<HTMLInputElement>} event - The change event from the input field.
+
+   * @description
+   * - Will re-trigger the hook to get reviews from event.target.value specified
+   */
   const handleSearch = (event) => {
     setReviewMovieFilter(event.target.value);
   };
 
+  /**
+   *
+   *  Function to clear each filter specified
+   *
+   * This function clears each filter specified
+   *
+   * @function handleResetFilters
+   *
+   * @description
+   * - Clears each type of filter in the local storage. Will retrigger automatically hook for reviews
+   */
   const handleResetFilters = () => {
     setCriticFilter("all_critics");
     setTypeFilter("all_types");

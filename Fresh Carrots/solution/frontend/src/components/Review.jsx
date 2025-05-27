@@ -1,3 +1,14 @@
+/**
+ *
+ *  Arrow function that let user navigate to the movie clicked by the user.
+ *
+ * Formats the date and returns a new object Date in ISO format
+ *
+ * @function formatDate
+ * @param {string} dateString -String date to format in ISO yyyy/mm/dd
+ *
+ *
+ */
 const formatDate = (dateString) => {
     const date = new Date(dateString);
     return date.toLocaleDateString("en-US", {
@@ -6,7 +17,6 @@ const formatDate = (dateString) => {
         day: "numeric",
     });
 };
-
 
 /*
 * Reusable component to show a single review in reviews page

@@ -10,7 +10,8 @@ const DiscussionItem = ({
                             buttonVariant = "primary",
                             createdAt
                         }) => {
-    // format ISO date to dd/mm/yyyy
+
+
     const formattedDate = createdAt
         ? new Date(createdAt).toLocaleDateString('en-GB', {
             day: '2-digit',

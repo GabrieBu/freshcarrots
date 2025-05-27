@@ -7,7 +7,6 @@ const Searchbar = lazy(() => import("./Searchbar"));
 
 function Navbar() {
 
-
     return (
         <nav className="navbar navbar-expand-lg navbar-dark bg-dark w-100" aria-label="Main navigation">
             <div className="container-fluid">

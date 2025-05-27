@@ -9,6 +9,9 @@ import Discussion from "../models/Discussion.js";
  * @param {string} req.body.id - Unique identifier for the discussion
  * @param {Object} req.body.movie - The movie related to the discussion
  * @param {Object} res - Express response object
+ *
+ * @returns {Object} 500 - Internal server error with error_message
+ * @returns {Object} 400 - Missing required fields error with error_message
  */
 export const newDiscussion = async (req, res) => {
     try {
@@ -32,7 +35,9 @@ export const newDiscussion = async (req, res) => {
  * @route GET /discussions
  * @param {string} [req.query.movieQuery] - Optional movie title filter
  * @param {string} [req.query.sortByDate='asc'] - Sort order: 'asc' or 'desc'
- * @param {Object} res - Express response object
+ *
+ * @returns {Array<Discussion>} 200 - An array of discussion objects
+ * @returns {Object} 500 - Internal server error with error_message
  */
 export const getDiscussions = async (req, res) => {
     const {movieQuery, sortByDate = 'asc'} = req.query
@@ -68,7 +73,16 @@ export const getDiscussions = async (req, res) => {
  * @param {string} req.query.id_room - ID of the discussion
  * @param {number} req.query.page - Page number for pagination
  * @param {Object} res - Express response object
- */
+ *
+ * @returns {Object} res Response object
+ * @returns {string} res.title - Title of the discussion
+ * @returns {movieSchema} res.movie - Movie object associated with the discussion
+ * @returns {Array<messageSchema>} res.messages - Array of discussion messages
+ * @returns {boolean} res.hasMore - Whether more messages are available
+ *
+ * @returns {Object} 500 - Internal server error with error_message
+ * @returns {Object} 404 - Not message with error_message
+ *  */
 export const getMessages = async (req, res) => {
     try {
         const pageSize = 50;
@@ -102,6 +116,7 @@ export const getMessages = async (req, res) => {
         res.json({ error_message: error.message });
     }
 };
+
 /**
  * Adds a new text message to an existing discussion thread.
  *
@@ -110,8 +125,12 @@ export const getMessages = async (req, res) => {
  * @param {string} req.body.id_room - ID of the discussion
  * @param {string} req.body.sender - Sender's username
  * @param {string} req.body.message - Message content
- * @param {string} req.body.time_stamp - ISO 8601 timestamp
- * @param {Object} res - Express response object
+ * @param {string} req.body.time_stamp - ISO timestamp
+ * @param {Object} res - 200 Express response object
+ *
+ * @returns {Object} 500 - Internal server error with error_message
+ * @returns {Object} 400 - Missing required fields error with error_message
+ * @returns {Object} 404 - Discussion not found
  */
 export const newMessage = async (req, res) => {
     try {
@@ -142,9 +161,13 @@ export const newMessage = async (req, res) => {
  * @param {Object} req - Express request object
  * @param {string} req.body.id_room - ID of the discussion
  * @param {string} req.body.sender - Sender's username
- * @param {string} req.body.image - Image data (e.g. base64 encoded string or image URL)
- * @param {string} req.body.time_stamp - ISO 8601 timestamp
+ * @param {string} req.body.image - Image data (base64 encoded string)
+ * @param {string} req.body.time_stamp - ISO timestamp
  * @param {Object} res - Express response object
+ *
+ * @returns {Object} 500 - Internal server error with error_message
+ * @returns {Object} 400 - Missing required fields error with error_message
+ * @returns {Object} 404 - Discussion not found
  */
 export const newImage = async (req, res) => {
     try {

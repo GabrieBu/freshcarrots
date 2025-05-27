@@ -17,7 +17,7 @@ function Searchbar({children, onSelectMovie}) {
     const { moviesSearched, loading, error } = useSearch(query); //hook returns top 20 result searching by title
 
     /**
-     * each time query changes, the hook is re-triggered and results returned again
+     * Each time query changes, the hook is re-triggered and results returned again
      *
      * @param {React.ChangeEvent<HTMLInputElement>} event - The change event from the input field.
      */

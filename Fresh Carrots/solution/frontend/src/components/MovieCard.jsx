@@ -1,6 +1,5 @@
 import {Link} from "react-router-dom";
 
-
 /*
 * Reusable component for movie card
 * */

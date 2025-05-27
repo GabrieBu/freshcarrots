@@ -34,6 +34,17 @@ function HeroSection({ ref }) {
     const [currentIndex, setCurrentIndex] = useState(0);
     const navigate = useNavigate();
 
+    /**
+     *
+     *  Function that let user navigate to the movie clicked by the user.
+     *  Navigates to /movie/{id_film}
+     *
+     * This decrease value of index and stores it in the local state. Index is the current central number of card to be displayed
+     *
+     * @function handleClickCarousel
+     * @param {Integer} id_film - Id of the film clicked by the user
+     *
+     */
     const handleClickCarousel = (id_film) => {
         navigate(`/movie/${id_film}`); //navigate to the page Movie of the movie in top 5
     };

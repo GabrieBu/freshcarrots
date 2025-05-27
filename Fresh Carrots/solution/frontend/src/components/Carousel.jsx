@@ -8,36 +8,65 @@ function Carousel({ title, movies, loading }) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [itemsVisible, setItemsVisible] = useState(1);
 
-  useEffect(() => {
-    const calculateItemsVisible = () => {
-        /* Dynamically loading depending on the screen number of cards visible per carousel */
-      const containerWidth = window.innerWidth;
-      const itemWidth = 120;
-      const itemMargin = 20;
-      const newItemsVisible = Math.floor(
-        containerWidth / (itemWidth + itemMargin)
-      );
-      console.log("itemsVisible:", newItemsVisible);
-      setItemsVisible(newItemsVisible);
+    /**
+     *  Function to calculate dynamically the number of cards visibile on the user custom screen
+     *
+     * This function gets the sizes of user browser screen and dynamically calculates number of cards to be displayed
+     *
+     * @function calculateItemsVisible
+     *
+     * @description
+     * - Cards are 120px x 180px, margin (gap) 20px
+     * - Stores filters in local storage.
+     */
+    useEffect(() => {
+        const calculateItemsVisible = () => {
+            /* Dynamically loading depending on the screen number of cards visible per carousel */
+          const containerWidth = window.innerWidth;
+          const itemWidth = 120;
+          const itemMargin = 20;
+          const newItemsVisible = Math.floor(
+            containerWidth / (itemWidth + itemMargin)
+          );
+          console.log("itemsVisible:", newItemsVisible);
+          setItemsVisible(newItemsVisible);
+        };
+        calculateItemsVisible();
+        window.addEventListener("resize", calculateItemsVisible);
+        return () => window.removeEventListener("resize", calculateItemsVisible);
+        }, []);
+
+        // eslint-disable-next-line react/prop-types
+        const moviesLength = movies?.length;
+        /**
+         *
+         *  Function to update index of caoursel
+         *
+         * This increase value of index and stores it in the local state. Index is the current central number of card to be displayed
+         *
+         * @function nextPage
+         *
+         */
+        const nextPage = () => {
+        if (currentIndex < moviesLength - itemsVisible) {
+          setCurrentIndex(currentIndex + 1);
+        }
     };
-    calculateItemsVisible();
-    window.addEventListener("resize", calculateItemsVisible);
-    return () => window.removeEventListener("resize", calculateItemsVisible);
-  }, []);
 
-  // eslint-disable-next-line react/prop-types
-  const moviesLength = movies?.length;
-  const nextPage = () => {
-    if (currentIndex < moviesLength - itemsVisible) {
-      setCurrentIndex(currentIndex + 1);
-    }
-  };
-
-  const prevPage = () => {
-    if (currentIndex > 0) {
-      setCurrentIndex(currentIndex - 1);
-    }
-  };
+    /**
+     *
+     *  Function to update index of caoursel
+     *
+     * This decrease value of index and stores it in the local state. Index is the current central number of card to be displayed
+     *
+     * @function prevPage
+     *
+     */
+    const prevPage = () => {
+        if (currentIndex > 0) {
+          setCurrentIndex(currentIndex - 1);
+        }
+        };
 
   return (
     <div className="carousel-container">

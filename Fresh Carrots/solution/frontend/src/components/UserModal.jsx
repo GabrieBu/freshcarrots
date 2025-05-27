@@ -28,14 +28,27 @@ function UserModal({ username, onSetUsername }) {
         //retrieve past followed discussion from the localstorage, if present
     }, []);
 
-    // submiut username in the modal, store in useState
+    /**
+     *
+     *  Function ran for submit username by modal
+     *
+     * This function stores the username in the local storage when the username submit in the form
+     *
+     * @function handleSubmitModal
+     *
+     * @description
+     * - Sets the username, if valid, in localStorage
+     * -
+     */
     function handleSubmitModal() {
         if(username!== "") {
             localStorage.setItem("username", JSON.stringify(username));
             const modalElement = document.getElementById("modalUsername");
             const modal = window.bootstrap.Modal.getInstance(modalElement)
             modal.hide();
-
+            /*
+            * dynamic style
+            * */
             document.querySelectorAll(".modal-backdrop").forEach((el) => el.remove());
         }
         else{

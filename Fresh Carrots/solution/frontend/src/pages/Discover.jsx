@@ -33,10 +33,23 @@ function Discover() {
     }
   }, [inView]);
 
+
+  /**
+   *  Function is called whenever a filter change
+   *
+   * This function updates filters of the page letting the hook be re-triggered each time
+   * It stores each time values of filters in the local storage and put pageNumber of the query again to default minimun value 0.
+   *
+   *
+   * @function handleFilterChange
+   * @param {string} type - Type of the filter
+   * @param {boolean} value - Value of the filter depending on the type
+   *
+   * @description
+   * - Automatically triggers a new fetch every time filters changes.
+   * - Stores filters in local storage.
+   */
   function handleFilterChange(type, value) {
-    /*
-    * This function is called whenever a filter change. We bring back pagenum = 0 to retrigger the query to the db trough Springboot
-    * */
     setSelectedFilters((prevFilters) => {
       let newFilters;
       if (value === "") {
@@ -123,6 +136,17 @@ function Discover() {
     },
   ];
 
+  /**
+   *  Function is called whenever reset filter button is clicked
+   *
+   * This function deletes each selected filters and clears the local storage
+   *
+   * @function handleResetFilter
+   *
+   * @description
+   * - Clear local storage and reset filters in local state.
+   * - Put pageNumber back again to default minimun value.
+   */
   function handleResetFilter() {
     setSelectedFilters([]);
     localStorage.removeItem("selectedFilters");
